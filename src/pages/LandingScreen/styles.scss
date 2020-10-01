@@ -1,7 +1,14 @@
-.my-items{
-    margin-top: 15px;
+.my-items {
+  margin-top: 15px;
 
-    .item-list{
-        display: block;
-    }
+  .item-list {
+    display: block;
+  }
+
+  p {
+    color: gray;
+    font-size: small;
+    margin-left: 4px;
+    font-style: italic;
+  }
 }

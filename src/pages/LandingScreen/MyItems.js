@@ -1,32 +1,34 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
 import queries from "../../api";
-import { _currentUser } from "../../globals/variables";
+import { _currentUser, _currentBoard } from "../../globals/variables";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { getInclusionDirectives } from "@apollo/client/utilities";
+import {useSpring, animated} from 'react-spring'
 
 function MyItems() {
+  const [props, set, stop] = useSpring(() => ({opacity: 0}))
   const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
-    variables: { ids: [757616149] },
+    variables: { ids: _currentBoard() },
   });
 
-  if (loading) return <p>loading.</p>;
+  if (loading) return null;
   if (error) return <p>Error :(</p>;
 
   const user = _currentUser(data.me.id);
 
   function getList(data) {
     let items = [];
-    data.boards[0].items.map((item) => {
+    data.boards[0].items.map((item, index) => {
       item.subscribers.map((sub) => {
         if (user === sub.id) {
-          console.log(user, sub.id);
-          items.push(<p key={item.id}>{item.name}</p>);
+          items.push(<animated.p key={index} style={props}>{item.name}</animated.p>);
         }
       });
     });
+    set({opacity: 1});
+    stop();
     return items;
   }
 

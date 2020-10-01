@@ -2,8 +2,13 @@ import { gql } from "@apollo/client";
 
 const queries = {
   // Returns the name of the passed board ID
-  BOARD_NAME: gql`
+  BOARD: gql`
     query BoardName($ids: [Int!]) {
+      me {
+        id
+        name
+        photo_original
+      }
       boards(ids: $ids) {
         name
       }

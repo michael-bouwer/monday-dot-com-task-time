@@ -8,10 +8,12 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import mondaySdk from "monday-sdk-js";
+import { _currentBoard } from "./globals/variables";
 
-import LandingScreen from './pages/LandingScreen';
+import LandingScreen from "./pages/LandingScreen";
 
 const monday = mondaySdk();
+_currentBoard([0]);
 
 const httpLink = createHttpLink({
   uri: "https://api.monday.com/v2/",
@@ -41,20 +43,34 @@ class App extends React.Component {
 
     // Default state
     this.state = {
-      settings: {},
+      settings: {}, 
       name: "",
+      triggerEvent: null,
     };
   }
 
   componentDidMount() {
     // TODO: set up event listeners
+    monday.get("context").then((res) => {
+      //set global boardId
+      _currentBoard(res.data.boardIds[0]);
+    });
+
+    var callback = (res) => {
+      this.setState({
+        triggerEvent: res.data,
+      });
+    };
+    monday.listen("events", callback);
   }
 
   render() {
     return (
       <ApolloProvider client={client}>
         <div className="App">
-          <LandingScreen />
+          <LandingScreen
+            key={this.state.triggerEvent}
+          />
         </div>
       </ApolloProvider>
     );
