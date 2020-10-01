@@ -53,7 +53,7 @@ class App extends React.Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <div className="App primary">
+        <div className="App">
           <LandingScreen />
         </div>
       </ApolloProvider>

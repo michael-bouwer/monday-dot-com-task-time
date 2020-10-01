@@ -32,6 +32,28 @@ const queries = {
       }
     }
   `,
+
+  // Owner of this board
+  USERS_ITEMS: gql`
+    query Me($ids: [Int!]) {
+      me {
+        id
+        name
+      }
+      boards(ids: $ids) {
+        items {
+          name
+          subscribers {
+            id
+          }
+          group {
+            id
+            title
+          }
+        }
+      }
+    }
+  `,
 };
 
 export default queries;
