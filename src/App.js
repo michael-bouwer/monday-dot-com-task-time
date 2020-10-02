@@ -43,7 +43,7 @@ class App extends React.Component {
 
     // Default state
     this.state = {
-      settings: {}, 
+      settings: {},
       name: "",
       triggerEvent: null,
     };
@@ -54,6 +54,27 @@ class App extends React.Component {
     monday.get("context").then((res) => {
       //set global boardId
       _currentBoard(res.data.boardIds[0]);
+    });
+
+    /*monday.storage.instance.getItem("campaigns").then((res) => {
+      const { value, version } = res.data;
+      console.log(value);
+      //sleep(10000); // someone may overwrite serialKey during this time
+
+      monday.storage.instance
+        .setItem("test", { previous_version: version })
+        .then((res) => {
+          console.log(res);
+        });
+    });*/
+
+    monday.storage.instance.getItem("campaigns").then((res) => {
+      const { value, version } = res.data;
+      console.log(value);
+      //sleep(10000); // someone may overwrite serialKey during this time
+      if(!value){
+        console.log('no campaigns')
+      }
     });
 
     var callback = (res) => {
@@ -68,9 +89,7 @@ class App extends React.Component {
     return (
       <ApolloProvider client={client}>
         <div className="App">
-          <LandingScreen
-            key={this.state.triggerEvent}
-          />
+          <LandingScreen key={this.state.triggerEvent} />
         </div>
       </ApolloProvider>
     );

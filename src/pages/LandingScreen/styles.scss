@@ -12,3 +12,16 @@
     font-style: italic;
   }
 }
+
+.avatar {
+  &:hover{
+      cursor: pointer;
+  }
+}
+
+.header {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

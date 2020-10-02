@@ -20,7 +20,7 @@ function LandingScreen() {
   return (
     <div>
       <div className="header">
-        <h2>{data.boards[0].name}</h2>
+        {/*<h2>{data.boards[0].name}</h2>
         <div className="profile">
           <Tooltip title={data.me.name} placement="left">
             <Avatar
@@ -29,9 +29,9 @@ function LandingScreen() {
               src={data.me.photo_original}
             />
           </Tooltip>
-        </div>
+        </div>*/}
       </div>
-      <MyItems />
+      {/*<MyItems />*/}
     </div>
   );
 }

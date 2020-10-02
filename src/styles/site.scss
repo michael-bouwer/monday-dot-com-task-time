@@ -13,22 +13,3 @@ p{
 .primary {
     background-color: $primary;
 }
-
-.avatar {
-    &:hover{
-        cursor: pointer;
-    }
-}
-
-.header {
-    padding: 20px;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0.0px 4.0px 8.0px 0px rgba(0, 0, 0, 0.2);
-
-    .profile {
-        text-align: right;
-    }
-}

@@ -47,6 +47,7 @@ const queries = {
       }
       boards(ids: $ids) {
         items {
+          id
           name
           subscribers {
             id
