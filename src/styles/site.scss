@@ -1,15 +1,15 @@
-@import 'variables';
+@import "variables";
 
-.row{
-    margin-left: 0;
-    margin-right: 0;
+.row {
+  margin-left: 0;
+  margin-right: 0;
 }
 
-p{
-    padding: 0;
-    margin: 0;
+p {
+  padding: 0;
+  margin: 0;
 }
 
-.primary {
-    background-color: $primary;
+.primary-bg {
+  background-color: $primary-bg;
 }

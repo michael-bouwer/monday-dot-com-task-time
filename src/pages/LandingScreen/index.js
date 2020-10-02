@@ -2,12 +2,10 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import queries from "../../api";
 import "./styles.scss";
-
-import MyItems from "./MyItems";
 import { _currentUser, _currentBoard } from "../../globals/variables";
 
-import Avatar from "@material-ui/core/Avatar";
-import Tooltip from "@material-ui/core/Tooltip";
+//custom
+import AddNew from "../../sections/AddNew";
 
 function LandingScreen() {
   const { loading, error, data } = useQuery(queries.BOARD, {
@@ -20,6 +18,7 @@ function LandingScreen() {
   return (
     <div>
       <div className="header">
+        <AddNew />
         {/*<h2>{data.boards[0].name}</h2>
         <div className="profile">
           <Tooltip title={data.me.name} placement="left">

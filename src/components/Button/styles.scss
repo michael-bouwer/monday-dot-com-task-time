@@ -1,0 +1,65 @@
+@import "../../styles/variables";
+
+//Sizes
+.btn-large {
+  border-radius: 4px;
+  padding: 12px 24px;
+
+  p {
+    letter-spacing: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+  }
+}
+.btn-medium {
+  border-radius: 4px;
+  padding: 8px 16px;
+
+  p {
+    letter-spacing: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+  }
+}
+.btn-small {
+  border-radius: 4px;
+  padding: 5px 8px;
+
+  p {
+    letter-spacing: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+  }
+}
+
+//Colors
+.custom-btn-primary {
+  background-color: $primary;
+  color: #fff;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #0071d9;
+  }
+}
+.custom-btn-secondary {
+  //background-color: $light;
+  border: 1px solid #c5c7d0;
+  color: $dark;
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+.custom-btn-tertiary {
+  color: $dark;
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
