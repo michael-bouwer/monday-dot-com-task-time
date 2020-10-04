@@ -63,3 +63,10 @@
     background-color: rgba(0, 0, 0, 0.1);
   }
 }
+
+.btn-large, .btn-medium, .btn-small{
+
+  &:active{
+    //margin: 10px;
+  }
+}

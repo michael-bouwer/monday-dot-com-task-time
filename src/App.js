@@ -68,15 +68,6 @@ class App extends React.Component {
         });
     });*/
 
-    monday.storage.instance.getItem("campaigns").then((res) => {
-      const { value, version } = res.data;
-      console.log(value);
-      //sleep(10000); // someone may overwrite serialKey during this time
-      if(!value){
-        console.log('no campaigns')
-      }
-    });
-
     var callback = (res) => {
       this.setState({
         triggerEvent: res.data,
