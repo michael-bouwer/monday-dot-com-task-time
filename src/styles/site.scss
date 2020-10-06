@@ -17,3 +17,19 @@ p {
 .bold{
   font-weight: 500;
 }
+
+.center-all{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+//Typography
+.text-main-32{
+  font-size: 32px;
+  line-height: 100%;
+}
+.text-title-24{
+  font-size: 24px;
+  line-height: 100%;
+}
