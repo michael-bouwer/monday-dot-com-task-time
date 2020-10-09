@@ -6,7 +6,6 @@
   }
 
   p {
-    color: gray;
     font-size: small;
     margin-left: 4px;
     font-style: italic;
@@ -14,8 +13,8 @@
 }
 
 .avatar {
-  &:hover{
-      cursor: pointer;
+  &:hover {
+    cursor: pointer;
   }
 }
 
@@ -23,10 +22,25 @@
   background-color: white;
 }
 
-.AddNew{
+.AddNew {
+  //height: 50vh;
+}
+
+.Existing {
   height: 50vh;
 }
 
-.Existing{
-  height: 50vh;
+.testing {
+  display: inline-flex;
+  background-color: lightblue;
+  padding: 2px 8px;
+  border-radius: 1em;
+  margin: 4px 0;
+  color: white;
+
+  &:hover{
+    background-color: blueviolet;
+    cursor: pointer;
+    transition: background-color .4s;
+  }
 }

@@ -7,6 +7,7 @@ import { _currentUser, _currentBoard } from "../../globals/variables";
 //custom
 import AddNew from "../../sections/AddNew";
 import Existing from "../../sections/Existing";
+import MyItems from "./MyItems";
 
 function LandingScreen() {
   const { loading, error, data } = useQuery(queries.BOARD, {
@@ -22,9 +23,7 @@ function LandingScreen() {
         <div className="AddNew center-all">
           <AddNew />
         </div>
-        <div className="Existing">
-          <Existing />
-        </div>
+        <MyItems />
         {/*<h2>{data.boards[0].name}</h2>
         <div className="profile">
           <Tooltip title={data.me.name} placement="left">

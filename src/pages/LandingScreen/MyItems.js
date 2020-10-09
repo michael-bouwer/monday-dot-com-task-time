@@ -22,20 +22,36 @@ function MyItems() {
 
   function getList(data) {
     let items = [];
+    let groups = [];
+    // data.boards[0].items.map((item, index) => {
+    //   //if (index === 0) monday.execute("openItemCard", { itemId: item.id });
+    //   item.subscribers.map((sub) => {
+    //     if (user === sub.id) {
+    //       items.push(
+    //         <animated.p key={index} style={props}>
+    //           {item.name} - {item.id}
+    //         </animated.p>
+    //       );
+    //     }
+    //   });
+    // });
     data.boards[0].items.map((item, index) => {
-      //if (index === 0) monday.execute("openItemCard", { itemId: item.id });
-      item.subscribers.map((sub) => {
-        if (user === sub.id) {
-          items.push(
-            <animated.p key={index} style={props}>
-              {item.name} - {item.id}
-            </animated.p>
-          );
-        }
-      });
+      items.push(
+        <animated.p
+          key={index}
+          style={{
+            ...props
+          }}
+          className="testing"
+        >
+          {item.name} - {item.id}
+        </animated.p>
+      );
     });
+
     set({ opacity: 1 });
     stop();
+    console.log("getList");
     return items;
   }
 
