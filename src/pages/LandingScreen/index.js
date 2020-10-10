@@ -10,10 +10,12 @@ import Existing from "../../sections/Existing";
 import Button from "../../components/Button";
 import MyItems from "./MyItems";
 import MyTemplates from "./MyTemplates";
+import TimeCapture from "../../sections/TimeCapture";
 
 const _pages = {
   MY_ITEMS: 1,
   MY_TEMPLATES: 2,
+  TIME_CAPTURE: 3,
 };
 
 function LandingScreen() {
@@ -28,27 +30,11 @@ function LandingScreen() {
   return (
     <div>
       <div className="header">
-        <div className="AddNew center-all">
-          {/*<AddNew />*/}
-          <Button text="My Items" onClick={(e) => getButtonEvent(e)} />
-          <Button text="My Templates" onClick={(e) => getButtonEvent(e)} />
-        </div>
-        {/*<div className="Existing">
-          <Existing />
-        </div>*/}
-        {getCurrentPage()}
-        {/*<h2>{data.boards[0].name}</h2>
-        <div className="profile">
-          <Tooltip title={data.me.name} placement="left">
-            <Avatar
-              className="avatar"
-              alt={data.me.name}
-              src={data.me.photo_original}
-            />
-          </Tooltip>
-        </div>*/}
+        <Button text="My Items" onClick={(e) => getButtonEvent(e)} />
+        <Button text="My Templates" onClick={(e) => getButtonEvent(e)} />
+        <Button text="Time Capture" onClick={(e) => getButtonEvent(e)} />
       </div>
-      {/*<MyItems />*/}
+      {getCurrentPage()}
     </div>
   );
 
@@ -57,6 +43,8 @@ function LandingScreen() {
       return <MyItems />;
     } else if (currentPage === _pages.MY_TEMPLATES) {
       return <MyTemplates />;
+    } else if (currentPage === _pages.TIME_CAPTURE) {
+      return <TimeCapture />;
     }
   }
 
@@ -69,6 +57,10 @@ function LandingScreen() {
       case "My Templates":
         setPage(_pages.MY_TEMPLATES);
         console.log("my templates selected");
+        break;
+      case "Time Capture":
+        setPage(_pages.TIME_CAPTURE);
+        console.log("time capture selected");
         break;
       default:
         setPage(_pages.MY_ITEMS);
