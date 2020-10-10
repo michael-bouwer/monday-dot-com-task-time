@@ -25,7 +25,7 @@
 }
 .btn-small {
   border-radius: 4px;
-  padding: 5px 8px; 
+  padding: 5px 8px;
 
   p {
     letter-spacing: 0;
@@ -64,9 +64,19 @@
   }
 }
 
-.btn-large, .btn-medium, .btn-small{
+.btn-large,
+.btn-medium,
+.btn-small {
+  margin: 0 8px;
+  outline: none;
+  border: 0;
 
-  &:active{
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
     //margin: 10px;
+    outline: none;
   }
 }
