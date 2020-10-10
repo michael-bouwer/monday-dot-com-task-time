@@ -18,6 +18,10 @@ const queries = {
   // Subscribers on this board
   SUBSCRIBERS: gql`
     query BoardSubscribers($ids: [Int!]) {
+      me{
+        id
+        name
+      }
       boards(ids: $ids) {
         subscribers {
           id
