@@ -52,19 +52,15 @@ function LandingScreen() {
     switch (e.target.innerText) {
       case "My Items":
         setPage(_pages.MY_ITEMS);
-        console.log("my items selected");
         break;
       case "My Templates":
         setPage(_pages.MY_TEMPLATES);
-        console.log("my templates selected");
         break;
       case "Time Capture":
         setPage(_pages.TIME_CAPTURE);
-        console.log("time capture selected");
         break;
       default:
         setPage(_pages.MY_ITEMS);
-        console.log("my items selected");
         break;
     }
   }

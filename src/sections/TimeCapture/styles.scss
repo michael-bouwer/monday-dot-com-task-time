@@ -4,18 +4,24 @@
 
   .item-name {
     width: 70%;
+    font-style: italic;
   }
   .time-capture {
     width: 30%;
+    font-style: italic;
   }
 
-  td{
-	  font-size: 16px;
-	  font-weight: 300;
+  td {
+    font-size: 16px;
+    font-weight: 300;
   }
 
   tbody tr:hover {
     cursor: pointer;
+
+    td {
+      background-color: lightgreen;
+    }
   }
 
   tfoot td {

@@ -7,10 +7,12 @@ import "./styles.scss";
 
 function TimeCatpure() {
 	const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
+		fetchPolicy: 'network-only',
 		variables: { ids: _currentBoard() },
 	});
 
 	function getList() {
+		console.log('time capture');
 		let items = [];
 		let groups = [];
 		data.boards[0].items.map((item, index) => {
@@ -24,8 +26,9 @@ function TimeCatpure() {
 		return items;
 	}
 
-
-	if (loading) return null;
+	if (loading) {
+		return null;
+	}
 	if (error) return <p>Error :(</p>;
 
 	return (
@@ -34,7 +37,7 @@ function TimeCatpure() {
 				<thead>
 					<tr>
 						<th className="item-name">Item</th>
-						<th className="time-catpure text-center">Time (Hours)</th>
+						<th className="text-center time-capture">Time (Hours)</th>
 					</tr>
 				</thead>
 				<tbody>
