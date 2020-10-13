@@ -8,18 +8,19 @@ import { _currentUser, _currentBoard } from "../../globals/variables";
 import AddNew from "../../sections/AddNew";
 import Existing from "../../sections/Existing";
 import Button from "../../components/Button";
-import MyItems from "./MyItems";
+import GroupTimeSheets from "../../sections/GroupTimeSheets";
 import MyTemplates from "./MyTemplates";
+import TimeSheet from '../../components/TimeSheet';
 import TimeCapture from "../../sections/TimeCapture";
 
 const _pages = {
-  MY_ITEMS: 1,
-  MY_TEMPLATES: 2,
+  GROUP_TIME_SHEETS: 1,
+  TIMESHEET: 2,
   TIME_CAPTURE: 3,
 };
 
 function LandingScreen() {
-  const [currentPage, setPage] = useState(_pages.MY_ITEMS);
+  const [currentPage, setPage] = useState(_pages.GROUP_TIME_SHEETS);
   const { loading, error, data } = useQuery(queries.BOARD, {
     variables: { ids: _currentBoard() },
   });
@@ -30,8 +31,8 @@ function LandingScreen() {
   return (
     <div>
       <div className="header">
-        <Button text="My Items" onClick={(e) => getButtonEvent(e)} />
-        <Button text="My Templates" onClick={(e) => getButtonEvent(e)} />
+        <Button text="GROUP_TIME_SHEETS" onClick={(e) => getButtonEvent(e)} />
+        <Button text="Time Sheet" onClick={(e) => getButtonEvent(e)} />
         <Button text="Time Capture" onClick={(e) => getButtonEvent(e)} />
       </div>
       {getCurrentPage()}
@@ -39,10 +40,10 @@ function LandingScreen() {
   );
 
   function getCurrentPage() {
-    if (currentPage === _pages.MY_ITEMS) {
-      return <MyItems />;
-    } else if (currentPage === _pages.MY_TEMPLATES) {
-      return <MyTemplates />;
+    if (currentPage === _pages.GROUP_TIME_SHEETS) {
+      return <GroupTimeSheets />;
+    } else if (currentPage === _pages.TIMESHEET) {
+      return <TimeSheet />;
     } else if (currentPage === _pages.TIME_CAPTURE) {
       return <TimeCapture />;
     }
@@ -50,11 +51,11 @@ function LandingScreen() {
 
   function getButtonEvent(e) {
     switch (e.target.innerText) {
-      case "My Items":
-        setPage(_pages.MY_ITEMS);
+      case "GROUP_TIME_SHEETS":
+        setPage(_pages.GROUP_TIME_SHEETS);
         break;
-      case "My Templates":
-        setPage(_pages.MY_TEMPLATES);
+      case "Time Sheet":
+        setPage(_pages.TIMESHEET);
         break;
       case "Time Capture":
         setPage(_pages.TIME_CAPTURE);

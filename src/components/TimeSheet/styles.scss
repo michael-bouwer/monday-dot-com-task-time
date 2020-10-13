@@ -3,11 +3,9 @@
   box-sizing: border-box;
 
   .item-name {
-    width: 70%;
     font-style: italic;
   }
-  .time-captures {
-    width: 30%;
+  .time-capture {
     font-style: italic;
   }
 
@@ -16,11 +14,21 @@
     font-weight: 300;
   }
 
-  tbody tr:hover {
-    cursor: pointer;
+  tbody {
+    tr {
+      &:hover {
+        cursor: pointer;
 
-    td {
-      background-color: lightgreen;
+        td {
+          background-color: lightgreen;
+        }
+      }
+
+      td {
+        input {
+          width: 40px;
+        }
+      }
     }
   }
 

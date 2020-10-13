@@ -51,7 +51,6 @@ function MyItems() {
 
     set({ opacity: 1 });
     stop();
-    console.log("getList");
     return items;
   }
 
