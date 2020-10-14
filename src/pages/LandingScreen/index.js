@@ -8,7 +8,7 @@ import { _currentUser, _currentBoard } from "../../globals/variables";
 import AddNew from "../../sections/AddNew";
 import Existing from "../../sections/Existing";
 import Button from "../../components/Button";
-import GroupTimeSheets from "../../sections/GroupTimeSheets";
+import GroupTimeSheets from "../GroupTimeSheets";
 import MyTemplates from "./MyTemplates";
 import TimeSheet from '../../components/TimeSheet';
 import TimeCapture from "../../sections/TimeCapture";
@@ -46,7 +46,7 @@ function LandingScreen() {
       return <TimeSheet />;
     } else if (currentPage === _pages.TIME_CAPTURE) {
       return <TimeCapture />;
-    }
+    } 
   }
 
   function getButtonEvent(e) {
@@ -61,7 +61,7 @@ function LandingScreen() {
         setPage(_pages.TIME_CAPTURE);
         break;
       default:
-        setPage(_pages.MY_ITEMS);
+        setPage(_pages.GROUP_TIME_SHEETS);
         break;
     }
   }
