@@ -36,10 +36,17 @@ function GroupTimeSheets() {
 		});
 	};
 
-	const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
+
+	const { loading, error, data, refetch } = useQuery(queries.USERS_ITEMS, {
 		fetchPolicy: "network-only",
 		variables: { ids: _currentBoard() },
 	});
+
+
+	var callback = (res) => {
+		refetch();
+	};
+	monday.listen("events", callback);
 
 	if (loading) {
 		return null;
@@ -82,7 +89,7 @@ function GroupTimeSheets() {
 		return groupsUi;
 	}
 
-	function editTimesheet(group){
+	function editTimesheet(group) {
 		setGroup(group);
 		setMode(modes.EDIT_TIMESHEET);
 	}

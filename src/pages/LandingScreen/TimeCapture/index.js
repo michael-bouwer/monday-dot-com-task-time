@@ -7,7 +7,7 @@ import "./styles.scss";
 
 function TimeCatpure() {
 	const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
-		fetchPolicy: 'network-only',
+		//fetchPolicy: 'network-only',
 		variables: { ids: _currentBoard() },
 	});
 

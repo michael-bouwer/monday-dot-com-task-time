@@ -10,7 +10,7 @@ import './styles.scss';
 
 function TimeSheet() {
     const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
-        fetchPolicy: 'network-only',
+        //fetchPolicy: 'network-only',
         variables: { ids: _currentBoard() },
     });
 
