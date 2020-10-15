@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import { useQuery } from "@apollo/client";
 import queries from "../../api";
 import { _currentUser, _currentBoard } from "../../globals/variables";
-import EditTimeSheet from '../../sections/EditTimeSheet';
+import EditTimeSheet from './EditTimeSheet';
 const monday = mondaySdk();
 
 const modes = {

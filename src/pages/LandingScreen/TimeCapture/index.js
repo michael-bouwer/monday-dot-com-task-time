@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
-import queries from "../../api";
-import { _currentUser, _currentBoard } from "../../globals/variables";
+import queries from "../../../api";
+import { _currentUser, _currentBoard } from "../../../globals/variables";
 import Table from "react-bootstrap/Table";
 import "./styles.scss";
 

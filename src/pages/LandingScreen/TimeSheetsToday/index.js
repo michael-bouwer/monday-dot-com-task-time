@@ -1,8 +1,8 @@
 import React from 'react';
 import { useQuery } from "@apollo/client";
-import queries from "../../api";
+import queries from "../../../api";
 import "./styles.scss";
-import { _currentUser, _currentBoard } from "../../globals/variables";
+import { _currentUser, _currentBoard } from "../../../globals/variables";
 import moment from 'moment';
 
 function TimeSheetsToday() {

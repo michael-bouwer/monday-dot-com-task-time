@@ -5,13 +5,13 @@ import "./styles.scss";
 import { _currentUser, _currentBoard } from "../../globals/variables";
 
 //custom
-import AddNew from "../../sections/AddNew";
-import Existing from "../../sections/Existing";
+import AddNew from "./AddNew";
+import Existing from "./Existing";
 import Button from "../../components/Button";
 import GroupTimeSheets from "../GroupTimeSheets";
 import MyTemplates from "./MyTemplates";
 import TimeSheet from '../../components/TimeSheet';
-import TimeCapture from "../../sections/TimeCapture";
+import TimeCapture from "./TimeCapture";
 
 const _pages = {
   GROUP_TIME_SHEETS: 1,
