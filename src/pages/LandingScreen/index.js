@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import queries from "../../api";
 import "./styles.scss";
 import { _currentUser, _currentBoard } from "../../globals/variables";
+import moment from 'moment';
 
 //custom
 import AddNew from "./AddNew";
@@ -34,10 +35,23 @@ function LandingScreen() {
         <Button text="GROUP_TIME_SHEETS" onClick={(e) => getButtonEvent(e)} />
         <Button text="Time Sheet" onClick={(e) => getButtonEvent(e)} />
         <Button text="Time Capture" onClick={(e) => getButtonEvent(e)} />
+        <div>
+          <p>{getDateRange(moment())}</p>
+        </div>
       </div>
       {getCurrentPage()}
     </div>
   );
+
+  function getDateRange(inputDate){
+    var currentDate = moment();
+    var weekStart = currentDate.clone().startOf('isoWeek');
+    var weekEnd = currentDate.clone().endOf('isoWeek');
+  
+    var days = [];
+  
+    return weekStart.format('Do MMM') + ' - ' + weekEnd.format('Do MMM') + ' (Monday - Sunday)';
+  }
 
   function getCurrentPage() {
     if (currentPage === _pages.GROUP_TIME_SHEETS) {
