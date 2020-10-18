@@ -11,6 +11,7 @@ import mondaySdk from "monday-sdk-js";
 import { _currentBoard } from "./globals/variables";
 
 import LandingScreen from "./pages/LandingScreen";
+import Timesheet from "./pages/Timesheet";
 
 const monday = mondaySdk();
 _currentBoard([0]);
@@ -69,9 +70,9 @@ class App extends React.Component {
     });*/
 
     var callback = (res) => {
-      this.setState({
+      /*this.setState({
         triggerEvent: res.data,
-      });
+      });*/
     };
     monday.listen("events", callback);
   }
@@ -80,7 +81,8 @@ class App extends React.Component {
     return (
       <ApolloProvider client={client}>
         <div className="App">
-          <LandingScreen key={this.state.triggerEvent} />
+          {/*<LandingScreen key={this.state.triggerEvent} />*/}
+          <Timesheet />
         </div>
       </ApolloProvider>
     );
