@@ -11,7 +11,7 @@ import Existing from "./Existing";
 import Button from "../../components/Button";
 import GroupTimeSheets from "../GroupTimeSheets";
 import MyTemplates from "./MyTemplates";
-import TimeSheet from '../../components/TimeSheet';
+import TimeSheet from '../../pages/Timesheet';
 import TimeCapture from "./TimeCapture";
 
 const _pages = {

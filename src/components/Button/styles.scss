@@ -37,12 +37,15 @@
 
 //Colors
 .custom-btn-primary {
-  background-color: $primary;
+  background-color: $primary-button;
   color: #fff;
 
   &:hover {
     cursor: pointer;
-    background-color: #0071d9;
+    background-color: $primary-button-hover;
+  }
+  &:active{
+    background-color: $primary-button-click;
   }
 }
 .custom-btn-secondary {
@@ -77,5 +80,6 @@
   &:active {
     //margin: 10px;
     outline: none;
+    transform: scale(.95);
   }
 }

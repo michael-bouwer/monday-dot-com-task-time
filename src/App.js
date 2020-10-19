@@ -8,13 +8,14 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import mondaySdk from "monday-sdk-js";
-import { _currentBoard } from "./globals/variables";
+import { _currentBoard, _currentTimesheet } from "./globals/variables";
 
 import LandingScreen from "./pages/LandingScreen";
 import Timesheet from "./pages/Timesheet";
 
 const monday = mondaySdk();
 _currentBoard([0]);
+_currentTimesheet([]);
 
 const httpLink = createHttpLink({
   uri: "https://api.monday.com/v2/",
@@ -81,8 +82,8 @@ class App extends React.Component {
     return (
       <ApolloProvider client={client}>
         <div className="App">
-          {/*<LandingScreen key={this.state.triggerEvent} />*/}
           <Timesheet />
+          {/* <LandingScreen key={this.state.triggerEvent} /> */}
         </div>
       </ApolloProvider>
     );

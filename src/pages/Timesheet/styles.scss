@@ -1,8 +1,74 @@
-.timesheet{
-    margin-top: 40px;
+.timesheet {
+  margin-top: 40px;
 
-    .get-timesheet{
-        height: 200px;
-        margin: 22px 0;
+  .get-timesheet {
+    height: 200px;
+    margin: 22px 0;
+  }
+}
+
+.table-time-capture {
+  box-sizing: border-box;
+  min-width: 400px;
+  width: 100%;
+
+  .item-name {
+    font-style: italic;
+    width: 60%;
+  }
+  .time-capture {
+    font-style: italic;
+    width: calc(40% / 8);
+  }
+
+  td {
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  tbody {
+    tr {
+      &:hover {
+        td {
+          background-color: salmon;
+        }
+      }
+
+      td {
+        input {
+          width: 40px;
+        }
+      }
     }
+  }
+
+  tfoot td {
+    font-weight: 600;
+  }
+}
+
+.add-items {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: RGBA(0, 0, 0, 0.5);
+  width: 100%;
+  height: calc(100vh - 98px);
+
+  .modal {
+    position: relative;
+    display: block;
+    background-color: white;
+    width: 600px;
+    height: 400px;
+    margin: 0 auto;
+    top: calc((100vh - 98px)/2 - 200px);
+    border-radius: 4px;
+    padding: 12px;
+
+    .modal-items {
+      overflow-y: scroll;
+      height: calc(400px - 24px);
+    }
+  }
 }
