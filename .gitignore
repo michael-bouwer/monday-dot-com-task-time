@@ -1,6 +1,6 @@
 ## - Michael Bouwer -
 
-build/
+build/*
 build.zip
 
 .vscode/*

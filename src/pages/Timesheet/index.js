@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { Col, Row, Spinner, Table } from "react-bootstrap";
 import "./styles.scss";
@@ -19,9 +19,6 @@ function Timesheet() {
     variables: { ids: _currentBoard() },
   });
 
-  const timesheet = useReactiveVar(_currentTimesheet);
-  const [temp, setTemp] = useState(0);
-
   if (loading) return <p>loading...</p>;
   if (error) return <p>error</p>;
   return (
@@ -36,35 +33,9 @@ function Timesheet() {
       </Row>
       <Row>
         <Col>
-          <Row className="get-timesheet" key={timesheet}>
-            <GetTimesheet data={data} />
+          <Row className="get-timesheet">
+            <GetTimesheet data={data}/>
           </Row>
-          {/* <Button
-            large
-            onClick={() => _currentTimesheet(moment().format("HH:mm:ss"))}
-            text="Fake New Data"
-          ></Button>
-          <p style={{ fontSize: "10px" }}>
-            Click to show new component where items can be added and removed
-            from current worksheet
-          </p>
-
-          <br />
-                    <br />
-                    <div>{temp}</div>
-                    <Button
-                        text="Add"
-                        onClick={() => {
-                            setTemp(temp + 1);
-                        }}
-                    ></Button>
-                    <Button
-                        text="Save"
-                        onClick={() => {
-                            _currentTimesheet(temp);
-                            setTemp(0);
-                        }}
-                    ></Button> */}
         </Col>
       </Row>
     </div>
@@ -75,6 +46,10 @@ function GetTimesheet({ data }) {
   const timesheet = useReactiveVar(_currentTimesheet);
   const [loading, setLoading] = useState(true);
   const [addingItem, isAddingItem] = useState(false);
+  
+  //Grid refs
+  const Mon = useRef(null);
+  const Tues = useRef(null);
 
   const getTimesheetForWeek = async () => {
     await monday.storage.instance
@@ -142,14 +117,14 @@ function GetTimesheet({ data }) {
                 return (
                   <tr key={item.id}>
                     <td>{item.name}</td>
-                    <td className="text-center time-capture">0.0</td>
-                    <td className="text-center time-capture">0.0</td>
-                    <td className="text-center time-capture">0.0</td>
-                    <td className="text-center time-capture">0.0</td>
-                    <td className="text-center time-capture">0.0</td>
-                    <td className="text-center time-capture">0.0</td>
-                    <td className="text-center time-capture">0.0</td>
-                    <td className="text-center time-capture">0.0</td>
+                    <td ref={Mon} className="text-center time-capture Mon" onClick={() => console.log(Mon)}><span>0.0</span></td>
+                    <td className="text-center time-capture Tue">0.0</td>
+                    <td className="text-center time-capture Wed">0.0</td>
+                    <td className="text-center time-capture Thu">0.0</td>
+                    <td className="text-center time-capture Fri">0.0</td>
+                    <td className="text-center time-capture Sat">0.0</td>
+                    <td className="text-center time-capture Sun">0.0</td>
+                    <td className="text-center time-capture Aggr">0.0</td>
                   </tr>
                 );
               })}

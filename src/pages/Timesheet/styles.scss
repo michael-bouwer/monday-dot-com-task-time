@@ -29,8 +29,12 @@
   tbody {
     tr {
       &:hover {
-        td {
-          background-color: salmon;
+        .time-capture {
+          background-color: lightskyblue;
+          cursor: pointer;
+        }
+        .time-capture:active {
+          background-color: lightgreen;
         }
       }
 
@@ -57,18 +61,36 @@
 
   .modal {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
     background-color: white;
     width: 600px;
     height: 400px;
     margin: 0 auto;
-    top: calc((100vh - 98px)/2 - 200px);
+    top: calc((100vh - 98px) / 2 - 200px);
     border-radius: 4px;
-    padding: 12px;
+    padding: 16px;
 
     .modal-items {
       overflow-y: scroll;
-      height: calc(400px - 24px);
+      height: 100%;
+      margin-bottom: 12px;
+
+      .item {
+        &:hover {
+          background-color: lightgray;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .actions {
+      display: block;
+      text-align: right;
+
+      Button {
+        margin-left: 8px;
+      }
     }
   }
 }

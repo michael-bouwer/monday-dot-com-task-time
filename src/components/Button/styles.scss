@@ -60,10 +60,12 @@
 }
 .custom-btn-tertiary {
   color: $dark;
+  background-color: unset;
 
   &:hover {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.1);
+    opacity: 100;
   }
 }
 

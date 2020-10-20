@@ -50,6 +50,10 @@ const queries = {
         name
       }
       boards(ids: $ids) {
+        groups{
+          id
+          title
+        }
         items {
           id
           name
