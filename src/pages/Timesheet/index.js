@@ -34,7 +34,7 @@ function Timesheet() {
       <Row>
         <Col>
           <Row className="get-timesheet">
-            <GetTimesheet data={data}/>
+            <GetTimesheet data={data} />
           </Row>
         </Col>
       </Row>
@@ -46,7 +46,7 @@ function GetTimesheet({ data }) {
   const timesheet = useReactiveVar(_currentTimesheet);
   const [loading, setLoading] = useState(true);
   const [addingItem, isAddingItem] = useState(false);
-  
+
   //Grid refs
   const Mon = useRef(null);
   const Tues = useRef(null);
@@ -95,10 +95,10 @@ function GetTimesheet({ data }) {
 
   return (
     <div className="table-time-capture">
-      <Table striped bordered hover size="sm">
+      <Table striped hover size="sm">
         <thead>
           <tr>
-            <th className="item-name">Item</th>
+            <th className="item-head">Item</th>
             <th className="text-center time-capture">Mon</th>
             <th className="text-center time-capture">Tue</th>
             <th className="text-center time-capture">Wed</th>
@@ -116,8 +116,23 @@ function GetTimesheet({ data }) {
               {timesheet.map((item) => {
                 return (
                   <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td ref={Mon} className="text-center time-capture Mon" onClick={() => console.log(Mon)}><span>0.0</span></td>
+                    <td className="item-text">
+                      <div className="center-all">
+                        <div
+                          className="group-color"
+                          style={{ backgroundColor: item.group.color }}
+                        ></div>
+                        <span>{item.name}</span>
+                      </div>
+                      <p className="delete">-</p>
+                    </td>
+                    <td
+                      ref={Mon}
+                      className="text-center time-capture Mon"
+                      onClick={() => console.log(Mon)}
+                    >
+                      <span>0.0</span>
+                    </td>
                     <td className="text-center time-capture Tue">0.0</td>
                     <td className="text-center time-capture Wed">0.0</td>
                     <td className="text-center time-capture Thu">0.0</td>
@@ -131,8 +146,15 @@ function GetTimesheet({ data }) {
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan={8}></td>
-                <td className="text-center">0.0</td>
+                <td colSpan={1}></td>
+                <td className="text-center summary">0.0</td>
+                <td className="text-center summary">0.0</td>
+                <td className="text-center summary">0.0</td>
+                <td className="text-center summary">0.0</td>
+                <td className="text-center summary">0.0</td>
+                <td className="text-center summary">0.0</td>
+                <td className="text-center summary">0.0</td>
+                <td className="text-center summary">0.0</td>
               </tr>
             </tfoot>
           </>
@@ -153,7 +175,9 @@ function GetTimesheet({ data }) {
       />
 
       {/* Add item to timesheet */}
-      {addingItem ? <AddItemToTimeheet close={() => isAddingItem(false)} /> : null}
+      {addingItem ? (
+        <AddItemToTimeheet close={() => isAddingItem(false)} />
+      ) : null}
     </div>
   );
 }

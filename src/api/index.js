@@ -63,6 +63,7 @@ const queries = {
           group {
             id
             title
+            color
           }
         }
       }

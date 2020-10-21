@@ -77,6 +77,11 @@ function AddItemToTimesheet({ close }) {
     const newItem = {
       id: item.id,
       name: item.name,
+      group: {
+        id: item.group.id,
+        title: item.group.title,
+        color: item.group.color,
+      },
       timeCaptureForDaysOfWeek: null,
     };
 
@@ -86,12 +91,16 @@ function AddItemToTimesheet({ close }) {
     });
 
     if (!found) {
+      console.log(newItem);
       setTimesheetData([...newTimesheetItems, newItem]);
     }
   }
 
   function save() {
-    _currentTimesheet(newTimesheetItems);
+    var arr = currentTimesheet;
+    arr.concat(newTimesheetItems);
+    console.log(currentTimesheet, newTimesheetItems, arr);
+    _currentTimesheet([...currentTimesheet, ...newTimesheetItems]);
     close();
   }
 }
