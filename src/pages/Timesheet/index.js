@@ -49,19 +49,7 @@ function GetTimesheet({ data }) {
   const [editingMonday, setEditingMonday] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [editingText, setEditingText] = useState("");
-  // const [summaries, setSummaries] = useState(() => {
-  //   let sums = [];
-  //   if (timesheet && timesheet.length > 0){ //valid timesheet, calculate sums
-  //     timesheet.map((item) => {
-  //       sums.push
-  //       item.timeCaptureForDaysOfWeek.map((dayOfWeek) => {
-
-  //       })
-  //     })
-  //   } else { //timesheet invlaid, initialize to zero
-  //     return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-  //   }
-  // })
+  const [summaries, setSummaries] = useState(() => getSums());
 
   //Grid refs
   const Mon = useRef(null);
@@ -104,13 +92,40 @@ function GetTimesheet({ data }) {
 
   function saveTimeItem(time, timeItem, index) {
     debugger;
-    var arr = timesheet;
+    let arr = timesheet;
+    let sums;
     arr.map((item) => {
       if (item.id === timeItem.id) {
         item.timeCaptureForDaysOfWeek[index] = time;
       }
     });
     _currentTimesheet(arr);
+    setSummaries(getSums());
+  }
+
+  function removeItemFromTimesheet(itemToDelete){
+    let arr = timesheet;
+    arr.map((item, index) => {
+      if(item.id === itemToDelete.id){
+        arr.splice(index, 1);
+      }
+    });
+    _currentTimesheet(null);  //for some reason, setting a Reactive Var as an array doesn't immediately trigger an update.
+    _currentTimesheet(arr);   //there fore, setting it to NULL then assign array forces a re-render.
+    setSummaries(getSums());
+  }
+
+  function getSums() {
+    let sums = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+    if (timesheet && timesheet.length > 0) {
+      //valid timesheet, calculate sums
+      timesheet.map((item) => {
+        item.timeCaptureForDaysOfWeek.map((dayOfWeek, index) => {
+          sums[index] = sums[index] + parseFloat(dayOfWeek);
+        });
+      });
+    }
+    return sums;
   }
 
   useEffect(() => {
@@ -152,7 +167,18 @@ function GetTimesheet({ data }) {
                           ></div>
                           <span>{item.name}</span>
                         </div>
-                        <span className="delete">remove</span>
+                        <span className="delete" onClick={() => {
+                          monday.execute("confirm", {
+                            message: "Are you sure you'd like to remove this item from your timesheet?",
+                            confirm: "Let's go!",
+                            cancelButton: "No way",
+                            excludeCancelButton: false
+                          }).then((res) => {
+                            if(res.data.confirm === true){
+                              removeItemFromTimesheet(item);
+                            }
+                          })
+                        }}>remove</span>
                       </div>
                     </td>
                     <td
@@ -182,7 +208,7 @@ function GetTimesheet({ data }) {
                           autoFocus
                           onChange={(e) => setEditingText(e.target.value)}
                           onKeyPress={(e) => {
-                            if(e.key === 'Enter'){
+                            if (e.key === "Enter") {
                               e.currentTarget.blur();
                             }
                           }}
@@ -205,7 +231,7 @@ function GetTimesheet({ data }) {
             <tfoot>
               <tr>
                 <td colSpan={1}></td>
-                <td className="text-center summary">0.0</td>
+                <td className="text-center summary">{summaries[0]}</td>
                 <td className="text-center summary">0.0</td>
                 <td className="text-center summary">0.0</td>
                 <td className="text-center summary">0.0</td>
@@ -218,16 +244,26 @@ function GetTimesheet({ data }) {
           </>
         ) : null}
       </Table>
-      {timesheet && timesheet.length > 0 ? null : (
-        <div className="font-italic text-paragraph-16 mb-4 center-all">
-          <span>No items loaded for this timesheet</span>
+      {timesheet && timesheet.length > 0 ? (
+        <Button
+          medium
+          text="Add Item"
+          onClick={() => isAddingItem(!addingItem)}
+        />
+      ) : (
+        <div className="text-subtitle-18 center-all" style={{flexDirection: "column", marginTop: "100px"}}>
+          <div style={{marginBottom: "16px"}}>
+            <span>Begin by <strong>adding items</strong> to the <strong>timesheet.</strong></span>
+          </div>
+          <div>
+            <Button
+              large
+              text="Add Item"
+              onClick={() => isAddingItem(!addingItem)}
+            />
+          </div>
         </div>
       )}
-      <Button
-        medium
-        text="Add Item"
-        onClick={() => isAddingItem(!addingItem)}
-      />
 
       {/* Add item to timesheet */}
       {addingItem ? (
