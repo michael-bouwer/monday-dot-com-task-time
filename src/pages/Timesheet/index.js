@@ -103,15 +103,15 @@ function GetTimesheet({ data }) {
     setSummaries(getSums());
   }
 
-  function removeItemFromTimesheet(itemToDelete){
+  function removeItemFromTimesheet(itemToDelete) {
     let arr = timesheet;
     arr.map((item, index) => {
-      if(item.id === itemToDelete.id){
+      if (item.id === itemToDelete.id) {
         arr.splice(index, 1);
       }
     });
-    _currentTimesheet(null);  //for some reason, setting a Reactive Var as an array doesn't immediately trigger an update.
-    _currentTimesheet(arr);   //there fore, setting it to NULL then assign array forces a re-render.
+    _currentTimesheet(null); //for some reason, setting a Reactive Var as an array doesn't immediately trigger an update.
+    _currentTimesheet(arr); //there fore, setting it to NULL then assign array forces a re-render.
     setSummaries(getSums());
   }
 
@@ -167,22 +167,33 @@ function GetTimesheet({ data }) {
                           ></div>
                           <span>{item.name}</span>
                         </div>
-                        <span className="delete" onClick={() => {
-                          monday.execute("confirm", {
-                            message: "Are you sure you'd like to remove this item from your timesheet?",
-                            confirm: "Let's go!",
-                            cancelButton: "No way",
-                            excludeCancelButton: false
-                          }).then((res) => {
-                            if(res.data.confirm === true){
-                              removeItemFromTimesheet(item);
-                            }
-                          })
-                        }}>remove</span>
+                        <span
+                          className="delete"
+                          onClick={() => {
+                            monday
+                              .execute("confirm", {
+                                message:
+                                  "Are you sure you'd like to remove this item from your timesheet?",
+                                confirm: "Let's go!",
+                                cancelButton: "No way",
+                                excludeCancelButton: false,
+                              })
+                              .then((res) => {
+                                if (res.data.confirm === true) {
+                                  removeItemFromTimesheet(item);
+                                }
+                              });
+                          }}
+                        >
+                          remove
+                        </span>
                       </div>
                     </td>
                     <td
                       className="text-center time-capture Mon"
+                      onFocus={(e) => {
+                        e.target.click();
+                      }}
                       onClick={() => {
                         if (!editingMonday) {
                           setEditingMonday(true);
@@ -190,6 +201,7 @@ function GetTimesheet({ data }) {
                           setEditingText(item.timeCaptureForDaysOfWeek[0]);
                         }
                       }}
+                      tabIndex={1}
                     >
                       {editingMonday === true && editingItem === item ? (
                         <input
@@ -212,13 +224,22 @@ function GetTimesheet({ data }) {
                               e.currentTarget.blur();
                             }
                           }}
+                          tabIndex={1}
                         ></input>
                       ) : (
                         <span>{item.timeCaptureForDaysOfWeek[0]}</span>
                       )}
                     </td>
-                    <td className="text-center time-capture Tue">0.0</td>
-                    <td className="text-center time-capture Wed">0.0</td>
+                    <td
+                      className="text-center time-capture Tue"
+                      tabIndex={2}
+                      onBlur={() => console.log("test")}
+                    >
+                      0.0
+                    </td>
+                    <td className="text-center time-capture Wed" tabIndex={3}>
+                      0.0
+                    </td>
                     <td className="text-center time-capture Thu">0.0</td>
                     <td className="text-center time-capture Fri">0.0</td>
                     <td className="text-center time-capture Sat">0.0</td>
@@ -251,9 +272,15 @@ function GetTimesheet({ data }) {
           onClick={() => isAddingItem(!addingItem)}
         />
       ) : (
-        <div className="text-subtitle-18 center-all" style={{flexDirection: "column", marginTop: "100px"}}>
-          <div style={{marginBottom: "16px"}}>
-            <span>Begin by <strong>adding items</strong> to the <strong>timesheet.</strong></span>
+        <div
+          className="text-subtitle-18 center-all"
+          style={{ flexDirection: "column", marginTop: "100px" }}
+        >
+          <div style={{ marginBottom: "16px" }}>
+            <span>
+              Begin by <strong>adding items</strong> to the{" "}
+              <strong>timesheet.</strong>
+            </span>
           </div>
           <div>
             <Button
