@@ -117,14 +117,16 @@ function GetTimesheet({ data }) {
                 return (
                   <tr key={item.id}>
                     <td className="item-text">
-                      <div className="center-all">
-                        <div
-                          className="group-color"
-                          style={{ backgroundColor: item.group.color }}
-                        ></div>
-                        <span>{item.name}</span>
+                      <div className="center-all justify-content-between">
+                        <div className="center-all">
+                          <div
+                            className="group-color"
+                            style={{ backgroundColor: item.group.color }}
+                          ></div>
+                          <span>{item.name}</span>
+                        </div>
+                        <span className="delete">remove</span>
                       </div>
-                      <p className="delete">-</p>
                     </td>
                     <td
                       ref={Mon}
@@ -158,16 +160,13 @@ function GetTimesheet({ data }) {
               </tr>
             </tfoot>
           </>
-        ) : (
-          <tbody>
-            <tr>
-              <td colSpan={9}>
-                <p>no items</p>
-              </td>
-            </tr>
-          </tbody>
-        )}
+        ) : null}
       </Table>
+      {timesheet && timesheet.length > 0 ? null : (
+        <div className="font-italic text-paragraph-16 mb-4 center-all">
+          <span>No items loaded for this timesheet</span>
+        </div>
+      )}
       <Button
         medium
         text="Add Item"

@@ -19,11 +19,13 @@
   .time-capture {
     font-style: italic;
     width: calc(40% / 8);
+    box-sizing: border-box;
   }
 
   .item-text {
-    display: flex;
-    justify-content: space-between;
+    box-sizing: border-box;
+    // display: flex;
+    // justify-content: space-between;
 
     .delete {
       display: none;
@@ -41,18 +43,21 @@
     font-size: 16px;
     font-weight: 300;
   }
-
-  tr:last-child {
-    .time-capture {
-      border-bottom: 1px solid gray;
-    }
-  }
-  .summary{
+  .summary {
     border-bottom: 1px solid gray;
+  }
+
+  thead {
+    th{
+      border: unset;
+    }
   }
 
   tbody {
     tr {
+      &:first-child{
+        border: unset;
+      }
       &:hover {
         .time-capture {
           background-color: lightyellow;
@@ -67,18 +72,35 @@
         }
         .delete {
           display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 2px 8px;
+          font-size: .6em;
+          background-color: tomato;
+          border-radius: 4px;
+          color: white;    
+          margin: 0 16px;      
+
+          &:hover{
+            background-color: red;
+            cursor: pointer;
+          }
         }
       }
 
       td {
         border-left: 1px solid gainsboro;
+        border-top: unset;
+        border-bottom: 1px solid gainsboro;
+        &:first-child {
+          border-left: unset;
+        }
         input {
           width: 40px;
         }
       }
       td:last-child {
         background-color: unset;
-        // border-bottom: unset;
       }
     }
   }
@@ -86,6 +108,10 @@
   tfoot td {
     font-weight: 600;
   }
+}
+
+tr, td{
+  box-sizing: border-box;
 }
 
 .add-items {
