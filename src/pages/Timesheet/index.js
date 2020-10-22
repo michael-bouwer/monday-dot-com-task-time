@@ -46,6 +46,22 @@ function GetTimesheet({ data }) {
   const timesheet = useReactiveVar(_currentTimesheet);
   const [loading, setLoading] = useState(true);
   const [addingItem, isAddingItem] = useState(false);
+  const [editingMonday, setEditingMonday] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const [editingText, setEditingText] = useState("");
+  // const [summaries, setSummaries] = useState(() => {
+  //   let sums = [];
+  //   if (timesheet && timesheet.length > 0){ //valid timesheet, calculate sums
+  //     timesheet.map((item) => {
+  //       sums.push
+  //       item.timeCaptureForDaysOfWeek.map((dayOfWeek) => {
+
+  //       })
+  //     })
+  //   } else { //timesheet invlaid, initialize to zero
+  //     return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  //   }
+  // })
 
   //Grid refs
   const Mon = useRef(null);
@@ -86,6 +102,17 @@ function GetTimesheet({ data }) {
       });
   };
 
+  function saveTimeItem(time, timeItem, index) {
+    debugger;
+    var arr = timesheet;
+    arr.map((item) => {
+      if (item.id === timeItem.id) {
+        item.timeCaptureForDaysOfWeek[index] = time;
+      }
+    });
+    _currentTimesheet(arr);
+  }
+
   useEffect(() => {
     setLoading(true);
     getTimesheetForWeek();
@@ -99,14 +126,14 @@ function GetTimesheet({ data }) {
         <thead>
           <tr>
             <th className="item-head">Item</th>
-            <th className="text-center time-capture">Mon</th>
-            <th className="text-center time-capture">Tue</th>
-            <th className="text-center time-capture">Wed</th>
-            <th className="text-center time-capture">Thu</th>
-            <th className="text-center time-capture">Fri</th>
-            <th className="text-center time-capture">Sat</th>
-            <th className="text-center time-capture">Sun</th>
-            <th className="text-center time-capture">Aggr.</th>
+            <th className="text-center time-capture-head">Mon</th>
+            <th className="text-center time-capture-head">Tue</th>
+            <th className="text-center time-capture-head">Wed</th>
+            <th className="text-center time-capture-head">Thu</th>
+            <th className="text-center time-capture-head">Fri</th>
+            <th className="text-center time-capture-head">Sat</th>
+            <th className="text-center time-capture-head">Sun</th>
+            <th className="text-center time-capture-head">Aggr.</th>
           </tr>
         </thead>
 
@@ -129,11 +156,40 @@ function GetTimesheet({ data }) {
                       </div>
                     </td>
                     <td
-                      ref={Mon}
                       className="text-center time-capture Mon"
-                      onClick={() => console.log(Mon)}
+                      onClick={() => {
+                        if (!editingMonday) {
+                          setEditingMonday(true);
+                          setEditingItem(item);
+                          setEditingText(item.timeCaptureForDaysOfWeek[0]);
+                        }
+                      }}
                     >
-                      <span>0.0</span>
+                      {editingMonday === true && editingItem === item ? (
+                        <input
+                          ref={Mon}
+                          className="time-input"
+                          value={editingText}
+                          onBlur={() => {
+                            saveTimeItem(editingText, item, 0);
+                            setEditingMonday(false);
+                            setEditingItem(null);
+                            setEditingText("");
+                          }}
+                          onFocus={(e) => {
+                            e.target.select();
+                          }}
+                          autoFocus
+                          onChange={(e) => setEditingText(e.target.value)}
+                          onKeyPress={(e) => {
+                            if(e.key === 'Enter'){
+                              e.currentTarget.blur();
+                            }
+                          }}
+                        ></input>
+                      ) : (
+                        <span>{item.timeCaptureForDaysOfWeek[0]}</span>
+                      )}
                     </td>
                     <td className="text-center time-capture Tue">0.0</td>
                     <td className="text-center time-capture Wed">0.0</td>

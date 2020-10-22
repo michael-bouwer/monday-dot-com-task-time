@@ -15,6 +15,13 @@
   .item-head {
     font-style: italic;
     width: 60%;
+    border: unset;
+  }
+  .time-capture-head {
+    font-style: italic;
+    width: calc(40% / 8);
+    box-sizing: border-box;
+    border:unset;
   }
   .time-capture {
     font-style: italic;
@@ -36,6 +43,7 @@
       border-radius: 100%;
       margin-right: 8px;
       box-sizing: border-box;
+      display: table;
     }
   }
 
@@ -48,14 +56,15 @@
   }
 
   thead {
-    th{
+      tr {
+        border-bottom: 1px solid gray;
+      }
       border: unset;
-    }
   }
 
   tbody {
     tr {
-      &:first-child{
+      &:first-child {
         border: unset;
       }
       &:hover {
@@ -75,13 +84,13 @@
           justify-content: center;
           align-items: center;
           padding: 2px 8px;
-          font-size: .6em;
+          font-size: 0.6em;
           background-color: tomato;
           border-radius: 4px;
-          color: white;    
-          margin: 0 16px;      
+          color: white;
+          margin: 0 16px;
 
-          &:hover{
+          &:hover {
             background-color: red;
             cursor: pointer;
           }
@@ -96,7 +105,11 @@
           border-left: unset;
         }
         input {
-          width: 40px;
+          width: 100%;
+          font-size: 0.8em;
+          height: 1.8em;
+          text-align: center;
+          margin: 0;
         }
       }
       td:last-child {
@@ -110,7 +123,8 @@
   }
 }
 
-tr, td{
+tr,
+td {
   box-sizing: border-box;
 }
 

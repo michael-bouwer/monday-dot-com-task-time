@@ -82,7 +82,7 @@ function AddItemToTimesheet({ close }) {
         title: item.group.title,
         color: item.group.color,
       },
-      timeCaptureForDaysOfWeek: null,
+      timeCaptureForDaysOfWeek: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     };
 
     let found = false;
