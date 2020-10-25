@@ -3,6 +3,7 @@ import { useQuery, useReactiveVar } from "@apollo/client";
 import { Row, Col } from "react-bootstrap";
 import WorkIcon from "@material-ui/icons/Work";
 import Tooltip from "@material-ui/core/Tooltip";
+import TextField from "@material-ui/core/TextField";
 import moment from "moment";
 import "./styles.scss";
 
@@ -19,9 +20,20 @@ function Header() {
     <div className="custom-header">
       <Row>
         <Col>
-          <p className="text-main-32 bold">Timesheet for week:</p>
+          <p className="text-main-32 bold">My Timesheets</p>
           <div>
-            <p className="text-subtitle-18">{getDateRange()}</p>
+            {/* <p className="text-subtitle-18">{getDateRange()}</p> */}
+            <form noValidate>
+              <TextField
+                id="date"
+                // label="Timesheet Period"
+                type="week"
+                defaultValue="2017-05-24"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </form>
           </div>
         </Col>
         {loading ? null : (

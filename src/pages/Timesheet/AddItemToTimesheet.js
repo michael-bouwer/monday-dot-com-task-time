@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
+import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
@@ -46,7 +47,7 @@ function AddItemToTimesheet({ close }) {
         }
       }}
     >
-      <div className="modal">
+      <Box boxShadow={3} className="modal">
         <div>
           <span className="text-secondary-sub-24">
             Select items to add to your Timesheet.
@@ -57,7 +58,7 @@ function AddItemToTimesheet({ close }) {
           <Button small tertiary text="Cancel" onClick={() => close()} />
           <Button small text="Add to Timesheet" onClick={() => save()} />
         </div>
-      </div>
+      </Box>
     </div>
   );
 
@@ -76,7 +77,7 @@ function AddItemToTimesheet({ close }) {
             key={group.id}
             style={{ borderLeft: `8px solid ${group.color}` }}
           >
-            {group.title}
+            <strong>{group.title}</strong>
           </AccordionSummary>
           <AccordionDetails
             style={{ flexDirection: "column", backgroundColor: "#fafafa" }}

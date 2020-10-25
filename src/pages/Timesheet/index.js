@@ -261,7 +261,12 @@ function GetTimesheet({ data }) {
             <tfoot>
               <tr>
                 <td colSpan={1}></td>
-                <td className="text-center summary">{summaries[0]}</td>
+                <td
+                  className="text-center summary"
+                  style={{ color: parseFloat(summaries[0]) > 24 ? "red" : "" }} //mark value red - totals hours for 1 day cannot exceed 24.
+                >
+                  {summaries[0]}
+                </td>
                 <td className="text-center summary">0.0</td>
                 <td className="text-center summary">0.0</td>
                 <td className="text-center summary">0.0</td>

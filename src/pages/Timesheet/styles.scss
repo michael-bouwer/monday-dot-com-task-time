@@ -124,9 +124,10 @@
         }
         input {
           width: 100%;
-          height: inherit;
+          height: 75%;
           text-align: center;
           margin: 0;
+          padding: 0;
           outline: none;
 
           &:active{
@@ -162,7 +163,7 @@ td {
     position: relative;
     display: flex;
     flex-direction: column;
-    background-color: whitesmoke;
+    background-color: white;
     width: 600px;
     height: 80vh;
     margin: 0 auto;
