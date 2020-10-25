@@ -1,3 +1,5 @@
+@import "../../styles/variables";
+
 .timesheet {
   margin-top: 40px;
 
@@ -33,6 +35,18 @@
     box-sizing: border-box;
     // display: flex;
     // justify-content: space-between;
+
+    .item-name{
+      max-width: 40vw;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover{
+        color: $text-link;
+        cursor: pointer;
+      }
+    }
 
     .delete {
       display: none;
@@ -140,22 +154,26 @@ td {
     position: relative;
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: whitesmoke;
     width: 600px;
     height: 400px;
     margin: 0 auto;
     top: calc((100vh - 98px) / 2 - 200px);
     border-radius: 4px;
-    padding: 16px;
+    padding: 8px;
 
     .modal-items {
       overflow-y: scroll;
       height: 100%;
       margin-bottom: 12px;
+      padding: 8px;
 
       .item {
+        border-bottom: 1px solid gainsboro;
+        border-radius: 4px;
+        padding: 2px 4px;
         &:hover {
-          background-color: lightgray;
+          background-color: lightcyan;
           cursor: pointer;
         }
       }

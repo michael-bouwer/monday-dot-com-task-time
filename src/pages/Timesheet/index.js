@@ -165,7 +165,17 @@ function GetTimesheet({ data }) {
                             className="group-color"
                             style={{ backgroundColor: item.group.color }}
                           ></div>
-                          <span>{item.name}</span>
+                          <span
+                            className="item-name"
+                            onClick={() => {
+                              debugger;
+                              monday.execute("openItemCard", {
+                                itemId: item.id,
+                              });
+                            }}
+                          >
+                            {item.name}
+                          </span>
                         </div>
                         <span
                           className="delete"
@@ -174,13 +184,18 @@ function GetTimesheet({ data }) {
                               .execute("confirm", {
                                 message:
                                   "Are you sure you'd like to remove this item from your timesheet?",
-                                confirm: "Let's go!",
+                                confirmButton: "Let's go!",
                                 cancelButton: "No way",
                                 excludeCancelButton: false,
                               })
                               .then((res) => {
                                 if (res.data.confirm === true) {
                                   removeItemFromTimesheet(item);
+                                  monday.execute("notice", {
+                                    message: "Item removed.",
+                                    type: "success", // or "error" (red), or "info" (blue)
+                                    timeout: 4000,
+                                  });
                                 }
                               });
                           }}
