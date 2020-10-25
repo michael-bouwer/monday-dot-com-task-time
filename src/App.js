@@ -12,8 +12,10 @@ import { _currentBoard, _currentTimesheet } from "./globals/variables";
 
 import LandingScreen from "./pages/LandingScreen";
 import Timesheet from "./pages/Timesheet";
+import Header from "./components/Header";
 
 const monday = mondaySdk();
+
 _currentBoard([0]);
 _currentTimesheet([]);
 
@@ -82,6 +84,7 @@ class App extends React.Component {
     return (
       <ApolloProvider client={client}>
         <div className="App">
+          <Header />
           <Timesheet />
           {/* <LandingScreen key={this.state.triggerEvent} /> */}
         </div>

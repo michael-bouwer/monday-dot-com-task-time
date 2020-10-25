@@ -1,7 +1,7 @@
 @import "../../styles/variables";
 
 .timesheet {
-  margin-top: 40px;
+  // margin-top: 40px;
 
   .get-timesheet {
     height: 200px;
@@ -58,6 +58,10 @@
       margin-right: 8px;
       box-sizing: border-box;
       display: table;
+
+      &:hover{
+        cursor: pointer;
+      }
     }
   }
 
@@ -120,10 +124,14 @@
         }
         input {
           width: 100%;
-          font-size: 0.8em;
-          height: 1.8em;
+          height: inherit;
           text-align: center;
           margin: 0;
+          outline: none;
+
+          &:active{
+            outline: none;
+          }
         }
       }
       td:last-child {
@@ -143,12 +151,12 @@ td {
 }
 
 .add-items {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   background-color: RGBA(0, 0, 0, 0.5);
   width: 100%;
-  height: calc(100vh - 98px);
+  height: calc(100vh);
 
   .modal {
     position: relative;
@@ -156,9 +164,9 @@ td {
     flex-direction: column;
     background-color: whitesmoke;
     width: 600px;
-    height: 400px;
+    height: 80vh;
     margin: 0 auto;
-    top: calc((100vh - 98px) / 2 - 200px);
+    top: calc((100vh) / 2 - 40vh);
     border-radius: 4px;
     padding: 8px;
 

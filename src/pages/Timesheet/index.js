@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { Col, Row, Spinner, Table } from "react-bootstrap";
+import Tooltip from "@material-ui/core/Tooltip";
 import "./styles.scss";
 import moment from "moment";
 import mondaySdk from "monday-sdk-js";
@@ -23,14 +24,6 @@ function Timesheet() {
   if (error) return <p>error</p>;
   return (
     <div className="timesheet">
-      <Row>
-        <Col>
-          <p className="text-main-32 bold">Timesheet for week:</p>
-          <div>
-            <p className="text-subtitle-18">{getDateRange()}</p>
-          </div>
-        </Col>
-      </Row>
       <Row>
         <Col>
           <Row className="get-timesheet">
@@ -91,7 +84,6 @@ function GetTimesheet({ data }) {
   };
 
   function saveTimeItem(time, timeItem, index) {
-    debugger;
     let arr = timesheet;
     let sums;
     arr.map((item) => {
@@ -155,16 +147,18 @@ function GetTimesheet({ data }) {
         {timesheet && timesheet.length > 0 ? (
           <>
             <tbody>
-              {timesheet.map((item) => {
+              {timesheet.map((item, index) => {
                 return (
                   <tr key={item.id}>
                     <td className="item-text">
                       <div className="center-all justify-content-between">
                         <div className="center-all">
-                          <div
-                            className="group-color"
-                            style={{ backgroundColor: item.group.color }}
-                          ></div>
+                          <Tooltip title={item.group.title} placement="right">
+                            <div
+                              className="group-color"
+                              style={{ backgroundColor: item.group.color }}
+                            ></div>
+                          </Tooltip>
                           <span
                             className="item-name"
                             onClick={() => {
@@ -184,7 +178,7 @@ function GetTimesheet({ data }) {
                               .execute("confirm", {
                                 message:
                                   "Are you sure you'd like to remove this item from your timesheet?",
-                                confirmButton: "Let's go!",
+                                confirmButton: "Yes!",
                                 cancelButton: "No way",
                                 excludeCancelButton: false,
                               })
@@ -312,19 +306,6 @@ function GetTimesheet({ data }) {
         <AddItemToTimeheet close={() => isAddingItem(false)} />
       ) : null}
     </div>
-  );
-}
-
-function getDateRange(inputDate) {
-  var currentDate = moment();
-  var weekStart = currentDate.clone().startOf("isoWeek");
-  var weekEnd = currentDate.clone().endOf("isoWeek");
-
-  return (
-    weekStart.format("Do MMM") +
-    " - " +
-    weekEnd.format("Do MMM") +
-    " (Monday - Sunday)"
   );
 }
 

@@ -47,6 +47,11 @@ function AddItemToTimesheet({ close }) {
       }}
     >
       <div className="modal">
+        <div>
+          <span className="text-secondary-sub-24">
+            Select items to add to your Timesheet.
+          </span>
+        </div>
         <div className="modal-items">{getListOfItemsNotInTimesheet(data)}</div>
         <div className="actions">
           <Button small tertiary text="Cancel" onClick={() => close()} />
@@ -73,7 +78,9 @@ function AddItemToTimesheet({ close }) {
           >
             {group.title}
           </AccordionSummary>
-          <AccordionDetails style={{ flexDirection: "column", backgroundColor: "#fafafa" }}>
+          <AccordionDetails
+            style={{ flexDirection: "column", backgroundColor: "#fafafa" }}
+          >
             {filteredItems.map((item) => {
               let found = false;
               if (currentTimesheet && currentTimesheet.length > 0) {
@@ -131,9 +138,6 @@ function AddItemToTimesheet({ close }) {
   }
 
   function save() {
-    var arr = currentTimesheet;
-    arr.concat(newTimesheetItems);
-    console.log(currentTimesheet, newTimesheetItems, arr);
     _currentTimesheet([...currentTimesheet, ...newTimesheetItems]);
     close();
   }

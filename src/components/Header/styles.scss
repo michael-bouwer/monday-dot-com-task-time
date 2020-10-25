@@ -1,0 +1,30 @@
+@import '../../styles/variables';
+
+.custom-header{
+    padding: 40px 0;
+    background-color: whitesmoke;
+
+
+    .nav-buttons{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    //Icons
+    .timesheet-icon{
+        padding: 4px;
+        border-radius: 4px;
+        border: 1px solid gray;
+        display: block;
+    }
+
+
+    .timesheet-icon{
+        &:hover{
+            background-color: $primary-button-hover;
+            border-color: $primary-button-hover;
+            color: white;
+            cursor: pointer;
+        }
+    }
+}
