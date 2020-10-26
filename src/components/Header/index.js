@@ -6,10 +6,13 @@ import Tooltip from "@material-ui/core/Tooltip";
 import TextField from "@material-ui/core/TextField";
 import moment from "moment";
 import "./styles.scss";
+import mondaySdk from "monday-sdk-js";
 
 //Custom
 import queries from "../../api";
 import { _currentBoard, _currentTimesheet } from "../../globals/variables";
+
+const monday = mondaySdk();
 
 function Header() {
   const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
@@ -41,6 +44,22 @@ function Header() {
             <span className="text-text-subtitle-18">
               Hello, <strong>{data.me.name}</strong>
             </span>
+            <button
+              onClick={() => {
+                // TEMP FUNCTIONS TO RESET INSTANCE DB:
+                monday.storage.instance
+                  .setItem("timesheet_" + data.me.id + "_", JSON.stringify([]))
+                  .then((res) => {
+                    if (res.data.success) {
+                      console.log("db instance reset: timesheet");
+                      _currentTimesheet([]);
+                    } else console.log("db reset failed: timesheet");
+                  });
+                // ------------------------------------
+              }}
+            >
+              reset db instance
+            </button>
             <div className="nav-buttons">
               <Tooltip title="My Timesheet">
                 <div className="timesheet-icon">

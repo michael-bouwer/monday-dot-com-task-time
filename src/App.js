@@ -60,18 +60,6 @@ class App extends React.Component {
       _currentBoard(res.data.boardIds[0]);
     });
 
-    /*monday.storage.instance.getItem("campaigns").then((res) => {
-      const { value, version } = res.data;
-      console.log(value);
-      //sleep(10000); // someone may overwrite serialKey during this time
-
-      monday.storage.instance
-        .setItem("test", { previous_version: version })
-        .then((res) => {
-          console.log(res);
-        });
-    });*/
-
     var callback = (res) => {
       /*this.setState({
         triggerEvent: res.data,
