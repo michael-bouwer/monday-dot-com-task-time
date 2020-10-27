@@ -11,7 +11,7 @@ import queries from "../../api";
 import { _currentBoard, _currentTimesheet } from "../../globals/variables";
 import Button from "../../components/Button";
 import AddItemToTimeheet from "./AddItemToTimesheet";
-import { ReactComponent as LoadingIcon } from "../../assets/svg/loading.svg";
+import Loading from "../../components/Loading";
 
 const monday = mondaySdk();
 
@@ -21,12 +21,7 @@ function Timesheet() {
     variables: { ids: _currentBoard() },
   });
 
-  if (loading)
-    return (
-      <div className="center-all" style={{ paddingTop: "44px" }}>
-        <LoadingIcon width="100px" height="100px" />.
-      </div>
-    );
+  if (loading) return <Loading text="sifting through all the items from the main board. Adding extra text to test modal sizing..." />;
   if (error) return <p>error</p>;
   return <GetTimesheet data={data} />;
 }
@@ -66,8 +61,8 @@ function GetTimesheet({ data }) {
       .setItem("timesheet_" + data.me.id + "_", JSON.stringify(timesheet))
       .then((res) => {
         console.log(res);
-      })      
-  }
+      });
+  };
 
   function saveTimeItem(time, timeItem, index) {
     let arr = timesheet;
@@ -113,12 +108,7 @@ function GetTimesheet({ data }) {
     getSums();
   }, []);
 
-  if (loading)
-    return (
-      <div className="center-all" style={{ paddingTop: "44px" }}>
-        <LoadingIcon width="100px" height="100px" />.
-      </div>
-    );
+  if (loading) return <Loading text="loading timesheet" />;
 
   return (
     <div className="timesheet">

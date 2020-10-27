@@ -23,7 +23,7 @@
     font-style: italic;
     width: calc(40% / 8);
     box-sizing: border-box;
-    border:unset;
+    border: unset;
   }
   .time-capture {
     font-style: italic;
@@ -38,13 +38,13 @@
     // justify-content: space-between;
     vertical-align: middle;
 
-    .item-name{
+    .item-name {
       max-width: 40vw;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
 
-      &:hover{
+      &:hover {
         color: $text-link;
         cursor: pointer;
       }
@@ -61,7 +61,7 @@
       box-sizing: border-box;
       display: table;
 
-      &:hover{
+      &:hover {
         cursor: pointer;
       }
     }
@@ -77,10 +77,10 @@
   }
 
   thead {
-      tr {
-        border-bottom: 1px solid gray;                
-      }
-      border: unset;
+    tr {
+      border-bottom: 1px solid gray;
+    }
+    border: unset;
   }
 
   tbody {
@@ -134,7 +134,7 @@
           padding: 0;
           outline: none;
 
-          &:active{
+          &:active {
             outline: none;
           }
         }
@@ -153,14 +153,14 @@
 tr,
 td {
   box-sizing: border-box;
-  height: 2.5em;  
+  height: 2.5em;
 }
 
 .add-items {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: RGBA(0, 0, 0, 0.5);
+  background-color: rgba($modal-background, 0.8);
   width: 100%;
   height: calc(100vh);
 
@@ -175,12 +175,16 @@ td {
     top: calc((100vh) / 2 - 40vh);
     border-radius: 4px;
     padding: 8px;
+    box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+      0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+      0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+      0 100px 80px rgba(0, 0, 0, 0.12);
 
     .modal-items {
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 100%;
       margin-bottom: 12px;
-      padding: 8px;
+      padding: 8px 24px;
 
       .item {
         border-bottom: 1px solid gainsboro;

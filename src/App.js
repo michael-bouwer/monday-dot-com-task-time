@@ -8,7 +8,12 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import mondaySdk from "monday-sdk-js";
-import { _currentBoard, _currentTimesheet } from "./globals/variables";
+import {
+  _currentBoard,
+  _currentTimesheet,
+  _currentComponent,
+  _pages,
+} from "./globals/variables";
 
 import LandingScreen from "./pages/LandingScreen";
 import Timesheet from "./pages/Timesheet";
@@ -51,6 +56,8 @@ class App extends React.Component {
       name: "",
       triggerEvent: null,
     };
+
+    _currentComponent(_pages.TIMESHEET);
   }
 
   componentDidMount() {
@@ -73,11 +80,17 @@ class App extends React.Component {
       <ApolloProvider client={client}>
         <div className="App">
           <Header />
-          <Timesheet />
+          {renderSelectedComponent()}
           {/* <LandingScreen key={this.state.triggerEvent} /> */}
         </div>
       </ApolloProvider>
     );
+  }
+}
+
+function renderSelectedComponent() {
+  if (_currentComponent() === _pages.TIMESHEET) {
+    return <Timesheet />;
   }
 }
 

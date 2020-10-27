@@ -1,7 +1,10 @@
 import React from "react";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { Row, Col } from "react-bootstrap";
-import WorkIcon from "@material-ui/icons/Work";
+import TocRoundedIcon from '@material-ui/icons/TocRounded';
+import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
+import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
+import PrintRoundedIcon from '@material-ui/icons/PrintRounded';
 import Tooltip from "@material-ui/core/Tooltip";
 import TextField from "@material-ui/core/TextField";
 import moment from "moment";
@@ -10,7 +13,7 @@ import mondaySdk from "monday-sdk-js";
 
 //Custom
 import queries from "../../api";
-import { _currentBoard, _currentTimesheet } from "../../globals/variables";
+import { _currentBoard, _currentTimesheet, _currentComponent, _pages } from "../../globals/variables";
 
 const monday = mondaySdk();
 
@@ -19,6 +22,9 @@ function Header() {
     fetchPolicy: "network-only",
     variables: { ids: _currentBoard() },
   });
+
+  const selectedPage = _currentComponent();
+  
   return (
     <div className="custom-header">
       <Row>
@@ -61,9 +67,28 @@ function Header() {
               reset db instance
             </button>
             <div className="nav-buttons">
+              
+              <Tooltip title="Component A">
+                <div className={`timesheet-icon ${ selectedPage === _pages.COMPONENTA ? "selected" : ""}`} onClick={() => _currentComponent(_pages.COMPONENTA)}>
+                  <EqualizerRoundedIcon />
+                </div>
+              </Tooltip>
+              
+              <Tooltip title="Component B">
+                <div className={`timesheet-icon ${ selectedPage === _pages.COMPONENTB ? "selected" : ""}`} onClick={() => _currentComponent(_pages.COMPONENTB)}>
+                  <PeopleAltRoundedIcon />
+                </div>
+              </Tooltip>
+              
+              <Tooltip title="Component C">
+                <div className={`timesheet-icon ${ selectedPage === _pages.COMPONENTC ? "selected" : ""}`} onClick={() => _currentComponent(_pages.COMPONENTC)}>
+                  <PrintRoundedIcon />
+                </div>
+              </Tooltip>
+              
               <Tooltip title="My Timesheet">
-                <div className="timesheet-icon">
-                  <WorkIcon />
+                <div className={`timesheet-icon ${ selectedPage === _pages.TIMESHEET ? "selected" : ""}`} onClick={() => _currentComponent(_pages.TIMESHEET)}>
+                  <TocRoundedIcon />
                 </div>
               </Tooltip>
             </div>

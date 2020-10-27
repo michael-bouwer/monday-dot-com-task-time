@@ -7,6 +7,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import mondaySdk from "monday-sdk-js";
 
 //Custom
 import queries from "../../api";
@@ -14,6 +15,8 @@ import { _currentBoard, _currentTimesheet } from "../../globals/variables";
 import Button from "../../components/Button";
 import "./styles.scss";
 import { Save } from "@material-ui/icons";
+
+const monday = mondaySdk();
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,9 +50,12 @@ function AddItemToTimesheet({ close }) {
         }
       }}
     >
-      <Box boxShadow={3} className="modal">
+      <Box className="modal">
         <div>
-          <span className="text-secondary-sub-24">
+          <span
+            className="text-secondary-sub-24"
+            style={{ padding: "24px 24px", display: "block" }}
+          >
             Select items to add to your Timesheet.
           </span>
         </div>
@@ -67,52 +73,62 @@ function AddItemToTimesheet({ close }) {
     let filteredItems = fromData.boards[0].items;
     let groups = fromData.boards[0].groups;
 
-    groups.map((group) => {
-      list.push(
-        <Accordion key={group.id}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            key={group.id}
-            style={{ borderLeft: `8px solid ${group.color}` }}
-          >
-            <strong>{group.title}</strong>
-          </AccordionSummary>
-          <AccordionDetails
-            style={{ flexDirection: "column", backgroundColor: "#fafafa" }}
-          >
-            {filteredItems.map((item) => {
-              let found = false;
-              if (currentTimesheet && currentTimesheet.length > 0) {
-                currentTimesheet.map((timesheetItem, timesheetIndex) => {
-                  if (timesheetItem.id === item.id) {
-                    //filteredItems = filteredItems.splice(index, 1);
-                    found = true;
-                  }
-                });
-              }
+    if (filteredItems && filteredItems.length > 0) {
+      groups.map((group) => {
+        let itemsCount = 0;
+        list.push(
+          <Accordion key={group.id}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              key={group.id}
+              style={{ borderLeft: `8px solid ${group.color}` }}
+            >
+              <span>{group.title}</span>
+            </AccordionSummary>
+            <AccordionDetails style={{ flexDirection: "column" }}>
+              {filteredItems.map((item) => {
+                let found = false;
+                if (currentTimesheet && currentTimesheet.length > 0) {
+                  currentTimesheet.map((timesheetItem, timesheetIndex) => {
+                    if (timesheetItem.id === item.id) {
+                      //filteredItems = filteredItems.splice(index, 1);
+                      found = true;
+                    }
+                  });
+                }
 
-              if (item.group.id === group.id && !found) {
-                return (
-                  <div
-                    key={item.id}
-                    onClick={(e) => {
-                      e.currentTarget.style.backgroundColor = "lightblue";
-                      addToTimesheet(item);
-                    }}
-                    className="item"
-                  >
-                    <span>{item.name}</span>
-                  </div>
-                );
-              }
-            })}
-          </AccordionDetails>
-        </Accordion>
-      );
-    });
-    return list;
+                if (item.group.id === group.id && !found) {
+                  itemsCount += 1;
+                  return (
+                    <div
+                      key={item.id}
+                      onClick={(e) => {
+                        e.currentTarget.style.backgroundColor = "lightblue";
+                        addToTimesheet(item);
+                      }}
+                      className="item"
+                    >
+                      <span>{item.name}</span>
+                    </div>
+                  );
+                }
+              })}
+            </AccordionDetails>
+          </Accordion>
+        );
+        if (itemsCount === 0) list.pop(); //Remove group from list if there all items are already on the timesheet.
+      });
+      return list;
+    } else {
+      monday.execute("notice", {
+        message: "There are no items on your board.",
+        type: "error", // or "error" (red), or "info" (blue)
+        timeout: 4000,
+      });
+      close();
+    }
   }
 
   function addToTimesheet(item) {
