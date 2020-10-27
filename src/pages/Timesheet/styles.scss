@@ -160,9 +160,10 @@ td {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba($modal-background, 0.8);
+  background-color:rgba(41,47,76,0.7);
   width: 100%;
   height: calc(100vh);
+  transition: all 0.3s ease 0s;
 
   .modal {
     position: relative;
@@ -179,6 +180,10 @@ td {
       0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
       0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
       0 100px 80px rgba(0, 0, 0, 0.12);
+
+    //Monday's box shadow
+    -webkit-box-shadow: rgba(0,0,0,0.7) 0 25px 50px -15px !important;
+    box-shadow: rgba(0,0,0,0.7) 0 25px 50px -15px !important;
 
     .modal-items {
       overflow-y: auto;
