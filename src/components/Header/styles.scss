@@ -1,12 +1,21 @@
 @import "../../styles/variables";
 
 .custom-header {
-  padding: 40px 0;
-  background-color: whitesmoke;
+  padding: 16px 16px;
+  align-items: center;
+
+  .page-name{
+    display: flex;
+    align-items: center;
+
+    .heading{
+      margin-right: 16px;
+    }
+  }
 
   .nav-buttons {
     display: flex;
-    margin: 8px 0;
+    margin-top: 8px;
     justify-content: flex-end;
   }
 
