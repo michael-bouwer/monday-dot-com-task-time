@@ -8,7 +8,7 @@ import mondaySdk from "monday-sdk-js";
 
 //Custom
 import queries from "../../api";
-import { _currentBoard, _currentTimesheet } from "../../globals/variables";
+import { _currentBoard, _currentTimesheet, _loadingMessages } from "../../globals/variables";
 import Button from "../../components/Button";
 import AddItemToTimeheet from "./AddItemToTimesheet";
 import Loading from "../../components/Loading";
@@ -17,11 +17,14 @@ const monday = mondaySdk();
 
 function Timesheet() {
   const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
-    fetchPolicy: "network-only",
+    //fetchPolicy: "network-only",
     variables: { ids: _currentBoard() },
   });
 
-  if (loading) return <Loading text="sifting through all the items from the main board. Adding extra text to test modal sizing..." />;
+  if (loading)
+    return (
+      <Loading text={_loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]} />
+    );
   if (error) return <p>error</p>;
   return <GetTimesheet data={data} />;
 }
@@ -108,7 +111,7 @@ function GetTimesheet({ data }) {
     getSums();
   }, []);
 
-  if (loading) return <Loading text="loading timesheet" />;
+  if (loading) return <Loading text={_loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]} />;
 
   return (
     <div className="timesheet">
@@ -293,7 +296,6 @@ function GetTimesheet({ data }) {
               </Table>
               {timesheet && timesheet.length > 0 ? (
                 <Button
-                  medium
                   text="Add Item"
                   onClick={() => isAddingItem(!addingItem)}
                 />
