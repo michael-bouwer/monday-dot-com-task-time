@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import {
   ApolloProvider,
   ApolloClient,
   createHttpLink,
   InMemoryCache,
+  useReactiveVar,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import mondaySdk from "monday-sdk-js";
@@ -46,51 +47,36 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
+_currentComponent(_pages.TIMESHEET);
 
-    // Default state
-    this.state = {
-      settings: {},
-      name: "",
-      triggerEvent: null,
-    };
+function App() {
+  const selection = useReactiveVar(_currentComponent);
 
-    _currentComponent(_pages.TIMESHEET);
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     // TODO: set up event listeners
     monday.get("context").then((res) => {
       //set global boardId
       _currentBoard(res.data.boardIds[0]);
     });
+  }, []);
 
-    var callback = (res) => {
-      /*this.setState({
-        triggerEvent: res.data,
-      });*/
-    };
-    monday.listen("events", callback);
-  }
+  return (
+    <ApolloProvider client={client}>
+      <div className="App">
+        <Header />
+        {renderSelectedComponent()}
+        {/* <LandingScreen key={this.state.triggerEvent} /> */}
+      </div>
+    </ApolloProvider>
+  );
 
-  render() {
-    return (
-      <ApolloProvider client={client}>
-        <div className="App">
-          <Header />
-          {renderSelectedComponent()}
-          {/* <LandingScreen key={this.state.triggerEvent} /> */}
-        </div>
-      </ApolloProvider>
-    );
-  }
-}
-
-function renderSelectedComponent() {
-  if (_currentComponent() === _pages.TIMESHEET) {
-    return <Timesheet />;
+  function renderSelectedComponent() {
+    debugger;
+    if (selection === _pages.TIMESHEET) {
+      return <Timesheet />;
+    } else {
+      return selection;
+    }
   }
 }
 
