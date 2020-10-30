@@ -22,7 +22,7 @@ function Users() {
   if (error) return <span>something went wrong :(</span>;
 
   return (
-    <div>
+    <div style={{margin: "0 16px"}}>
       <Row xs={2} md={3} lg={4}>
         {data.boards[0].subscribers.map((user) => {
           return (
