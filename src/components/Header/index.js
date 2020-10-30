@@ -32,7 +32,7 @@ function Header() {
   let pageName = "";
   if (selectedPage === _pages.TIMESHEET) pageName = "My Timesheet";
   else if (selectedPage === _pages.COMPONENTA) pageName = "Component A";
-  else if (selectedPage === _pages.COMPONENTB) pageName = "Component B";
+  else if (selectedPage === _pages.USERS) pageName = "All Users";
   else if (selectedPage === _pages.COMPONENTC) pageName = "Component C";
 
   useEffect(() => {
@@ -102,17 +102,6 @@ function Header() {
                 </div>
               </Tooltip>
 
-              <Tooltip title="Component B">
-                <div
-                  className={`timesheet-icon ${
-                    selectedPage === _pages.COMPONENTB ? "selected" : ""
-                  }`}
-                  onClick={() => _currentComponent(_pages.COMPONENTB)}
-                >
-                  <PeopleAltRoundedIcon />
-                </div>
-              </Tooltip>
-
               <Tooltip title="Component C">
                 <div
                   className={`timesheet-icon ${
@@ -121,6 +110,17 @@ function Header() {
                   onClick={() => _currentComponent(_pages.COMPONENTC)}
                 >
                   <PrintRoundedIcon />
+                </div>
+              </Tooltip>
+
+              <Tooltip title="All Users">
+                <div
+                  className={`timesheet-icon ${
+                    selectedPage === _pages.USERS ? "selected" : ""
+                  }`}
+                  onClick={() => _currentComponent(_pages.USERS)}
+                >
+                  <PeopleAltRoundedIcon />
                 </div>
               </Tooltip>
 

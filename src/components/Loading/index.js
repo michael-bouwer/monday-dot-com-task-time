@@ -8,7 +8,7 @@ function Loading({ text }) {
       <div className="modal">
         <LoadingSVG width="100px" height="100px" />
         <div>
-          <span className="text-text-paragraph-16 text">{text}</span>
+          <span className="text-text-paragraph-16 text ">{text}</span>
         </div>
       </div>
     </div>
