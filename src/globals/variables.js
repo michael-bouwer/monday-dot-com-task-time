@@ -11,7 +11,7 @@ export const _currentComponent = makeVar();
 export const _pages = {
   TIMESHEET: "timesheet",
   COMPONENTA: "a",
-  COMPONENTB: "b",
+  USERS: "users",
   COMPONENTC: "c",
 };
 

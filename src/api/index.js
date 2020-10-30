@@ -21,11 +21,13 @@ const queries = {
       me{
         id
         name
+        photo_original
       }
       boards(ids: $ids) {
         subscribers {
           id
           name
+          photo_original
         }
       }
     }

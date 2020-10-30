@@ -18,6 +18,7 @@ import {
 
 import LandingScreen from "./pages/LandingScreen";
 import Timesheet from "./pages/Timesheet";
+import Users from "./pages/Users";
 import Header from "./components/Header";
 
 const monday = mondaySdk();
@@ -71,11 +72,10 @@ function App() {
   );
 
   function renderSelectedComponent() {
-    debugger;
     if (selection === _pages.TIMESHEET) {
       return <Timesheet />;
-    } else {
-      return selection;
+    } else if (selection === _pages.USERS) {
+      return <Users />;
     }
   }
 }
