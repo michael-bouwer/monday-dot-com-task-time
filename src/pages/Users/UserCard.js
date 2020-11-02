@@ -16,7 +16,6 @@ function UserCard({ user, onClick }) {
       .getItem("timesheet_" + user.id + "_")
       .then((res) => {
         const { value, version } = res.data;
-        console.log(value);
         if (value && value.length > 0) {
           let todaySum = 0;
           let weekSum = 0;

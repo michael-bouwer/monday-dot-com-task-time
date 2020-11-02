@@ -68,7 +68,6 @@ function GetTimesheet({ data }) {
       .getItem("timesheet_" + data.me.id + "_")
       .then((res) => {
         const { value, version } = res.data;
-        console.log(value);
         //sleep(10000); // someone may overwrite serialKey during this time
         if (value && value.length > 0) {
           //setTimesheet(JSON.parse(value));
@@ -85,13 +84,12 @@ function GetTimesheet({ data }) {
     await monday.storage.instance
       .setItem("timesheet_" + data.me.id + "_", JSON.stringify(timesheet))
       .then((res) => {
-        console.log(res);
+        if (res.data.success) console.log("timesheet saved.");
       });
   };
 
   function saveTimeItem(time, timeItem, index) {
     let arr = timesheet;
-    let sums;
     arr.map((item) => {
       if (item.id === timeItem.id) {
         item.timeCaptureForDaysOfWeek[index] = parseFloat(time).toFixed(2);
@@ -348,7 +346,7 @@ function GetTimesheet({ data }) {
                             <td className="text-center time-capture Sun">
                               0.0
                             </td>
-                            <td className="text-center time-capture Aggr">
+                            <td className="text-center time-capture bold">
                               {getWeekdaySum(item.timeCaptureForDaysOfWeek)}
                             </td>
                           </tr>

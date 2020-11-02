@@ -112,8 +112,14 @@ function AddItemToTimesheet({ close, onSave }) {
                     <div
                       key={item.id}
                       onClick={(e) => {
-                        e.currentTarget.style.backgroundColor = "lightblue";
-                        addToTimesheet(item);
+                        debugger;
+                        if (alreadyInTimesheet(item)) {
+                          e.currentTarget.style.backgroundColor = "unset";
+                          removeFromTimesheet(item);
+                        } else {
+                          e.currentTarget.style.backgroundColor = "lightblue";
+                          addToTimesheet(item);
+                        }
                       }}
                       className="item"
                     >
@@ -159,6 +165,27 @@ function AddItemToTimesheet({ close, onSave }) {
       console.log(newItem);
       setTimesheetData([...newTimesheetItems, newItem]);
     }
+  }
+
+  function alreadyInTimesheet(item) {
+    let found = false;
+    newTimesheetItems.map((entry) => {
+      if (entry.id === item.id) {
+        found = true;
+      }
+    });
+    if(found) return true;
+    return false;
+  }
+
+  function removeFromTimesheet(item) {
+    let tempArr = newTimesheetItems;
+    newTimesheetItems.map((entry, index) => {
+      if (entry.id === item.id) {
+        tempArr.splice(index, 1);
+      }
+    });
+    setTimesheetData([...tempArr]);
   }
 
   function save() {

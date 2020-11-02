@@ -88,6 +88,9 @@
     border-bottom: 1px solid gray;
     vertical-align: middle;
   }
+  .bold{
+    font-weight: 600;
+  }
 
   thead {
     tr {
@@ -109,6 +112,7 @@
         td:last-child {
           background-color: gray;
           color: white;
+          font-weight: 600;
         }
         .time-capture:active {
           background-color: lightgreen;
