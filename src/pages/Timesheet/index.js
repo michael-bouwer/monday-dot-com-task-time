@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useReactiveVar } from "@apollo/client";
+import { useSpring, animated } from "react-spring";
 import { Col, Row, Table } from "react-bootstrap";
 import Tooltip from "@material-ui/core/Tooltip";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
@@ -63,6 +64,11 @@ function GetTimesheet({ data }) {
   const Sat = useRef(null);
   const Sun = useRef(null);
 
+  const props = useSpring({
+    to: { opacity: 1, marginTop: 0 },
+    from: { opacity: 0, marginTop: 64 },
+  });
+
   const getTimesheetForWeek = async () => {
     await monday.storage.instance
       .getItem("timesheet_" + data.me.id + "_")
@@ -91,7 +97,7 @@ function GetTimesheet({ data }) {
   function saveTimeItem(time, timeItem, index) {
     let arr = timesheet;
     arr.map((item) => {
-      if (item.id === timeItem.id) {
+      if (item.id === timeItem.id && parseFloat(time).toFixed(2) >= 0) {
         item.timeCaptureForDaysOfWeek[index] = parseFloat(time).toFixed(2);
       }
     });
@@ -151,7 +157,7 @@ function GetTimesheet({ data }) {
     );
 
   return (
-    <div className="timesheet">
+    <animated.div className="timesheet" style={props}>
       <Row>
         <Col>
           <Row className="get-timesheet">
@@ -517,7 +523,7 @@ function GetTimesheet({ data }) {
           </Row>
         </Col>
       </Row>
-    </div>
+    </animated.div>
   );
 }
 

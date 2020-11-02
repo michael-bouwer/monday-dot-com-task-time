@@ -112,7 +112,6 @@ function AddItemToTimesheet({ close, onSave }) {
                     <div
                       key={item.id}
                       onClick={(e) => {
-                        debugger;
                         if (alreadyInTimesheet(item)) {
                           e.currentTarget.style.backgroundColor = "unset";
                           removeFromTimesheet(item);
@@ -153,7 +152,15 @@ function AddItemToTimesheet({ close, onSave }) {
         title: item.group.title,
         color: item.group.color,
       },
-      timeCaptureForDaysOfWeek: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+      timeCaptureForDaysOfWeek: [
+        "0.00",
+        "0.00",
+        "0.00",
+        "0.00",
+        "0.00",
+        "0.00",
+        "0.00",
+      ],
     };
 
     let found = false;
@@ -174,7 +181,7 @@ function AddItemToTimesheet({ close, onSave }) {
         found = true;
       }
     });
-    if(found) return true;
+    if (found) return true;
     return false;
   }
 
