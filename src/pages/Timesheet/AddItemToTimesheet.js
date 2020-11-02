@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AddItemToTimesheet({ close }) {
+function AddItemToTimesheet({ close, onSave }) {
   const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
     //fetchPolicy: "network-only",
     variables: { ids: _currentBoard() },
@@ -62,7 +62,14 @@ function AddItemToTimesheet({ close }) {
         <div className="modal-items">{getListOfItemsNotInTimesheet(data)}</div>
         <div className="actions">
           <Button small tertiary text="Cancel" onClick={() => close()} />
-          <Button small text="Add to Timesheet" onClick={() => save()} />
+          <Button
+            small
+            text="Add to Timesheet"
+            onClick={() => {
+              onSave([...currentTimesheet, ...newTimesheetItems]);
+              save();
+            }}
+          />
         </div>
       </Box>
     </div>

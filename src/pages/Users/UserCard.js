@@ -33,8 +33,8 @@ function UserCard({ user, onClick }) {
               });
             });
           }
-          setHoursToday(todaySum);
-          setHoursWeek(weekSum);
+          setHoursToday(todaySum.toFixed(2));
+          setHoursWeek(weekSum.toFixed(2));
         } else {
           // do nothing
           setHoursToday(0);

@@ -2,13 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { Col, Row, Table } from "react-bootstrap";
 import Tooltip from "@material-ui/core/Tooltip";
+import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
 import "./styles.scss";
 import moment from "moment";
 import mondaySdk from "monday-sdk-js";
+import { IMaskInput } from "react-imask";
 
 //Custom
 import queries from "../../api";
-import { _currentBoard, _currentTimesheet, _loadingMessages } from "../../globals/variables";
+import {
+  _currentBoard,
+  _currentTimesheet,
+  _loadingMessages,
+} from "../../globals/variables";
 import Button from "../../components/Button";
 import AddItemToTimeheet from "./AddItemToTimesheet";
 import Loading from "../../components/Loading";
@@ -23,7 +29,11 @@ function Timesheet() {
 
   if (loading)
     return (
-      <Loading text={_loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]} />
+      <Loading
+        text={
+          _loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]
+        }
+      />
     );
   if (error) return <p>error</p>;
   return <GetTimesheet data={data} />;
@@ -34,6 +44,12 @@ function GetTimesheet({ data }) {
   const [loading, setLoading] = useState(true);
   const [addingItem, isAddingItem] = useState(false);
   const [editingMonday, setEditingMonday] = useState(false);
+  const [editingTuesday, setEditingTuesday] = useState(false);
+  const [editingWednesday, setEditingWednesday] = useState(false);
+  const [editingThursday, setEditingThursday] = useState(false);
+  const [editingFriday, setEditingFriday] = useState(false);
+  const [editingSaturday, setEditingSaturday] = useState(false);
+  const [editingSunday, setEditingSunday] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [editingText, setEditingText] = useState("");
   const [summaries, setSummaries] = useState(() => getSums());
@@ -41,6 +57,11 @@ function GetTimesheet({ data }) {
   //Grid refs
   const Mon = useRef(null);
   const Tues = useRef(null);
+  const Wed = useRef(null);
+  const Thu = useRef(null);
+  const Fri = useRef(null);
+  const Sat = useRef(null);
+  const Sun = useRef(null);
 
   const getTimesheetForWeek = async () => {
     await monday.storage.instance
@@ -52,6 +73,7 @@ function GetTimesheet({ data }) {
         if (value && value.length > 0) {
           //setTimesheet(JSON.parse(value));
           _currentTimesheet(JSON.parse(value));
+          setSummaries(getSums(JSON.parse(value)));
         } else {
           _currentTimesheet([]);
         }
@@ -72,7 +94,7 @@ function GetTimesheet({ data }) {
     let sums;
     arr.map((item) => {
       if (item.id === timeItem.id) {
-        item.timeCaptureForDaysOfWeek[index] = time;
+        item.timeCaptureForDaysOfWeek[index] = parseFloat(time).toFixed(2);
       }
     });
     saveTimesheetForWeek(arr);
@@ -89,29 +111,46 @@ function GetTimesheet({ data }) {
     });
     _currentTimesheet(null); //for some reason, setting a Reactive Var as an array doesn't immediately trigger an update.
     _currentTimesheet(arr); //there fore, setting it to NULL then assign array forces a re-render.
+    saveTimesheetForWeek(arr);
     setSummaries(getSums());
   }
 
-  function getSums() {
+  function getSums(timesheetObject) {
+    let processData = timesheetObject ? timesheetObject : timesheet; //Updating the global timesheet doesn't always happen before sums get calculated.
     let sums = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-    if (timesheet && timesheet.length > 0) {
+    if (processData && processData.length > 0) {
       //valid timesheet, calculate sums
-      timesheet.map((item) => {
+      processData.map((item) => {
         item.timeCaptureForDaysOfWeek.map((dayOfWeek, index) => {
-          sums[index] = sums[index] + parseFloat(dayOfWeek);
+          sums[index] += parseFloat(dayOfWeek);
         });
       });
     }
     return sums;
   }
 
+  function getWeekdaySum(dayValues) {
+    let sum = 0;
+    dayValues.map((value) => {
+      sum += parseFloat(value);
+    });
+
+    return sum.toFixed(2);
+  }
+
   useEffect(() => {
     setLoading(true);
     getTimesheetForWeek();
-    getSums();
   }, []);
 
-  if (loading) return <Loading text={_loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]} />;
+  if (loading)
+    return (
+      <Loading
+        text={
+          _loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]
+        }
+      />
+    );
 
   return (
     <div className="timesheet">
@@ -130,7 +169,9 @@ function GetTimesheet({ data }) {
                     <th className="text-center time-capture-head">Fri</th>
                     <th className="text-center time-capture-head">Sat</th>
                     <th className="text-center time-capture-head">Sun</th>
-                    <th className="text-center time-capture-head">Aggr.</th>
+                    <th className="text-center time-capture-head">
+                      <AssignmentRoundedIcon />
+                    </th>
                   </tr>
                 </thead>
 
@@ -157,7 +198,6 @@ function GetTimesheet({ data }) {
                                   <span
                                     className="item-name"
                                     onClick={() => {
-                                      debugger;
                                       monday.execute("openItemCard", {
                                         itemId: item.id,
                                       });
@@ -193,6 +233,7 @@ function GetTimesheet({ data }) {
                                 </span>
                               </div>
                             </td>
+                            {/* MONDAY */}
                             <td
                               className="text-center time-capture Mon"
                               onFocus={(e) => {
@@ -211,7 +252,9 @@ function GetTimesheet({ data }) {
                             >
                               {editingMonday === true &&
                               editingItem === item ? (
-                                <input
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
                                   ref={Mon}
                                   className="time-input"
                                   value={editingText}
@@ -225,8 +268,8 @@ function GetTimesheet({ data }) {
                                     e.target.select();
                                   }}
                                   autoFocus
-                                  onChange={(e) =>
-                                    setEditingText(e.target.value)
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
                                   }
                                   onKeyPress={(e) => {
                                     if (e.key === "Enter") {
@@ -234,22 +277,63 @@ function GetTimesheet({ data }) {
                                     }
                                   }}
                                   tabIndex={1}
-                                ></input>
+                                ></IMaskInput>
                               ) : (
                                 <span>{item.timeCaptureForDaysOfWeek[0]}</span>
                               )}
                             </td>
+                            {/* TUESDAY */}
                             <td
                               className="text-center time-capture Tue"
+                              onFocus={(e) => {
+                                e.target.click();
+                              }}
+                              onClick={() => {
+                                if (!editingTuesday) {
+                                  setEditingTuesday(true);
+                                  setEditingItem(item);
+                                  setEditingText(
+                                    item.timeCaptureForDaysOfWeek[1]
+                                  );
+                                }
+                              }}
                               tabIndex={2}
-                              onBlur={() => console.log("test")}
                             >
-                              0.0
+                              {editingTuesday === true &&
+                              editingItem === item ? (
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
+                                  ref={Tues}
+                                  className="time-input"
+                                  value={editingText}
+                                  onBlur={() => {
+                                    saveTimeItem(editingText, item, 1);
+                                    setEditingTuesday(false);
+                                    setEditingItem(null);
+                                    setEditingText("");
+                                  }}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                  }}
+                                  autoFocus
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
+                                  }
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.currentTarget.blur();
+                                    }
+                                  }}
+                                  tabIndex={2}
+                                ></IMaskInput>
+                              ) : (
+                                <span>{item.timeCaptureForDaysOfWeek[1]}</span>
+                              )}
                             </td>
-                            <td
-                              className="text-center time-capture Wed"
-                              tabIndex={3}
-                            >
+
+                            {/* To be replaced with Imasks once perfected */}
+                            <td className="text-center time-capture Wed">
                               0.0
                             </td>
                             <td className="text-center time-capture Thu">
@@ -265,7 +349,7 @@ function GetTimesheet({ data }) {
                               0.0
                             </td>
                             <td className="text-center time-capture Aggr">
-                              0.0
+                              {getWeekdaySum(item.timeCaptureForDaysOfWeek)}
                             </td>
                           </tr>
                         );
@@ -274,21 +358,121 @@ function GetTimesheet({ data }) {
                     <tfoot>
                       <tr>
                         <td colSpan={1}></td>
-                        <td
-                          className="text-center summary"
-                          style={{
-                            color: parseFloat(summaries[0]) > 24 ? "red" : "",
-                          }} //mark value red - totals hours for 1 day cannot exceed 24.
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[0]) > 24 ? false : true
+                          }
                         >
-                          {summaries[0]}
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[0]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[0]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[1]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[1]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[2]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[2]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[2]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[3]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[3]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[3]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[4]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[4]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[4]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[5]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[5]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[5]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[6]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[6]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[6]}
+                          </td>
+                        </Tooltip>
+                        <td className="text-center summary">
+                          {getWeekdaySum(summaries)}
                         </td>
-                        <td className="text-center summary">0.0</td>
-                        <td className="text-center summary">0.0</td>
-                        <td className="text-center summary">0.0</td>
-                        <td className="text-center summary">0.0</td>
-                        <td className="text-center summary">0.0</td>
-                        <td className="text-center summary">0.0</td>
-                        <td className="text-center summary">0.0</td>
                       </tr>
                     </tfoot>
                   </>
@@ -322,7 +506,14 @@ function GetTimesheet({ data }) {
 
               {/* Add item to timesheet */}
               {addingItem ? (
-                <AddItemToTimeheet close={() => isAddingItem(false)} />
+                <AddItemToTimeheet
+                  onSave={(tempTimesheet) => {
+                    saveTimesheetForWeek(tempTimesheet);
+                  }}
+                  close={() => {
+                    isAddingItem(false);
+                  }}
+                />
               ) : null}
             </div>
           </Row>
