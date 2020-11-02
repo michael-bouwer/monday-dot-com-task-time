@@ -257,7 +257,7 @@ function GetTimesheet({ data }) {
                                   radix="."
                                   ref={Mon}
                                   className="time-input"
-                                  value={editingText}
+                                  value={editingText.toString()}
                                   onBlur={() => {
                                     saveTimeItem(editingText, item, 0);
                                     setEditingMonday(false);
@@ -306,7 +306,7 @@ function GetTimesheet({ data }) {
                                   radix="."
                                   ref={Tues}
                                   className="time-input"
-                                  value={editingText}
+                                  value={editingText.toString()}
                                   onBlur={() => {
                                     saveTimeItem(editingText, item, 1);
                                     setEditingTuesday(false);
