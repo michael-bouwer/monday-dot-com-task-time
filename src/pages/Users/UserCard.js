@@ -3,6 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import Avatar from "@material-ui/core/Avatar";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import mondaySdk from "monday-sdk-js";
+import moment from "moment";
 
 const monday = mondaySdk();
 
@@ -11,9 +12,17 @@ function UserCard({ user, onClick }) {
   const [hoursWeek, setHoursWeek] = useState(null);
   const [userTimesheet, setUserTimesheet] = useState([]);
 
+  function getDateRange(inputDate) {
+    var currentDate = inputDate; //moment();
+    var weekStart = currentDate.clone().startOf("isoWeek");
+    var weekEnd = currentDate.clone().endOf("isoWeek");
+
+    return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
+  }
+
   const getTimesheetForWeek = async (user) => {
     await monday.storage.instance
-      .getItem("timesheet_" + user.id + "_")
+      .getItem("timesheet_" + user.id + "_" + getDateRange(moment()))
       .then((res) => {
         const { value, version } = res.data;
         if (value && value.length > 0) {

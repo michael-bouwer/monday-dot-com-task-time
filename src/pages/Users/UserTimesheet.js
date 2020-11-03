@@ -19,6 +19,7 @@ import {
   _loadingMessages,
 } from "../../globals/variables";
 import Loading from "../../components/Loading";
+import CustomDatePicker from "../../components/CustomDatePicker";
 
 const monday = mondaySdk();
 
@@ -45,11 +46,6 @@ function UserTimesheet({ user, goBack }) {
             </div>
           </Col>
         </Row>
-        <Row>
-          <Col className="center-all font-italic">
-            <span className="text-subtitle-18 mr-2 mt-2">Timesheet for: </span>
-          </Col>
-        </Row>
         <Timesheet user={user} />
       </animated.div>
     </div>
@@ -71,41 +67,31 @@ function Timesheet({ user }) {
       />
     );
   if (error) return <p>error</p>;
-  return <GetTimesheet data={data} />;
+  return <GetTimesheet data={data} user={user} />;
 }
 
-function GetTimesheet({ data }) {
+function getDateRange(inputDate) {
+  var currentDate = inputDate; //moment();
+  var weekStart = currentDate.clone().startOf("isoWeek");
+  var weekEnd = currentDate.clone().endOf("isoWeek");
+
+  return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
+}
+
+function GetTimesheet({ data, user }) {
   const timesheet = useReactiveVar(_currentTimesheet);
   const [loading, setLoading] = useState(true);
-  const [addingItem, isAddingItem] = useState(false);
-  const [editingMonday, setEditingMonday] = useState(false);
-  const [editingTuesday, setEditingTuesday] = useState(false);
-  const [editingWednesday, setEditingWednesday] = useState(false);
-  const [editingThursday, setEditingThursday] = useState(false);
-  const [editingFriday, setEditingFriday] = useState(false);
-  const [editingSaturday, setEditingSaturday] = useState(false);
-  const [editingSunday, setEditingSunday] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
-  const [editingText, setEditingText] = useState("");
   const [summaries, setSummaries] = useState(() => getSums());
-
-  //Grid refs
-  const Mon = useRef(null);
-  const Tues = useRef(null);
-  const Wed = useRef(null);
-  const Thu = useRef(null);
-  const Fri = useRef(null);
-  const Sat = useRef(null);
-  const Sun = useRef(null);
+  const [date, setDate] = useState(moment());
 
   const props = useSpring({
     to: { opacity: 1, marginTop: 0 },
     from: { opacity: 0, marginTop: 64 },
   });
 
-  const getTimesheetForWeek = async () => {
+  const getTimesheetForWeek = async (dateRange) => {
     await monday.storage.instance
-      .getItem("timesheet_" + data.me.id + "_")
+      .getItem("timesheet_" + user.id + "_" + getDateRange(dateRange))
       .then((res) => {
         const { value, version } = res.data;
         //sleep(10000); // someone may overwrite serialKey during this time
@@ -145,7 +131,7 @@ function GetTimesheet({ data }) {
 
   useEffect(() => {
     setLoading(true);
-    getTimesheetForWeek();
+    getTimesheetForWeek(date);
   }, []);
 
   if (loading)
@@ -159,6 +145,12 @@ function GetTimesheet({ data }) {
 
   return (
     <animated.div className="timesheet" style={props}>
+      <Row>
+        <Col className="center-all mb-2">
+          <span className="text-subtitle-18 mr-3 font-italic">Timesheet for: </span>
+          <CustomDatePicker onClick={(value) => getTimesheetForWeek(value)} />
+        </Col>
+      </Row>
       <Row>
         <Col>
           <Row className="get-timesheet">
@@ -273,14 +265,68 @@ function GetTimesheet({ data }) {
                     <tfoot>
                       <tr>
                         <td colSpan={1}></td>
-                        <td className="text-center summary">{summaries[0]}</td>
-                        <td className="text-center summary">{summaries[1]}</td>
-                        <td className="text-center summary">{summaries[2]}</td>
-                        <td className="text-center summary">{summaries[3]}</td>
-                        <td className="text-center summary">{summaries[4]}</td>
-                        <td className="text-center summary">{summaries[5]}</td>
-                        <td className="text-center summary">{summaries[6]}</td>
-                        <td className="text-center summary">
+                        <td
+                          className="text-center summary"
+                          style={{
+                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                          }}
+                        >
+                          {summaries[0]}
+                        </td>
+                        <td
+                          className="text-center summary"
+                          style={{
+                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                          }}
+                        >
+                          {summaries[1]}
+                        </td>
+                        <td
+                          className="text-center summary"
+                          style={{
+                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                          }}
+                        >
+                          {summaries[2]}
+                        </td>
+                        <td
+                          className="text-center summary"
+                          style={{
+                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                          }}
+                        >
+                          {summaries[3]}
+                        </td>
+                        <td
+                          className="text-center summary"
+                          style={{
+                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                          }}
+                        >
+                          {summaries[4]}
+                        </td>
+                        <td
+                          className="text-center summary"
+                          style={{
+                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                          }}
+                        >
+                          {summaries[5]}
+                        </td>
+                        <td
+                          className="text-center summary"
+                          style={{
+                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                          }}
+                        >
+                          {summaries[6]}
+                        </td>
+                        <td
+                          className="text-center summary"
+                          style={{
+                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                          }}
+                        >
                           {getWeekdaySum(summaries)}
                         </td>
                       </tr>

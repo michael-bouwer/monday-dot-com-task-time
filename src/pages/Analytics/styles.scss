@@ -1,0 +1,23 @@
+.analytics{
+    .card{
+        height: 100%;
+        transition: all .5s ease;
+        &:hover{
+            box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034);
+            cursor: unset;
+        }
+
+        padding: 8px;
+    }
+
+    .analytical-block{
+        color: darkgray;
+    }
+
+    .chart{
+        svg{
+            width: 100%;
+        }
+        width: 100%;
+    }
+}

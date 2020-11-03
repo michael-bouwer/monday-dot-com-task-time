@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { Row, Col } from "react-bootstrap";
 import TocRoundedIcon from "@material-ui/icons/TocRounded";
@@ -6,7 +6,6 @@ import EqualizerRoundedIcon from "@material-ui/icons/EqualizerRounded";
 import PeopleAltRoundedIcon from "@material-ui/icons/PeopleAltRounded";
 import PrintRoundedIcon from "@material-ui/icons/PrintRounded";
 import Tooltip from "@material-ui/core/Tooltip";
-import TextField from "@material-ui/core/TextField";
 import moment from "moment";
 import "./styles.scss";
 import mondaySdk from "monday-sdk-js";
@@ -33,7 +32,8 @@ function Header() {
   if (selectedPage === _pages.TIMESHEET) pageName = "My Timesheet";
   else if (selectedPage === _pages.COMPONENTA) pageName = "Component A";
   else if (selectedPage === _pages.USERS) pageName = "All Users";
-  else if (selectedPage === _pages.COMPONENTC) pageName = "Component C";
+  else if (selectedPage === _pages.ANALYTICS)
+    pageName = "Analytics and Reporting";
 
   useEffect(() => {
     var callback = (res) => {
@@ -47,22 +47,6 @@ function Header() {
       <Row>
         <Col className="page-name">
           <p className="text-main-32 bold heading">{pageName}</p>
-          {selectedPage === _pages.TIMESHEET ? (
-            <div>
-              {/* <p className="text-subtitle-18">{getDateRange()}</p> */}
-              <form noValidate>
-                <TextField
-                  id="date"
-                  // label="Timesheet Period"
-                  type="week"
-                  defaultValue="2017-05-24"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </form>
-            </div>
-          ) : null}
         </Col>
         {loading ? null : (
           <Col style={{ textAlign: "right" }}>
@@ -70,27 +54,6 @@ function Header() {
               Hello, <strong>{data.me.name}</strong>
             </span> */}
             <div className="nav-buttons">
-              <button
-                onClick={() => {
-                  // TEMP FUNCTIONS TO RESET INSTANCE DB:
-
-                  monday.storage.instance
-                    .setItem(
-                      "timesheet_" + data.me.id + "_",
-                      JSON.stringify([])
-                    )
-                    .then((res) => {
-                      if (res.data.success) {
-                        console.log("db instance reset: timesheet");
-                        _currentTimesheet([]);
-                      } else console.log("db reset failed: timesheet");
-                    });
-                  // ------------------------------------
-                }}
-              >
-                DELETE DB!
-              </button>
-
               <Tooltip title="Component A">
                 <div
                   className={`timesheet-icon ${
@@ -98,18 +61,18 @@ function Header() {
                   }`}
                   onClick={() => _currentComponent(_pages.COMPONENTA)}
                 >
-                  <EqualizerRoundedIcon />
+                  <PrintRoundedIcon />
                 </div>
               </Tooltip>
 
               <Tooltip title="Component C">
                 <div
                   className={`timesheet-icon ${
-                    selectedPage === _pages.COMPONENTC ? "selected" : ""
+                    selectedPage === _pages.ANALYTICS ? "selected" : ""
                   }`}
-                  onClick={() => _currentComponent(_pages.COMPONENTC)}
+                  onClick={() => _currentComponent(_pages.ANALYTICS)}
                 >
-                  <PrintRoundedIcon />
+                  <EqualizerRoundedIcon />
                 </div>
               </Tooltip>
 

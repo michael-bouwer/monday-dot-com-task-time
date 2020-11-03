@@ -12,7 +12,7 @@ export const _pages = {
   TIMESHEET: "timesheet",
   COMPONENTA: "a",
   USERS: "users",
-  COMPONENTC: "c",
+  ANALYTICS: "analytics",
 };
 
 export const _loadingMessages = [
