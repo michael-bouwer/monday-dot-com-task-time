@@ -1,12 +1,15 @@
 import React, { Fragment, useState } from "react";
-import { DatePicker } from "@material-ui/pickers";
+import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateRange from "@material-ui/icons/DateRange";
+import IconButton from "@material-ui/core/IconButton";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import "./styles.scss";
 
 function CustomDatePicker({ onClick }) {
   const [selectedDate, handleDateChange] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   function getDateRange(inputDate) {
     var currentDate = inputDate; //moment();
@@ -19,7 +22,47 @@ function CustomDatePicker({ onClick }) {
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <Fragment>
-        <DatePicker
+        <div style={{ display: "inline" }}>
+          <DatePicker
+            className="date-picker"
+            value={selectedDate}
+            labelFunc={() => {
+              return getDateRange(moment(selectedDate));
+            }}
+            onChange={(value) => {
+              handleDateChange(value);
+              onClick(value);
+            }}
+            // open={open}
+            animateYearScrolling
+            showTodayButton
+          />
+          <div
+            style={{
+              position: "relative",
+              display: "inherit",
+            }}
+          >
+            <IconButton
+              color="white"
+              aria-label="upload picture"
+              component="span"
+              // style={{ marginLeft: "-1.4em", width: "1.2em", height: "1.2em" }}
+              style={{
+                position: "absolute",
+                left: "-2em",
+                top: "-.4em",
+                zIndex: "1",
+              }}
+              // onClick={() => setOpen(true)}
+            >
+              <DateRange style={{ fill: "white" }} />
+            </IconButton>
+          </div>
+        </div>
+
+        {/* <KeyboardDatePicker
+          clearable={false}
           value={selectedDate}
           labelFunc={() => {
             return getDateRange(moment(selectedDate));
@@ -28,9 +71,9 @@ function CustomDatePicker({ onClick }) {
             handleDateChange(value);
             onClick(value);
           }}
-          animateYearScrolling
+          format="MM/dd/yyyy"
           showTodayButton
-        />
+        /> */}
       </Fragment>
     </MuiPickersUtilsProvider>
   );

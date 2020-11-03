@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { Row, Col } from "react-bootstrap";
-import TocRoundedIcon from "@material-ui/icons/TocRounded";
 import EqualizerRoundedIcon from "@material-ui/icons/EqualizerRounded";
 import PeopleAltRoundedIcon from "@material-ui/icons/PeopleAltRounded";
 import PrintRoundedIcon from "@material-ui/icons/PrintRounded";
+import ListAltRoundedIcon from "@material-ui/icons/ListAltRounded";
 import Tooltip from "@material-ui/core/Tooltip";
 import moment from "moment";
 import "./styles.scss";
 import mondaySdk from "monday-sdk-js";
+import { ReactComponent as Logo } from "../../assets/svg/TaskTime_Logo.svg";
 
 //Custom
 import queries from "../../api";
@@ -47,6 +48,9 @@ function Header() {
       <Row>
         <Col className="page-name">
           <p className="text-main-32 bold heading">{pageName}</p>
+        </Col>
+        <Col className="center-all">
+          <Logo width="150px" />
         </Col>
         {loading ? null : (
           <Col style={{ textAlign: "right" }}>
@@ -94,7 +98,7 @@ function Header() {
                   }`}
                   onClick={() => _currentComponent(_pages.TIMESHEET)}
                 >
-                  <TocRoundedIcon />
+                  <ListAltRoundedIcon />
                 </div>
               </Tooltip>
             </div>

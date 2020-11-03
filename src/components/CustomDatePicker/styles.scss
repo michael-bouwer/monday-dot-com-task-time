@@ -1,5 +1,19 @@
-.custom-date-picker{
-    &:hover{
-        cursor: pointer;
-    }
+@import "../../styles/variables";
+
+.custom-date-picker {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.date-picker {
+  background-color: $primary-button;
+  border-radius: 4px 4px 0 0;
+
+  input {
+    padding: 8px 16px;
+    color: white;
+    border-bottom: unset;
+    cursor: pointer;
+  }
 }
