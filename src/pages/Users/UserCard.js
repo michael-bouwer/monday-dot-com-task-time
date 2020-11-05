@@ -20,6 +20,10 @@ function UserCard({ user, onClick }) {
     return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
   }
 
+  function getdayOfWeekInt() {
+    return moment().day() - 1;
+  }
+
   const getTimesheetForWeek = async (user) => {
     await monday.storage.instance
       .getItem("timesheet_" + user.id + "_" + getDateRange(moment()))
@@ -33,7 +37,7 @@ function UserCard({ user, onClick }) {
             setUserTimesheet(timesheet);
             timesheet.map((item) => {
               item.timeCaptureForDaysOfWeek.map((dayTime, index) => {
-                if (index === 0) {
+                if (index === getdayOfWeekInt()) {
                   //Monday jsut for testing
                   todaySum += parseFloat(dayTime);
                 }

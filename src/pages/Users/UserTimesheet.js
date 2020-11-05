@@ -12,7 +12,6 @@ import mondaySdk from "monday-sdk-js";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
 import ArrowRightAltRoundedIcon from "@material-ui/icons/ArrowRightAltRounded";
-import PrintRoundedIcon from "@material-ui/icons/PrintRounded";
 import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 
 //Custom
@@ -33,6 +32,7 @@ function UserTimesheet({ user, goBack }) {
     to: { marginLeft: 0, opacity: 1 },
     from: { marginLeft: 50, opacity: 0 },
   });
+
   return (
     <div>
       <animated.div style={props}>
@@ -50,12 +50,12 @@ function UserTimesheet({ user, goBack }) {
                 <span className="text-secondary-sub-24">{user.name}</span>
               </div>
               <div className="center-all">
-                <span className="mr-2">
+                {/* <span className="mr-2">
                   <Button
                     text="Print"
                     icon={<PrintRoundedIcon />}
                   ></Button>
-                </span>
+                </span> */}
                 <Button text="Save" icon={<SaveRoundedIcon />}></Button>
               </div>
             </div>

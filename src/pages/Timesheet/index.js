@@ -4,6 +4,9 @@ import { useSpring, animated } from "react-spring";
 import { Col, Row, Table } from "react-bootstrap";
 import Tooltip from "@material-ui/core/Tooltip";
 import TimerRoundedIcon from "@material-ui/icons/TimerRounded";
+import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
+import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
+import ArrowRightAltRoundedIcon from "@material-ui/icons/ArrowRightAltRounded";
 import "./styles.scss";
 import moment, { isMoment } from "moment";
 import mondaySdk from "monday-sdk-js";
@@ -42,6 +45,17 @@ function Timesheet() {
   return <GetTimesheet data={data} />;
 }
 
+function getStartDay(inputDate) {
+  var currentDate = inputDate; //moment();
+  var weekStart = currentDate.clone().startOf("isoWeek");
+  return weekStart.format("dddd, DD MMMM yyyy");
+}
+function getEndDay(inputDate) {
+  var currentDate = inputDate; //moment();
+  var weekEnd = currentDate.clone().endOf("isoWeek");
+  return weekEnd.format("dddd, DD MMMM yyyy");
+}
+
 function GetTimesheet({ data }) {
   const timesheet = useReactiveVar(_currentTimesheet);
   const [loading, setLoading] = useState(true);
@@ -58,6 +72,7 @@ function GetTimesheet({ data }) {
   const [summaries, setSummaries] = useState(() => getSums());
 
   const [date, setDate] = useState(moment());
+  const datePickerRef = useRef();
 
   //Grid refs
   const Mon = useRef(null);
@@ -85,6 +100,19 @@ function GetTimesheet({ data }) {
     //   " (Monday - Sunday)"
     // );
     return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
+  }
+
+  function getPreviousWeekTimesheet(currentDate) {
+    var thisTimeLastWeek = moment(currentDate).subtract(1, "weeks");
+    setDate(thisTimeLastWeek);
+    getTimesheetForWeek(thisTimeLastWeek);
+    datePickerRef.current.setDateFromParentComponent(thisTimeLastWeek);
+  }
+  function getNextWeekTimesheet(currentDate) {
+    var thisTimeNextWeek = moment(currentDate).add(1, "weeks");
+    setDate(thisTimeNextWeek);
+    getTimesheetForWeek(thisTimeNextWeek);
+    datePickerRef.current.setDateFromParentComponent(thisTimeNextWeek);
   }
 
   function getDay(index) {
@@ -212,6 +240,7 @@ function GetTimesheet({ data }) {
       <Row>
         <Col className="tab">
           <CustomDatePicker
+            ref={datePickerRef}
             onClick={(value) => {
               setDate(value);
               getTimesheetForWeek(value);
@@ -224,6 +253,31 @@ function GetTimesheet({ data }) {
         <Col>
           <Row className="get-timesheet">
             <div className="table-time-capture">
+              <div className="center-all justify-content-between mb-2">
+                <ArrowBackIosRoundedIcon
+                  onClick={() => {
+                    getPreviousWeekTimesheet(date);
+                  }}
+                  className="arrow"
+                />
+                <div className="center-all">
+                  <span className="text-paragraph-16 day">
+                    {getStartDay(date)}
+                  </span>
+                  <div className="ml-2 mr-2">
+                    <ArrowRightAltRoundedIcon />
+                  </div>
+                  <span className="text-paragraph-16 day">
+                    {getEndDay(date)}
+                  </span>
+                </div>
+                <ArrowForwardIosRoundedIcon
+                  onClick={() => {
+                    getNextWeekTimesheet(date);
+                  }}
+                  className="arrow"
+                />
+              </div>
               {loading ? null : timesheet && timesheet.length > 0 ? (
                 <Table striped hover size="sm">
                   <thead>
