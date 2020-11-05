@@ -11,6 +11,9 @@ import moment from "moment";
 import mondaySdk from "monday-sdk-js";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
+import ArrowRightAltRoundedIcon from "@material-ui/icons/ArrowRightAltRounded";
+import PrintRoundedIcon from "@material-ui/icons/PrintRounded";
+import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 
 //Custom
 import queries from "../../api";
@@ -21,6 +24,7 @@ import {
 } from "../../globals/variables";
 import Loading from "../../components/Loading";
 import CustomDatePicker from "../../components/CustomDatePicker";
+import Button from "../../components/Button";
 
 const monday = mondaySdk();
 
@@ -34,16 +38,26 @@ function UserTimesheet({ user, goBack }) {
       <animated.div style={props}>
         <Row>
           <Col>
-            <div className="center-all justify-content-start mb-2">
-              <IconButton
-                style={{ marginLeft: "-16px" }}
-                aria-label="upload picture"
-                component="span"
-                onClick={() => goBack()}
-              >
-                <ArrowBackRoundedIcon />
-              </IconButton>
-              <span className="text-secondary-sub-24">{user.name}</span>
+            <div className="center-all justify-content-between mb-2">
+              <div className="center-all">
+                <IconButton
+                  style={{ marginLeft: "-16px" }}
+                  component="span"
+                  onClick={() => goBack()}
+                >
+                  <ArrowBackRoundedIcon />
+                </IconButton>
+                <span className="text-secondary-sub-24">{user.name}</span>
+              </div>
+              <div className="center-all">
+                <span className="mr-2">
+                  <Button
+                    text="Print"
+                    icon={<PrintRoundedIcon />}
+                  ></Button>
+                </span>
+                <Button text="Save" icon={<SaveRoundedIcon />}></Button>
+              </div>
             </div>
           </Col>
         </Row>
@@ -79,6 +93,17 @@ function getDateRange(inputDate) {
   return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
 }
 
+function getStartDay(inputDate) {
+  var currentDate = inputDate; //moment();
+  var weekStart = currentDate.clone().startOf("isoWeek");
+  return weekStart.format("dddd, DD MMMM yyyy");
+}
+function getEndDay(inputDate) {
+  var currentDate = inputDate; //moment();
+  var weekEnd = currentDate.clone().endOf("isoWeek");
+  return weekEnd.format("dddd, DD MMMM yyyy");
+}
+
 function GetTimesheet({ data, user }) {
   const timesheet = useReactiveVar(_currentTimesheet);
   const [loading, setLoading] = useState(true);
@@ -100,9 +125,21 @@ function GetTimesheet({ data, user }) {
         const { value, version } = res.data;
         //sleep(10000); // someone may overwrite serialKey during this time
         if (value && value.length > 0) {
-          //setTimesheet(JSON.parse(value));
-          _currentTimesheet(JSON.parse(value));
-          setSummaries(getSums(JSON.parse(value)));
+          let items = JSON.parse(value); //Need to establish if items are still valid on the main board.
+          items.map((item) => {
+            let found = false;
+            data.boards[0].items.map((boardItem) => {
+              if (item.id === boardItem.id) {
+                found = true;
+                return;
+              }
+            });
+            if (!found) {
+              item["deleted"] = true;
+            }
+          });
+          _currentTimesheet(items);
+          setSummaries(getSums(items));
         } else {
           _currentTimesheet([]);
         }
@@ -182,14 +219,24 @@ function GetTimesheet({ data, user }) {
         <Col>
           <Row className="get-timesheet">
             <div className="table-time-capture">
-              <div className="center-all justify-content-between">
+              <div className="center-all justify-content-between mb-2">
                 <ArrowBackIosRoundedIcon
                   onClick={() => {
                     getPreviousWeekTimesheet(date);
                   }}
                   className="arrow"
                 />
-
+                <div className="center-all">
+                  <span className="text-paragraph-16 day">
+                    {getStartDay(date)}
+                  </span>
+                  <div className="ml-2 mr-2">
+                    <ArrowRightAltRoundedIcon />
+                  </div>
+                  <span className="text-paragraph-16 day">
+                    {getEndDay(date)}
+                  </span>
+                </div>
                 <ArrowForwardIosRoundedIcon
                   onClick={() => {
                     getNextWeekTimesheet(date);
@@ -251,9 +298,26 @@ function GetTimesheet({ data, user }) {
                                   <span
                                     className="item-name"
                                     onClick={() => {
-                                      monday.execute("openItemCard", {
-                                        itemId: item.id,
-                                      });
+                                      if (item.deleted) {
+                                        monday.execute("notice", {
+                                          message:
+                                            "This item was removed from the board",
+                                          type: "error", // or "error" (red), or "info" (blue)
+                                          timeout: 4000,
+                                        });
+                                      } else {
+                                        monday.execute("openItemCard", {
+                                          itemId: item.id,
+                                        });
+                                      }
+                                    }}
+                                    style={{
+                                      fontStyle: item.deleted
+                                        ? "italic"
+                                        : "inherit",
+                                      textDecoration: item.deleted
+                                        ? "line-through"
+                                        : "inherit",
                                     }}
                                   >
                                     {item.name}
@@ -324,10 +388,10 @@ function GetTimesheet({ data, user }) {
                         <td
                           className="text-center summary"
                           style={{
-                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                            color: parseFloat(summaries[0]) > 24 ? "red" : "",
                           }}
                         >
-                          {summaries[0]}
+                          {parseFloat(summaries[0]).toFixed(2)}
                         </td>
                         <td
                           className="text-center summary"
@@ -335,54 +399,49 @@ function GetTimesheet({ data, user }) {
                             color: parseFloat(summaries[1]) > 24 ? "red" : "",
                           }}
                         >
-                          {summaries[1]}
+                          {parseFloat(summaries[1]).toFixed(2)}
                         </td>
                         <td
                           className="text-center summary"
                           style={{
-                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                            color: parseFloat(summaries[2]) > 24 ? "red" : "",
                           }}
                         >
-                          {summaries[2]}
+                          {parseFloat(summaries[2]).toFixed(2)}
                         </td>
                         <td
                           className="text-center summary"
                           style={{
-                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                            color: parseFloat(summaries[3]) > 24 ? "red" : "",
                           }}
                         >
-                          {summaries[3]}
+                          {parseFloat(summaries[3]).toFixed(2)}
                         </td>
                         <td
                           className="text-center summary"
                           style={{
-                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                            color: parseFloat(summaries[4]) > 24 ? "red" : "",
                           }}
                         >
-                          {summaries[4]}
+                          {parseFloat(summaries[4]).toFixed(2)}
                         </td>
                         <td
                           className="text-center summary"
                           style={{
-                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                            color: parseFloat(summaries[5]) > 24 ? "red" : "",
                           }}
                         >
-                          {summaries[5]}
+                          {parseFloat(summaries[5]).toFixed(2)}
                         </td>
                         <td
                           className="text-center summary"
                           style={{
-                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                            color: parseFloat(summaries[6]) > 24 ? "red" : "",
                           }}
                         >
-                          {summaries[6]}
+                          {parseFloat(summaries[6]).toFixed(2)}
                         </td>
-                        <td
-                          className="text-center summary"
-                          style={{
-                            color: parseFloat(summaries[1]) > 24 ? "red" : "",
-                          }}
-                        >
+                        <td className="text-center summary">
                           {getWeekdaySum(summaries)}
                         </td>
                       </tr>

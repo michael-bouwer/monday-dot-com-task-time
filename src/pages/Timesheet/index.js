@@ -103,9 +103,21 @@ function GetTimesheet({ data }) {
         const { value, version } = res.data;
         //sleep(10000); // someone may overwrite serialKey during this time
         if (value && value.length > 0) {
-          //setTimesheet(JSON.parse(value));
-          _currentTimesheet(JSON.parse(value));
-          setSummaries(getSums(JSON.parse(value)));
+          let items = JSON.parse(value); //Need to establish if items are still valid on the main board.
+          items.map((item) => {
+            let found = false;
+            data.boards[0].items.map((boardItem) => {
+              if (item.id === boardItem.id) {
+                found = true;
+                return;
+              }
+            });
+            if (!found) {
+              item["deleted"] = true;
+            }
+          });
+          _currentTimesheet(items);
+          setSummaries(getSums(items));
         } else {
           _currentTimesheet([]);
         }
@@ -249,6 +261,7 @@ function GetTimesheet({ data }) {
                       {timesheet.map((item, index) => {
                         return (
                           <tr key={item.id}>
+                            {/* ITEM NAME */}
                             <td className="item-text">
                               <div className="center-all justify-content-between">
                                 <div className="center-all">
@@ -266,9 +279,26 @@ function GetTimesheet({ data }) {
                                   <span
                                     className="item-name"
                                     onClick={() => {
-                                      monday.execute("openItemCard", {
-                                        itemId: item.id,
-                                      });
+                                      if (item.deleted) {
+                                        monday.execute("notice", {
+                                          message:
+                                            "This item was removed from the board",
+                                          type: "error", // or "error" (red), or "info" (blue)
+                                          timeout: 4000,
+                                        });
+                                      } else {
+                                        monday.execute("openItemCard", {
+                                          itemId: item.id,
+                                        });
+                                      }
+                                    }}
+                                    style={{
+                                      fontStyle: item.deleted
+                                        ? "italic"
+                                        : "inherit",
+                                      textDecoration: item.deleted
+                                        ? "line-through"
+                                        : "inherit",
                                     }}
                                   >
                                     {item.name}
@@ -325,15 +355,15 @@ function GetTimesheet({ data }) {
                                   radix="."
                                   ref={Mon}
                                   className="time-input"
-                                  value={editingText.toString()}
+                                  value={editingText} // ----> .toString()
                                   onBlur={() => {
                                     saveTimeItem(editingText, item, 0);
                                     setEditingMonday(false);
                                     setEditingItem(null);
                                     setEditingText("");
                                   }}
-                                  onFocus={(e) => {
-                                    e.target.select();
+                                  onClick={(e) => {
+                                    e.currentTarget.select();
                                   }}
                                   autoFocus
                                   onAccept={(value, mask) =>
@@ -400,22 +430,256 @@ function GetTimesheet({ data }) {
                               )}
                             </td>
 
-                            {/* To be replaced with Imasks once perfected */}
-                            <td className="text-center time-capture Wed">
-                              0.0
+                            {/* WEDNESDAY */}
+                            <td
+                              className="text-center time-capture Wed"
+                              onFocus={(e) => {
+                                e.target.click();
+                              }}
+                              onClick={() => {
+                                if (!editingWednesday) {
+                                  setEditingWednesday(true);
+                                  setEditingItem(item);
+                                  setEditingText(
+                                    item.timeCaptureForDaysOfWeek[2]
+                                  );
+                                }
+                              }}
+                              tabIndex={3}
+                            >
+                              {editingWednesday === true &&
+                              editingItem === item ? (
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
+                                  ref={Wed}
+                                  className="time-input"
+                                  value={editingText.toString()}
+                                  onBlur={() => {
+                                    saveTimeItem(editingText, item, 2);
+                                    setEditingWednesday(false);
+                                    setEditingItem(null);
+                                    setEditingText("");
+                                  }}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                  }}
+                                  autoFocus
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
+                                  }
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.currentTarget.blur();
+                                    }
+                                  }}
+                                  tabIndex={3}
+                                ></IMaskInput>
+                              ) : (
+                                <span>{item.timeCaptureForDaysOfWeek[2]}</span>
+                              )}
                             </td>
-                            <td className="text-center time-capture Thu">
-                              0.0
+
+                            {/* THURSDADY */}
+                            <td
+                              className="text-center time-capture Thu"
+                              onFocus={(e) => {
+                                e.target.click();
+                              }}
+                              onClick={() => {
+                                if (!editingThursday) {
+                                  setEditingThursday(true);
+                                  setEditingItem(item);
+                                  setEditingText(
+                                    item.timeCaptureForDaysOfWeek[3]
+                                  );
+                                }
+                              }}
+                              tabIndex={4}
+                            >
+                              {editingThursday === true &&
+                              editingItem === item ? (
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
+                                  ref={Thu}
+                                  className="time-input"
+                                  value={editingText.toString()}
+                                  onBlur={() => {
+                                    saveTimeItem(editingText, item, 3);
+                                    setEditingThursday(false);
+                                    setEditingItem(null);
+                                    setEditingText("");
+                                  }}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                  }}
+                                  autoFocus
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
+                                  }
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.currentTarget.blur();
+                                    }
+                                  }}
+                                  tabIndex={4}
+                                ></IMaskInput>
+                              ) : (
+                                <span>{item.timeCaptureForDaysOfWeek[3]}</span>
+                              )}
                             </td>
-                            <td className="text-center time-capture Fri">
-                              0.0
+
+                            {/* FRIDAY */}
+                            <td
+                              className="text-center time-capture Fri"
+                              onFocus={(e) => {
+                                e.target.click();
+                              }}
+                              onClick={() => {
+                                if (!editingFriday) {
+                                  setEditingFriday(true);
+                                  setEditingItem(item);
+                                  setEditingText(
+                                    item.timeCaptureForDaysOfWeek[4]
+                                  );
+                                }
+                              }}
+                              tabIndex={5}
+                            >
+                              {editingFriday === true &&
+                              editingItem === item ? (
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
+                                  ref={Fri}
+                                  className="time-input"
+                                  value={editingText.toString()}
+                                  onBlur={() => {
+                                    saveTimeItem(editingText, item, 4);
+                                    setEditingFriday(false);
+                                    setEditingItem(null);
+                                    setEditingText("");
+                                  }}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                  }}
+                                  autoFocus
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
+                                  }
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.currentTarget.blur();
+                                    }
+                                  }}
+                                  tabIndex={5}
+                                ></IMaskInput>
+                              ) : (
+                                <span>{item.timeCaptureForDaysOfWeek[4]}</span>
+                              )}
                             </td>
-                            <td className="text-center time-capture Sat">
-                              0.0
+
+                            {/* SATURDAY */}
+                            <td
+                              className="text-center time-capture Sat"
+                              onFocus={(e) => {
+                                e.target.click();
+                              }}
+                              onClick={() => {
+                                if (!editingSaturday) {
+                                  setEditingSaturday(true);
+                                  setEditingItem(item);
+                                  setEditingText(
+                                    item.timeCaptureForDaysOfWeek[5]
+                                  );
+                                }
+                              }}
+                              tabIndex={6}
+                            >
+                              {editingSaturday === true &&
+                              editingItem === item ? (
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
+                                  ref={Sat}
+                                  className="time-input"
+                                  value={editingText.toString()}
+                                  onBlur={() => {
+                                    saveTimeItem(editingText, item, 5);
+                                    setEditingSaturday(false);
+                                    setEditingItem(null);
+                                    setEditingText("");
+                                  }}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                  }}
+                                  autoFocus
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
+                                  }
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.currentTarget.blur();
+                                    }
+                                  }}
+                                  tabIndex={6}
+                                ></IMaskInput>
+                              ) : (
+                                <span>{item.timeCaptureForDaysOfWeek[5]}</span>
+                              )}
                             </td>
-                            <td className="text-center time-capture Sun">
-                              0.0
+
+                            {/* SUNDAY */}
+                            <td
+                              className="text-center time-capture Sun"
+                              onFocus={(e) => {
+                                e.target.click();
+                              }}
+                              onClick={() => {
+                                if (!editingSunday) {
+                                  setEditingSunday(true);
+                                  setEditingItem(item);
+                                  setEditingText(
+                                    item.timeCaptureForDaysOfWeek[6]
+                                  );
+                                }
+                              }}
+                              tabIndex={7}
+                            >
+                              {editingSunday === true &&
+                              editingItem === item ? (
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
+                                  ref={Sun}
+                                  className="time-input"
+                                  value={editingText.toString()}
+                                  onBlur={() => {
+                                    saveTimeItem(editingText, item, 6);
+                                    setEditingSunday(false);
+                                    setEditingItem(null);
+                                    setEditingText("");
+                                  }}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                  }}
+                                  autoFocus
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
+                                  }
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.currentTarget.blur();
+                                    }
+                                  }}
+                                  tabIndex={7}
+                                ></IMaskInput>
+                              ) : (
+                                <span>{item.timeCaptureForDaysOfWeek[6]}</span>
+                              )}
                             </td>
+
                             <td className="text-center time-capture bold">
                               {getWeekdaySum(item.timeCaptureForDaysOfWeek)}
                             </td>
@@ -439,7 +703,7 @@ function GetTimesheet({ data }) {
                               color: parseFloat(summaries[0]) > 24 ? "red" : "",
                             }} //mark value red - totals hours for 1 day cannot exceed 24.
                           >
-                            {summaries[0]}
+                            {parseFloat(summaries[0]).toFixed(2)}
                           </td>
                         </Tooltip>
                         <Tooltip
@@ -455,7 +719,7 @@ function GetTimesheet({ data }) {
                               color: parseFloat(summaries[1]) > 24 ? "red" : "",
                             }} //mark value red - totals hours for 1 day cannot exceed 24.
                           >
-                            {summaries[1]}
+                            {parseFloat(summaries[1]).toFixed(2)}
                           </td>
                         </Tooltip>
                         <Tooltip
@@ -471,7 +735,7 @@ function GetTimesheet({ data }) {
                               color: parseFloat(summaries[2]) > 24 ? "red" : "",
                             }} //mark value red - totals hours for 1 day cannot exceed 24.
                           >
-                            {summaries[2]}
+                            {parseFloat(summaries[2]).toFixed(2)}
                           </td>
                         </Tooltip>
                         <Tooltip
@@ -487,7 +751,7 @@ function GetTimesheet({ data }) {
                               color: parseFloat(summaries[3]) > 24 ? "red" : "",
                             }} //mark value red - totals hours for 1 day cannot exceed 24.
                           >
-                            {summaries[3]}
+                            {parseFloat(summaries[3]).toFixed(2)}
                           </td>
                         </Tooltip>
                         <Tooltip
@@ -503,7 +767,7 @@ function GetTimesheet({ data }) {
                               color: parseFloat(summaries[4]) > 24 ? "red" : "",
                             }} //mark value red - totals hours for 1 day cannot exceed 24.
                           >
-                            {summaries[4]}
+                            {parseFloat(summaries[4]).toFixed(2)}
                           </td>
                         </Tooltip>
                         <Tooltip
@@ -519,7 +783,7 @@ function GetTimesheet({ data }) {
                               color: parseFloat(summaries[5]) > 24 ? "red" : "",
                             }} //mark value red - totals hours for 1 day cannot exceed 24.
                           >
-                            {summaries[5]}
+                            {parseFloat(summaries[5]).toFixed(2)}
                           </td>
                         </Tooltip>
                         <Tooltip
@@ -535,7 +799,7 @@ function GetTimesheet({ data }) {
                               color: parseFloat(summaries[6]) > 24 ? "red" : "",
                             }} //mark value red - totals hours for 1 day cannot exceed 24.
                           >
-                            {summaries[6]}
+                            {parseFloat(summaries[6]).toFixed(2)}
                           </td>
                         </Tooltip>
                         <td className="text-center summary">
@@ -554,7 +818,7 @@ function GetTimesheet({ data }) {
                 />
               ) : (
                 <div
-                  className="text-subtitle-18 center-all"
+                  className="text-subtitle-18 center-all p-5"
                   style={{ flexDirection: "column" }}
                 >
                   <div style={{ marginBottom: "16px" }}>

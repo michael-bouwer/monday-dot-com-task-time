@@ -116,9 +116,11 @@ function AddItemToTimesheet({ close, onSave }) {
                         if (alreadyInTimesheet(item)) {
                           e.currentTarget.style.borderLeft =
                             "0px solid gainsboro";
+                          e.currentTarget.classList.remove("green");
                           removeFromTimesheet(item);
                         } else {
                           e.currentTarget.style.borderLeft = "8px solid green";
+                          e.currentTarget.classList.add("green");
                           addToTimesheet(item);
                         }
                       }}

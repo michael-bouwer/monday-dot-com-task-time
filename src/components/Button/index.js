@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.scss";
 
-function Button({ large, medium, secondary, tertiary, text, onClick }) {
+function Button({ large, medium, secondary, tertiary, text, onClick, icon, }) {
   let classes = "";
 
   if (large) classes = "btn-large ";
@@ -14,6 +14,7 @@ function Button({ large, medium, secondary, tertiary, text, onClick }) {
 
   return (
     <button className={classes} onClick={onClick}>
+      {icon ? <span className="mr-2">{icon}</span> : null}
       <p style={{ display: "inline-block" }}>{text}</p>
     </button>
   );

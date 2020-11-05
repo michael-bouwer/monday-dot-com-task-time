@@ -49,11 +49,25 @@
 }
 
 .arrow {
+  transition: all 0.2s ease;
   &:hover {
     fill: $primary-button;
     cursor: pointer;
+    transform: scale(1.1);
   }
 }
 .get-timesheet {
   margin-bottom: 22px;
+}
+
+.day {
+  position: relative;
+  &:before {
+    content: "";
+    width: 22px;
+    height: 2px;
+    background: $primary-button;
+    position: absolute;
+    bottom: -2px;
+  }
 }

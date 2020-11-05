@@ -3,7 +3,6 @@ import { useQuery, useReactiveVar } from "@apollo/client";
 import { Row, Col } from "react-bootstrap";
 import EqualizerRoundedIcon from "@material-ui/icons/EqualizerRounded";
 import PeopleAltRoundedIcon from "@material-ui/icons/PeopleAltRounded";
-import PrintRoundedIcon from "@material-ui/icons/PrintRounded";
 import ListAltRoundedIcon from "@material-ui/icons/ListAltRounded";
 import Tooltip from "@material-ui/core/Tooltip";
 import moment from "moment";
@@ -31,7 +30,6 @@ function Header() {
   const selectedPage = useReactiveVar(_currentComponent);
   let pageName = "";
   if (selectedPage === _pages.TIMESHEET) pageName = "My Timesheet";
-  else if (selectedPage === _pages.COMPONENTA) pageName = "Component A";
   else if (selectedPage === _pages.USERS) pageName = "All Users";
   else if (selectedPage === _pages.ANALYTICS)
     pageName = "Analytics and Reporting";
@@ -57,18 +55,7 @@ function Header() {
               Hello, <strong>{data.me.name}</strong>
             </span> */}
           <div className="nav-buttons">
-            <Tooltip title="Component A">
-              <div
-                className={`timesheet-icon ${
-                  selectedPage === _pages.COMPONENTA ? "selected" : ""
-                }`}
-                onClick={() => _currentComponent(_pages.COMPONENTA)}
-              >
-                <PrintRoundedIcon />
-              </div>
-            </Tooltip>
-
-            <Tooltip title="Component C">
+            <Tooltip title="Analytics and Reporting">
               <div
                 className={`timesheet-icon ${
                   selectedPage === _pages.ANALYTICS ? "selected" : ""
