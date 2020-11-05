@@ -2,7 +2,9 @@
 
 .custom-header {
   padding: 24px 16px;
-  padding-bottom: 4px;
+  position: relative;
+  z-index: 20;
+  background-color: whitesmoke;
 
   .page-name{
     display: flex;

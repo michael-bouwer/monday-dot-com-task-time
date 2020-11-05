@@ -43,7 +43,7 @@ function Header() {
     monday.listen("events", callback);
   }, []);
 
-  return (
+  return loading ? null : (
     <div className="custom-header">
       <Row>
         <Col className="page-name">
@@ -52,58 +52,56 @@ function Header() {
         <Col className="center-all">
           <Logo width="150px" />
         </Col>
-        {loading ? null : (
-          <Col style={{ textAlign: "right" }}>
-            {/* <span className="text-text-subtitle-18">
+        <Col style={{ textAlign: "right" }}>
+          {/* <span className="text-text-subtitle-18">
               Hello, <strong>{data.me.name}</strong>
             </span> */}
-            <div className="nav-buttons">
-              <Tooltip title="Component A">
-                <div
-                  className={`timesheet-icon ${
-                    selectedPage === _pages.COMPONENTA ? "selected" : ""
-                  }`}
-                  onClick={() => _currentComponent(_pages.COMPONENTA)}
-                >
-                  <PrintRoundedIcon />
-                </div>
-              </Tooltip>
+          <div className="nav-buttons">
+            <Tooltip title="Component A">
+              <div
+                className={`timesheet-icon ${
+                  selectedPage === _pages.COMPONENTA ? "selected" : ""
+                }`}
+                onClick={() => _currentComponent(_pages.COMPONENTA)}
+              >
+                <PrintRoundedIcon />
+              </div>
+            </Tooltip>
 
-              <Tooltip title="Component C">
-                <div
-                  className={`timesheet-icon ${
-                    selectedPage === _pages.ANALYTICS ? "selected" : ""
-                  }`}
-                  onClick={() => _currentComponent(_pages.ANALYTICS)}
-                >
-                  <EqualizerRoundedIcon />
-                </div>
-              </Tooltip>
+            <Tooltip title="Component C">
+              <div
+                className={`timesheet-icon ${
+                  selectedPage === _pages.ANALYTICS ? "selected" : ""
+                }`}
+                onClick={() => _currentComponent(_pages.ANALYTICS)}
+              >
+                <EqualizerRoundedIcon />
+              </div>
+            </Tooltip>
 
-              <Tooltip title="All Users">
-                <div
-                  className={`timesheet-icon ${
-                    selectedPage === _pages.USERS ? "selected" : ""
-                  }`}
-                  onClick={() => _currentComponent(_pages.USERS)}
-                >
-                  <PeopleAltRoundedIcon />
-                </div>
-              </Tooltip>
+            <Tooltip title="All Users">
+              <div
+                className={`timesheet-icon ${
+                  selectedPage === _pages.USERS ? "selected" : ""
+                }`}
+                onClick={() => _currentComponent(_pages.USERS)}
+              >
+                <PeopleAltRoundedIcon />
+              </div>
+            </Tooltip>
 
-              <Tooltip title="My Timesheet">
-                <div
-                  className={`timesheet-icon ${
-                    selectedPage === _pages.TIMESHEET ? "selected" : ""
-                  }`}
-                  onClick={() => _currentComponent(_pages.TIMESHEET)}
-                >
-                  <ListAltRoundedIcon />
-                </div>
-              </Tooltip>
-            </div>
-          </Col>
-        )}
+            <Tooltip title="My Timesheet">
+              <div
+                className={`timesheet-icon ${
+                  selectedPage === _pages.TIMESHEET ? "selected" : ""
+                }`}
+                onClick={() => _currentComponent(_pages.TIMESHEET)}
+              >
+                <ListAltRoundedIcon />
+              </div>
+            </Tooltip>
+          </div>
+        </Col>
       </Row>
     </div>
   );

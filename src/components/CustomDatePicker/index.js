@@ -22,10 +22,10 @@ function CustomDatePicker({ onClick }) {
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <Fragment>
-        <div style={{ display: "inline" }}>
+        <div className="center-all justify-content-start">
           <DatePicker
             className="date-picker"
-            value={selectedDate}
+            value={selectedDate}                        
             labelFunc={() => {
               return getDateRange(moment(selectedDate));
             }}
@@ -41,23 +41,10 @@ function CustomDatePicker({ onClick }) {
             style={{
               position: "relative",
               display: "inherit",
+              marginLeft: "-1.8em",
             }}
           >
-            <IconButton
-              color="white"
-              aria-label="upload picture"
-              component="span"
-              // style={{ marginLeft: "-1.4em", width: "1.2em", height: "1.2em" }}
-              style={{
-                position: "absolute",
-                left: "-2em",
-                top: "-.4em",
-                zIndex: "1",
-              }}
-              // onClick={() => setOpen(true)}
-            >
-              <DateRange style={{ fill: "white" }} />
-            </IconButton>
+            <DateRange style={{ fill: "white" }} />
           </div>
         </div>
 

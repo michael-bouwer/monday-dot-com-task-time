@@ -9,7 +9,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
 import moment from "moment";
 import mondaySdk from "monday-sdk-js";
-import { IMaskInput } from "react-imask";
+import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
+import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
 
 //Custom
 import queries from "../../api";
@@ -20,6 +21,7 @@ import {
 } from "../../globals/variables";
 import Loading from "../../components/Loading";
 import CustomDatePicker from "../../components/CustomDatePicker";
+import { setDate } from "date-fns";
 
 const monday = mondaySdk();
 
@@ -33,7 +35,7 @@ function UserTimesheet({ user, goBack }) {
       <animated.div style={props}>
         <Row>
           <Col>
-            <div className="center-all justify-content-start">
+            <div className="center-all justify-content-start mb-2">
               <IconButton
                 style={{ marginLeft: "-16px" }}
                 aria-label="upload picture"
@@ -90,6 +92,8 @@ function GetTimesheet({ data, user }) {
   });
 
   const getTimesheetForWeek = async (dateRange) => {
+    setLoading(true);
+    _currentTimesheet(null);
     await monday.storage.instance
       .getItem("timesheet_" + user.id + "_" + getDateRange(dateRange))
       .then((res) => {
@@ -105,6 +109,17 @@ function GetTimesheet({ data, user }) {
         setLoading(false);
       });
   };
+
+  function getPreviousWeekTimesheet(currentDate) {
+    var thisTimeLastWeek = moment(currentDate).subtract(1, "weeks");
+    setDate(thisTimeLastWeek);
+    getTimesheetForWeek(thisTimeLastWeek);
+  }
+  function getNextWeekTimesheet(currentDate) {
+    var thisTimeNextWeek = moment(currentDate).add(1, "weeks");
+    setDate(thisTimeNextWeek);
+    getTimesheetForWeek(thisTimeNextWeek);
+  }
 
   function getSums(timesheetObject) {
     let processData = timesheetObject ? timesheetObject : timesheet; //Updating the global timesheet doesn't always happen before sums get calculated.
@@ -134,45 +149,62 @@ function GetTimesheet({ data, user }) {
     getTimesheetForWeek(date);
   }, []);
 
-  if (loading)
-    return (
-      <Loading
-        text={
-          _loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]
-        }
-      />
-    );
-
   return (
-    <animated.div className="timesheet" style={props}>
+    <animated.div style={props}>
+      {loading ? (
+        <Loading
+          text={`Fetching ${user.name}'s timesheet for the selected week.`}
+        />
+      ) : null}
       <Row>
-        <Col className="center-all mb-2">
-          <span className="text-subtitle-18 mr-3 font-italic">Timesheet for: </span>
-          <CustomDatePicker onClick={(value) => getTimesheetForWeek(value)} />
+        <Col className="tab">
+          <CustomDatePicker
+            style={{ display: "inline-block" }}
+            onClick={(value) => {
+              setDate(value);
+              getTimesheetForWeek(value);
+            }}
+            value={date}
+          />
         </Col>
       </Row>
       <Row>
         <Col>
           <Row className="get-timesheet">
             <div className="table-time-capture">
-              <Table striped hover size="sm">
-                <thead>
-                  <tr>
-                    <th className="item-head">Item</th>
-                    <th className="text-center time-capture-head">Mon</th>
-                    <th className="text-center time-capture-head">Tue</th>
-                    <th className="text-center time-capture-head">Wed</th>
-                    <th className="text-center time-capture-head">Thu</th>
-                    <th className="text-center time-capture-head">Fri</th>
-                    <th className="text-center time-capture-head">Sat</th>
-                    <th className="text-center time-capture-head">Sun</th>
-                    <th className="text-center time-capture-head">
-                      <AssignmentRoundedIcon />
-                    </th>
-                  </tr>
-                </thead>
+              <div className="center-all justify-content-between">
+                <ArrowBackIosRoundedIcon
+                  onClick={() => {
+                    getPreviousWeekTimesheet(date);
+                  }}
+                  className="arrow"
+                />
 
-                {timesheet && timesheet.length > 0 ? (
+                <ArrowForwardIosRoundedIcon
+                  onClick={() => {
+                    getNextWeekTimesheet(date);
+                  }}
+                  className="arrow"
+                />
+              </div>
+              {loading ? null : timesheet && timesheet.length > 0 ? (
+                <Table striped hover size="sm">
+                  <thead>
+                    <tr>
+                      <th className="item-head">Item</th>
+                      <th className="text-center time-capture-head">Mon</th>
+                      <th className="text-center time-capture-head">Tue</th>
+                      <th className="text-center time-capture-head">Wed</th>
+                      <th className="text-center time-capture-head">Thu</th>
+                      <th className="text-center time-capture-head">Fri</th>
+                      <th className="text-center time-capture-head">Sat</th>
+                      <th className="text-center time-capture-head">Sun</th>
+                      <th className="text-center time-capture-head">
+                        <AssignmentRoundedIcon />
+                      </th>
+                    </tr>
+                  </thead>
+
                   <>
                     <tbody>
                       {timesheet.map((item, index) => {
@@ -332,8 +364,14 @@ function GetTimesheet({ data, user }) {
                       </tr>
                     </tfoot>
                   </>
-                ) : null}
-              </Table>
+                </Table>
+              ) : (
+                <div className="center-all p-4">
+                  <span className="m-2 text-text-subtitle-18">
+                    No hours were logged during this week
+                  </span>
+                </div>
+              )}
             </div>
           </Row>
         </Col>

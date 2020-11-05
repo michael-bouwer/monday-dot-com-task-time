@@ -56,19 +56,6 @@ function Data({ data }) {
                 <UserCard
                   user={item}
                   onClick={(timesheet) => {
-                    if (!timesheet || timesheet.length === 0) {
-                      // monday.execute("notice", {
-                      //   message: "Nothing to see here.",
-                      //   type: "error", // or "error" (red), or "info" (blue)
-                      //   timeout: 4000,
-                      // });
-                    } else {
-                      // monday.execute("notice", {
-                      //   message: JSON.stringify(timesheet),
-                      //   type: "success", // or "error" (red), or "info" (blue)
-                      //   timeout: 2000,
-                      // });
-                    }
                     setUser(item);
                     setViewUserTimesheet(true);
                   }}

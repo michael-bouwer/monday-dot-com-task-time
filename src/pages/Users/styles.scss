@@ -1,47 +1,59 @@
-@import '../../styles/variables';
+@import "../../styles/variables";
 
-.card{
-    padding: 8px 0;
-    height: 100%;
-    transition: all 0.2s ease;
+.card {
+  padding: 8px 0;
+  height: 100%;
+  transition: all 0.2s ease;
 
-    &:hover{
-        cursor: pointer;
-        box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-          0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06);
-    }
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+      0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06);
+  }
 
-    .avatar-summary{
-        padding: 0 16px;
-    }
+  .avatar-summary {
+    padding: 0 16px;
+  }
 
-    .today, .week, .avatar{
-        padding: 0;
-    }
+  .today,
+  .week,
+  .avatar {
+    padding: 0;
+  }
 
-    .today, .week{
-        font-size: 10px;
-    }
+  .today,
+  .week {
+    font-size: 10px;
+  }
 
-    .today{
-        text-align: left;
-    }
+  .today {
+    text-align: left;
+  }
 
-    .week{
-        text-align: right;
-    }
+  .week {
+    text-align: right;
+  }
 
-    .avatar{
-        display: flex;
-        justify-content: center;
-    }
+  .avatar {
+    display: flex;
+    justify-content: center;
+  }
 
-    .user-name{
-        text-align: center;
-    }
+  .user-name {
+    text-align: center;
+  }
 }
 
-// UserTimesheets
+.tab {
+  margin: 0 16px;
+}
 
-.modal-background{
+.arrow {
+  &:hover {
+    fill: $primary-button;
+    cursor: pointer;
+  }
+}
+.get-timesheet {
+  margin-bottom: 22px;
 }

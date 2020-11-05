@@ -89,6 +89,7 @@ function GetTimesheet({ data }) {
   //console.log(getDateRange(moment()));
 
   const getTimesheetForWeek = async (dateRange) => {
+    setLoading(true);
     _currentTimesheet(null);
     await monday.storage.instance
       .getItem("timesheet_" + _currentUser().id + "_" + getDateRange(dateRange))
@@ -174,25 +175,38 @@ function GetTimesheet({ data }) {
   //   return (
   //     <Loading
   //       text={
-  //         _loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]
+  //         // _loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]
+  //         "Fetching your timesheet for the selected week."
   //       }
   //     />
   //   );
 
   return (
     <animated.div className="timesheet" style={props}>
+      {loading ? (
+        <Loading
+          text={
+            // _loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]
+            "Fetching your timesheet for the selected week."
+          }
+        />
+      ) : null}
       <Row>
         <Col className="tab">
-          <CustomDatePicker onClick={(value) => getTimesheetForWeek(value)} />
+          <CustomDatePicker
+            onClick={(value) => {
+              setDate(value);
+              getTimesheetForWeek(value);
+            }}
+            value={date}
+          />
         </Col>
       </Row>
       <Row>
         <Col>
           <Row className="get-timesheet">
             <div className="table-time-capture">
-              {loading ? (
-                <p>loading</p>
-              ) : (
+              {loading ? null : timesheet && timesheet.length > 0 ? (
                 <Table striped hover size="sm">
                   <thead>
                     <tr>
@@ -210,321 +224,309 @@ function GetTimesheet({ data }) {
                     </tr>
                   </thead>
 
-                  {timesheet && timesheet.length > 0 ? (
-                    <>
-                      <tbody>
-                        {timesheet.map((item, index) => {
-                          return (
-                            <tr key={item.id}>
-                              <td className="item-text">
-                                <div className="center-all justify-content-between">
-                                  <div className="center-all">
-                                    <Tooltip
-                                      title={item.group.title}
-                                      placement="right"
-                                    >
-                                      <div
-                                        className="group-color"
-                                        style={{
-                                          backgroundColor: item.group.color,
-                                        }}
-                                      ></div>
-                                    </Tooltip>
-                                    <span
-                                      className="item-name"
-                                      onClick={() => {
-                                        monday.execute("openItemCard", {
-                                          itemId: item.id,
-                                        });
+                  <>
+                    <tbody>
+                      {timesheet.map((item, index) => {
+                        return (
+                          <tr key={item.id}>
+                            <td className="item-text">
+                              <div className="center-all justify-content-between">
+                                <div className="center-all">
+                                  <Tooltip
+                                    title={item.group.title}
+                                    placement="right"
+                                  >
+                                    <div
+                                      className="group-color"
+                                      style={{
+                                        backgroundColor: item.group.color,
                                       }}
-                                    >
-                                      {item.name}
-                                    </span>
-                                  </div>
+                                    ></div>
+                                  </Tooltip>
                                   <span
-                                    className="delete"
+                                    className="item-name"
                                     onClick={() => {
-                                      monday
-                                        .execute("confirm", {
-                                          message:
-                                            "Are you sure you'd like to remove this item from your timesheet?",
-                                          confirmButton: "Yes!",
-                                          cancelButton: "No way",
-                                          excludeCancelButton: false,
-                                        })
-                                        .then((res) => {
-                                          if (res.data.confirm === true) {
-                                            removeItemFromTimesheet(item);
-                                            monday.execute("notice", {
-                                              message: "Item removed.",
-                                              type: "success", // or "error" (red), or "info" (blue)
-                                              timeout: 4000,
-                                            });
-                                          }
-                                        });
+                                      monday.execute("openItemCard", {
+                                        itemId: item.id,
+                                      });
                                     }}
                                   >
-                                    remove
+                                    {item.name}
                                   </span>
                                 </div>
-                              </td>
-                              {/* MONDAY */}
-                              <td
-                                className="text-center time-capture Mon"
-                                onFocus={(e) => {
-                                  e.target.click();
-                                }}
-                                onClick={() => {
-                                  if (!editingMonday) {
-                                    setEditingMonday(true);
-                                    setEditingItem(item);
-                                    setEditingText(
-                                      item.timeCaptureForDaysOfWeek[0]
-                                    );
+                                <span
+                                  className="delete"
+                                  onClick={() => {
+                                    monday
+                                      .execute("confirm", {
+                                        message:
+                                          "Are you sure you'd like to remove this item from your timesheet?",
+                                        confirmButton: "Yes!",
+                                        cancelButton: "No way",
+                                        excludeCancelButton: false,
+                                      })
+                                      .then((res) => {
+                                        if (res.data.confirm === true) {
+                                          removeItemFromTimesheet(item);
+                                          monday.execute("notice", {
+                                            message: "Item removed.",
+                                            type: "success", // or "error" (red), or "info" (blue)
+                                            timeout: 4000,
+                                          });
+                                        }
+                                      });
+                                  }}
+                                >
+                                  remove
+                                </span>
+                              </div>
+                            </td>
+                            {/* MONDAY */}
+                            <td
+                              className="text-center time-capture Mon"
+                              onFocus={(e) => {
+                                e.target.click();
+                              }}
+                              onClick={() => {
+                                if (!editingMonday) {
+                                  setEditingMonday(true);
+                                  setEditingItem(item);
+                                  setEditingText(
+                                    item.timeCaptureForDaysOfWeek[0]
+                                  );
+                                }
+                              }}
+                              tabIndex={1}
+                            >
+                              {editingMonday === true &&
+                              editingItem === item ? (
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
+                                  ref={Mon}
+                                  className="time-input"
+                                  value={editingText.toString()}
+                                  onBlur={() => {
+                                    saveTimeItem(editingText, item, 0);
+                                    setEditingMonday(false);
+                                    setEditingItem(null);
+                                    setEditingText("");
+                                  }}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                  }}
+                                  autoFocus
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
                                   }
-                                }}
-                                tabIndex={1}
-                              >
-                                {editingMonday === true &&
-                                editingItem === item ? (
-                                  <IMaskInput
-                                    mask={Number}
-                                    radix="."
-                                    ref={Mon}
-                                    className="time-input"
-                                    value={editingText.toString()}
-                                    onBlur={() => {
-                                      saveTimeItem(editingText, item, 0);
-                                      setEditingMonday(false);
-                                      setEditingItem(null);
-                                      setEditingText("");
-                                    }}
-                                    onFocus={(e) => {
-                                      e.target.select();
-                                    }}
-                                    autoFocus
-                                    onAccept={(value, mask) =>
-                                      setEditingText(value)
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.currentTarget.blur();
                                     }
-                                    onKeyPress={(e) => {
-                                      if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                      }
-                                    }}
-                                    tabIndex={1}
-                                  ></IMaskInput>
-                                ) : (
-                                  <span>
-                                    {item.timeCaptureForDaysOfWeek[0]}
-                                  </span>
-                                )}
-                              </td>
-                              {/* TUESDAY */}
-                              <td
-                                className="text-center time-capture Tue"
-                                onFocus={(e) => {
-                                  e.target.click();
-                                }}
-                                onClick={() => {
-                                  if (!editingTuesday) {
-                                    setEditingTuesday(true);
-                                    setEditingItem(item);
-                                    setEditingText(
-                                      item.timeCaptureForDaysOfWeek[1]
-                                    );
+                                  }}
+                                  tabIndex={1}
+                                ></IMaskInput>
+                              ) : (
+                                <span>{item.timeCaptureForDaysOfWeek[0]}</span>
+                              )}
+                            </td>
+                            {/* TUESDAY */}
+                            <td
+                              className="text-center time-capture Tue"
+                              onFocus={(e) => {
+                                e.target.click();
+                              }}
+                              onClick={() => {
+                                if (!editingTuesday) {
+                                  setEditingTuesday(true);
+                                  setEditingItem(item);
+                                  setEditingText(
+                                    item.timeCaptureForDaysOfWeek[1]
+                                  );
+                                }
+                              }}
+                              tabIndex={2}
+                            >
+                              {editingTuesday === true &&
+                              editingItem === item ? (
+                                <IMaskInput
+                                  mask={Number}
+                                  radix="."
+                                  ref={Tues}
+                                  className="time-input"
+                                  value={editingText.toString()}
+                                  onBlur={() => {
+                                    saveTimeItem(editingText, item, 1);
+                                    setEditingTuesday(false);
+                                    setEditingItem(null);
+                                    setEditingText("");
+                                  }}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                  }}
+                                  autoFocus
+                                  onAccept={(value, mask) =>
+                                    setEditingText(value)
                                   }
-                                }}
-                                tabIndex={2}
-                              >
-                                {editingTuesday === true &&
-                                editingItem === item ? (
-                                  <IMaskInput
-                                    mask={Number}
-                                    radix="."
-                                    ref={Tues}
-                                    className="time-input"
-                                    value={editingText.toString()}
-                                    onBlur={() => {
-                                      saveTimeItem(editingText, item, 1);
-                                      setEditingTuesday(false);
-                                      setEditingItem(null);
-                                      setEditingText("");
-                                    }}
-                                    onFocus={(e) => {
-                                      e.target.select();
-                                    }}
-                                    autoFocus
-                                    onAccept={(value, mask) =>
-                                      setEditingText(value)
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.currentTarget.blur();
                                     }
-                                    onKeyPress={(e) => {
-                                      if (e.key === "Enter") {
-                                        e.currentTarget.blur();
-                                      }
-                                    }}
-                                    tabIndex={2}
-                                  ></IMaskInput>
-                                ) : (
-                                  <span>
-                                    {item.timeCaptureForDaysOfWeek[1]}
-                                  </span>
-                                )}
-                              </td>
+                                  }}
+                                  tabIndex={2}
+                                ></IMaskInput>
+                              ) : (
+                                <span>{item.timeCaptureForDaysOfWeek[1]}</span>
+                              )}
+                            </td>
 
-                              {/* To be replaced with Imasks once perfected */}
-                              <td className="text-center time-capture Wed">
-                                0.0
-                              </td>
-                              <td className="text-center time-capture Thu">
-                                0.0
-                              </td>
-                              <td className="text-center time-capture Fri">
-                                0.0
-                              </td>
-                              <td className="text-center time-capture Sat">
-                                0.0
-                              </td>
-                              <td className="text-center time-capture Sun">
-                                0.0
-                              </td>
-                              <td className="text-center time-capture bold">
-                                {getWeekdaySum(item.timeCaptureForDaysOfWeek)}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <td colSpan={1}></td>
-                          <Tooltip
-                            title="There are only 24 hours in a day!"
-                            placement="bottom"
-                            disableHoverListener={
-                              parseFloat(summaries[0]) > 24 ? false : true
-                            }
-                          >
-                            <td
-                              className="text-center summary"
-                              style={{
-                                color:
-                                  parseFloat(summaries[0]) > 24 ? "red" : "",
-                              }} //mark value red - totals hours for 1 day cannot exceed 24.
-                            >
-                              {summaries[0]}
+                            {/* To be replaced with Imasks once perfected */}
+                            <td className="text-center time-capture Wed">
+                              0.0
                             </td>
-                          </Tooltip>
-                          <Tooltip
-                            title="There are only 24 hours in a day!"
-                            placement="bottom"
-                            disableHoverListener={
-                              parseFloat(summaries[1]) > 24 ? false : true
-                            }
-                          >
-                            <td
-                              className="text-center summary"
-                              style={{
-                                color:
-                                  parseFloat(summaries[1]) > 24 ? "red" : "",
-                              }} //mark value red - totals hours for 1 day cannot exceed 24.
-                            >
-                              {summaries[1]}
+                            <td className="text-center time-capture Thu">
+                              0.0
                             </td>
-                          </Tooltip>
-                          <Tooltip
-                            title="There are only 24 hours in a day!"
-                            placement="bottom"
-                            disableHoverListener={
-                              parseFloat(summaries[2]) > 24 ? false : true
-                            }
-                          >
-                            <td
-                              className="text-center summary"
-                              style={{
-                                color:
-                                  parseFloat(summaries[2]) > 24 ? "red" : "",
-                              }} //mark value red - totals hours for 1 day cannot exceed 24.
-                            >
-                              {summaries[2]}
+                            <td className="text-center time-capture Fri">
+                              0.0
                             </td>
-                          </Tooltip>
-                          <Tooltip
-                            title="There are only 24 hours in a day!"
-                            placement="bottom"
-                            disableHoverListener={
-                              parseFloat(summaries[3]) > 24 ? false : true
-                            }
-                          >
-                            <td
-                              className="text-center summary"
-                              style={{
-                                color:
-                                  parseFloat(summaries[3]) > 24 ? "red" : "",
-                              }} //mark value red - totals hours for 1 day cannot exceed 24.
-                            >
-                              {summaries[3]}
+                            <td className="text-center time-capture Sat">
+                              0.0
                             </td>
-                          </Tooltip>
-                          <Tooltip
-                            title="There are only 24 hours in a day!"
-                            placement="bottom"
-                            disableHoverListener={
-                              parseFloat(summaries[4]) > 24 ? false : true
-                            }
-                          >
-                            <td
-                              className="text-center summary"
-                              style={{
-                                color:
-                                  parseFloat(summaries[4]) > 24 ? "red" : "",
-                              }} //mark value red - totals hours for 1 day cannot exceed 24.
-                            >
-                              {summaries[4]}
+                            <td className="text-center time-capture Sun">
+                              0.0
                             </td>
-                          </Tooltip>
-                          <Tooltip
-                            title="There are only 24 hours in a day!"
-                            placement="bottom"
-                            disableHoverListener={
-                              parseFloat(summaries[5]) > 24 ? false : true
-                            }
-                          >
-                            <td
-                              className="text-center summary"
-                              style={{
-                                color:
-                                  parseFloat(summaries[5]) > 24 ? "red" : "",
-                              }} //mark value red - totals hours for 1 day cannot exceed 24.
-                            >
-                              {summaries[5]}
+                            <td className="text-center time-capture bold">
+                              {getWeekdaySum(item.timeCaptureForDaysOfWeek)}
                             </td>
-                          </Tooltip>
-                          <Tooltip
-                            title="There are only 24 hours in a day!"
-                            placement="bottom"
-                            disableHoverListener={
-                              parseFloat(summaries[6]) > 24 ? false : true
-                            }
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colSpan={1}></td>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[0]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[0]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
                           >
-                            <td
-                              className="text-center summary"
-                              style={{
-                                color:
-                                  parseFloat(summaries[6]) > 24 ? "red" : "",
-                              }} //mark value red - totals hours for 1 day cannot exceed 24.
-                            >
-                              {summaries[6]}
-                            </td>
-                          </Tooltip>
-                          <td className="text-center summary">
-                            {getWeekdaySum(summaries)}
+                            {summaries[0]}
                           </td>
-                        </tr>
-                      </tfoot>
-                    </>
-                  ) : null}
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[1]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[1]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[1]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[2]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[2]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[2]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[3]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[3]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[3]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[4]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[4]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[4]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[5]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[5]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[5]}
+                          </td>
+                        </Tooltip>
+                        <Tooltip
+                          title="There are only 24 hours in a day!"
+                          placement="bottom"
+                          disableHoverListener={
+                            parseFloat(summaries[6]) > 24 ? false : true
+                          }
+                        >
+                          <td
+                            className="text-center summary"
+                            style={{
+                              color: parseFloat(summaries[6]) > 24 ? "red" : "",
+                            }} //mark value red - totals hours for 1 day cannot exceed 24.
+                          >
+                            {summaries[6]}
+                          </td>
+                        </Tooltip>
+                        <td className="text-center summary">
+                          {getWeekdaySum(summaries)}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </>
                 </Table>
-              )}
+              ) : null}
+
               {timesheet && timesheet.length > 0 ? (
                 <Button
                   text="Add Item"
@@ -533,7 +535,7 @@ function GetTimesheet({ data }) {
               ) : (
                 <div
                   className="text-subtitle-18 center-all"
-                  style={{ flexDirection: "column", marginTop: "100px" }}
+                  style={{ flexDirection: "column" }}
                 >
                   <div style={{ marginBottom: "16px" }}>
                     <span>
@@ -550,7 +552,6 @@ function GetTimesheet({ data }) {
                   </div>
                 </div>
               )}
-
               {/* Add item to timesheet */}
               {addingItem ? (
                 <AddItemToTimeheet

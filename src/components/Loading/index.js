@@ -4,7 +4,7 @@ import "./styles.scss";
 
 function Loading({ text }) {
   return (
-    <div className="loading" style={{position: "absolute", left: "unset", top: "unset"}}>
+    <div className="loading" style={{ position: "fixed", left: "0", top: "0" }}>
       <div className="modal">
         <LoadingSVG width="100px" height="100px" />
         <div>

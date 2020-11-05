@@ -45,8 +45,8 @@ function UserCard({ user, onClick }) {
           setHoursWeek(weekSum.toFixed(2));
         } else {
           // do nothing
-          setHoursToday(0);
-          setHoursWeek(0);
+          setHoursToday((0).toFixed(2));
+          setHoursWeek((0).toFixed(2));
         }
       });
   };

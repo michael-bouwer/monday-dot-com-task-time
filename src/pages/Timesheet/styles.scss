@@ -3,6 +3,7 @@
 .timesheet {
   // margin-top: 40px;
   margin: 0 16px;
+  padding-top: 16px;
 
   .get-timesheet {
     margin-bottom: 22px;
@@ -187,6 +188,7 @@ td {
   width: 100%;
   height: calc(100vh);
   transition: all 0.3s ease 0s;
+  z-index: 30;
 
   .modal {
     position: relative;
