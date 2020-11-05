@@ -21,7 +21,6 @@ import {
 } from "../../globals/variables";
 import Loading from "../../components/Loading";
 import CustomDatePicker from "../../components/CustomDatePicker";
-import { setDate } from "date-fns";
 
 const monday = mondaySdk();
 
@@ -85,6 +84,7 @@ function GetTimesheet({ data, user }) {
   const [loading, setLoading] = useState(true);
   const [summaries, setSummaries] = useState(() => getSums());
   const [date, setDate] = useState(moment());
+  const datePickerRef = useRef();
 
   const props = useSpring({
     to: { opacity: 1, marginTop: 0 },
@@ -114,11 +114,13 @@ function GetTimesheet({ data, user }) {
     var thisTimeLastWeek = moment(currentDate).subtract(1, "weeks");
     setDate(thisTimeLastWeek);
     getTimesheetForWeek(thisTimeLastWeek);
+    datePickerRef.current.setDateFromParentComponent(thisTimeLastWeek);
   }
   function getNextWeekTimesheet(currentDate) {
     var thisTimeNextWeek = moment(currentDate).add(1, "weeks");
     setDate(thisTimeNextWeek);
     getTimesheetForWeek(thisTimeNextWeek);
+    datePickerRef.current.setDateFromParentComponent(thisTimeNextWeek);
   }
 
   function getSums(timesheetObject) {
@@ -144,6 +146,13 @@ function GetTimesheet({ data, user }) {
     return sum.toFixed(2);
   }
 
+  function getDay(index) {
+    var currentDate = date;
+    var weekStart = currentDate.clone().startOf("isoWeek");
+
+    return weekStart.add(index, "days").format("dd Do");
+  }
+
   useEffect(() => {
     setLoading(true);
     getTimesheetForWeek(date);
@@ -159,6 +168,7 @@ function GetTimesheet({ data, user }) {
       <Row>
         <Col className="tab">
           <CustomDatePicker
+            ref={datePickerRef}
             style={{ display: "inline-block" }}
             onClick={(value) => {
               setDate(value);
@@ -192,13 +202,27 @@ function GetTimesheet({ data, user }) {
                   <thead>
                     <tr>
                       <th className="item-head">Item</th>
-                      <th className="text-center time-capture-head">Mon</th>
-                      <th className="text-center time-capture-head">Tue</th>
-                      <th className="text-center time-capture-head">Wed</th>
-                      <th className="text-center time-capture-head">Thu</th>
-                      <th className="text-center time-capture-head">Fri</th>
-                      <th className="text-center time-capture-head">Sat</th>
-                      <th className="text-center time-capture-head">Sun</th>
+                      <th className="text-center time-capture-head">
+                        {getDay(0)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(1)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(2)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(3)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(4)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(5)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(6)}
+                      </th>
                       <th className="text-center time-capture-head">
                         <AssignmentRoundedIcon />
                       </th>

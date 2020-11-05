@@ -86,7 +86,13 @@ function GetTimesheet({ data }) {
     // );
     return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
   }
-  //console.log(getDateRange(moment()));
+
+  function getDay(index) {
+    var currentDate = date;
+    var weekStart = currentDate.clone().startOf("isoWeek");
+
+    return weekStart.add(index, "days").format("dd Do");
+  }
 
   const getTimesheetForWeek = async (dateRange) => {
     setLoading(true);
@@ -211,13 +217,27 @@ function GetTimesheet({ data }) {
                   <thead>
                     <tr>
                       <th className="item-head">Item</th>
-                      <th className="text-center time-capture-head">Mon</th>
-                      <th className="text-center time-capture-head">Tue</th>
-                      <th className="text-center time-capture-head">Wed</th>
-                      <th className="text-center time-capture-head">Thu</th>
-                      <th className="text-center time-capture-head">Fri</th>
-                      <th className="text-center time-capture-head">Sat</th>
-                      <th className="text-center time-capture-head">Sun</th>
+                      <th className="text-center time-capture-head">
+                        {getDay(0)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(1)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(2)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(3)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(4)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(5)}
+                      </th>
+                      <th className="text-center time-capture-head">
+                        {getDay(6)}
+                      </th>
                       <th className="text-center time-capture-head">
                         <TimerRoundedIcon />
                       </th>

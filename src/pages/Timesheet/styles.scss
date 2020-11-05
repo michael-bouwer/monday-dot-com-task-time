@@ -102,7 +102,7 @@
     border: unset;
   }
 
-  th{
+  th {
     font-weight: unset;
   }
 
@@ -217,12 +217,30 @@ td {
       padding: 8px 24px;
 
       .item {
-        border-bottom: 1px solid gainsboro;
-        border-radius: 4px;
-        padding: 2px 4px;
+        transition: all 0.2s ease;
+        margin: 2px 0;
         &:hover {
           background-color: lightcyan;
           cursor: pointer;
+          .tick {
+            width: 40px;
+          }
+        }
+        .tick {
+          fill: green;
+          border-radius: 4px;
+          display: inline-block;
+          width:0;
+          transition: width .1s ease-in;
+        }
+        .tick-text {
+          padding: 8px 8px;
+        }
+
+        .selected{
+          .tick{
+            width: 200px;
+          }
         }
       }
     }

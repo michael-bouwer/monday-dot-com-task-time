@@ -33,6 +33,7 @@ export function CustomBar() {
   };
 
   const options = {
+    maintainsAspectRatio: false,
     scales: {
       yAxes: [
         {

@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
+import CheckCircleOutlineRoundedIcon from "@material-ui/icons/CheckCircleOutlineRounded";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -113,16 +114,20 @@ function AddItemToTimesheet({ close, onSave }) {
                       key={item.id}
                       onClick={(e) => {
                         if (alreadyInTimesheet(item)) {
-                          e.currentTarget.style.backgroundColor = "unset";
+                          e.currentTarget.style.borderLeft =
+                            "0px solid gainsboro";
                           removeFromTimesheet(item);
                         } else {
-                          e.currentTarget.style.backgroundColor = "lightblue";
+                          e.currentTarget.style.borderLeft = "8px solid green";
                           addToTimesheet(item);
                         }
                       }}
-                      className="item"
+                      className="item center-all justify-content-start"
                     >
-                      <span>{item.name}</span>
+                      {/* <CheckCircleOutlineRoundedIcon
+                        className="tick"
+                      /> */}
+                      <span className="tick-text">{item.name}</span>
                     </div>
                   );
                 }
