@@ -32,7 +32,6 @@ function Header() {
   let pageName = "";
   if (selectedPage === _pages.TIMESHEET) pageName = "My Timesheet";
   else if (selectedPage === _pages.USERS) pageName = "Team";
-  else if (selectedPage === _pages.ABSENCE) pageName = "Absence";
   else if (selectedPage === _pages.ANALYTICS)
     pageName = "Analytics and Reporting";
 
@@ -65,17 +64,6 @@ function Header() {
                 onClick={() => _currentComponent(_pages.ANALYTICS)}
               >
                 <EqualizerRoundedIcon />
-              </div>
-            </Tooltip>
-            
-            <Tooltip title="Absence">
-              <div
-                className={`timesheet-icon ${
-                  selectedPage === _pages.ABSENCE ? "selected" : ""
-                }`}
-                onClick={() => _currentComponent(_pages.ABSENCE)}
-              >
-                <BeachAccessRoundedIcon />
               </div>
             </Tooltip>
 

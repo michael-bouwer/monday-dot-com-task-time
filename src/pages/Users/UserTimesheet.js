@@ -11,8 +11,7 @@ import moment from "moment";
 import mondaySdk from "monday-sdk-js";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
-import ArrowRightAltRoundedIcon from "@material-ui/icons/ArrowRightAltRounded";
-import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
+import ImportExportRoundedIcon from "@material-ui/icons/ImportExportRounded";
 
 //Custom
 import queries from "../../api";
@@ -56,7 +55,6 @@ function UserTimesheet({ user, goBack }) {
                     icon={<PrintRoundedIcon />}
                   ></Button>
                 </span> */}
-                <Button tertiary text="Save" icon={<SaveRoundedIcon />}></Button>
               </div>
             </div>
           </Col>
@@ -134,7 +132,7 @@ function GetTimesheet({ data, user }) {
                 return;
               }
             });
-            if (!found) {
+            if (!found && item.type === "item") {
               item["deleted"] = true;
             }
           });
@@ -214,6 +212,16 @@ function GetTimesheet({ data, user }) {
             value={date}
           />
         </Col>
+
+        <Col className="tab text-right">
+          <span stlye={{ position: "absolute", top: "-1em" }}>
+            <Button
+              secondary
+              text="Export"
+              icon={<ImportExportRoundedIcon />}
+            ></Button>
+          </span>
+        </Col>
       </Row>
       <Row>
         <Col>
@@ -284,31 +292,39 @@ function GetTimesheet({ data, user }) {
                             <td className="item-text">
                               <div className="center-all justify-content-between">
                                 <div className="center-all">
-                                  <Tooltip
-                                    title={item.group.title}
-                                    placement="right"
-                                  >
-                                    <div
-                                      className="group-color"
-                                      style={{
-                                        backgroundColor: item.group.color,
-                                      }}
-                                    ></div>
-                                  </Tooltip>
+                                  {item.type === "item" ? (
+                                    <Tooltip
+                                      title={item.group.title}
+                                      placement="right"
+                                    >
+                                      <div
+                                        className="group-color"
+                                        style={{
+                                          backgroundColor: item.group.color,
+                                        }}
+                                      ></div>
+                                    </Tooltip>
+                                  ) : (
+                                    <div className="absence-color"></div>
+                                  )}
                                   <span
-                                    className="item-name"
+                                    className={`item-name ${
+                                      item.type === "item" ? `can-click` : null
+                                    }`}
                                     onClick={() => {
-                                      if (item.deleted) {
-                                        monday.execute("notice", {
-                                          message:
-                                            "This item was removed from the board",
-                                          type: "error", // or "error" (red), or "info" (blue)
-                                          timeout: 4000,
-                                        });
-                                      } else {
-                                        monday.execute("openItemCard", {
-                                          itemId: item.id,
-                                        });
+                                      if (item.type === "item") {
+                                        if (item.deleted) {
+                                          monday.execute("notice", {
+                                            message:
+                                              "This item was removed from the board",
+                                            type: "error", // or "error" (red), or "info" (blue)
+                                            timeout: 4000,
+                                          });
+                                        } else {
+                                          monday.execute("openItemCard", {
+                                            itemId: item.id,
+                                          });
+                                        }
                                       }
                                     }}
                                     style={{

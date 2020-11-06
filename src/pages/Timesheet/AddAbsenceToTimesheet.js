@@ -63,51 +63,37 @@ function AddAbsenceToTimesheet({ close, onSave }) {
   );
 
   function getListOfItemsNotInTimesheet() {
-    return (
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-          style={{ borderLeft: `8px solid #401694` }}
-        >
-          <span>Absence</span>
-        </AccordionSummary>
-        <AccordionDetails style={{ flexDirection: "column" }}>
-          {absenceItems.map((item) => {
-            let found = false;
-            if (currentTimesheet && currentTimesheet.length > 0) {
-              currentTimesheet.map((timesheetItem, timesheetIndex) => {
-                if (timesheetItem.id === item) {
-                  found = true;
-                }
-              });
-            }
-            if (!found) {
-              return (
-                <div
-                  key={item}
-                  onClick={(e) => {
-                    if (alreadyInTimesheet(item)) {
-                      e.currentTarget.style.borderLeft = "0px solid gainsboro";
-                      e.currentTarget.classList.remove("green");
-                      removeFromTimesheet(item);
-                    } else {
-                      e.currentTarget.style.borderLeft = "8px solid green";
-                      e.currentTarget.classList.add("green");
-                      addToTimesheet(item);
-                    }
-                  }}
-                  className="item center-all justify-content-start"
-                >
-                  <span className="tick-text">{item}</span>
-                </div>
-              );
-            }
-          })}
-        </AccordionDetails>
-      </Accordion>
-    );
+    return absenceItems.map((item) => {
+      let found = false;
+      if (currentTimesheet && currentTimesheet.length > 0) {
+        currentTimesheet.map((timesheetItem, timesheetIndex) => {
+          if (timesheetItem.id === item) {
+            found = true;
+          }
+        });
+      }
+      if (!found) {
+        return (
+          <div
+            key={item}
+            onClick={(e) => {
+              if (alreadyInTimesheet(item)) {
+                e.currentTarget.style.borderLeft = "0px solid gainsboro";
+                e.currentTarget.classList.remove("green");
+                removeFromTimesheet(item);
+              } else {
+                e.currentTarget.style.borderLeft = "8px solid green";
+                e.currentTarget.classList.add("green");
+                addToTimesheet(item);
+              }
+            }}
+            className="item center-all justify-content-start"
+          >
+            <span className="tick-text">{item}</span>
+          </div>
+        );
+      }
+    });
   }
 
   function addToTimesheet(item) {
