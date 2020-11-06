@@ -168,6 +168,7 @@ function AddItemToTimesheet({ close, onSave }) {
         "0.00",
         "0.00",
       ],
+      type: "item",
     };
 
     let found = false;

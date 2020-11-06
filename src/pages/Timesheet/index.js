@@ -6,7 +6,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import TimerRoundedIcon from "@material-ui/icons/TimerRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
-import ArrowRightAltRoundedIcon from "@material-ui/icons/ArrowRightAltRounded";
+import HouseRoundedIcon from "@material-ui/icons/HouseRounded";
 import "./styles.scss";
 import moment, { isMoment } from "moment";
 import mondaySdk from "monday-sdk-js";
@@ -22,6 +22,7 @@ import {
 } from "../../globals/variables";
 import Button from "../../components/Button";
 import AddItemToTimeheet from "./AddItemToTimesheet";
+import AddAbsenceToTimesheet from "./AddAbsenceToTimesheet";
 import Loading from "../../components/Loading";
 import CustomDatePicker from "../../components/CustomDatePicker";
 
@@ -60,6 +61,7 @@ function GetTimesheet({ data }) {
   const timesheet = useReactiveVar(_currentTimesheet);
   const [loading, setLoading] = useState(true);
   const [addingItem, isAddingItem] = useState(false);
+  const [addingAbsence, isAddingAbsence] = useState(false);
   const [editingMonday, setEditingMonday] = useState(false);
   const [editingTuesday, setEditingTuesday] = useState(false);
   const [editingWednesday, setEditingWednesday] = useState(false);
@@ -119,7 +121,7 @@ function GetTimesheet({ data }) {
     var currentDate = date;
     var weekStart = currentDate.clone().startOf("isoWeek");
 
-    return weekStart.add(index, "days").format("dd Do");
+    return weekStart.add(index, "days").format("ddd D");
   }
 
   const getTimesheetForWeek = async (dateRange) => {
@@ -140,7 +142,7 @@ function GetTimesheet({ data }) {
                 return;
               }
             });
-            if (!found) {
+            if (!found && item.type === "item") {
               item["deleted"] = true;
             }
           });
@@ -217,16 +219,6 @@ function GetTimesheet({ data }) {
     getTimesheetForWeek(date);
   }, []);
 
-  // if (loading)
-  //   return (
-  //     <Loading
-  //       text={
-  //         // _loadingMessages[Math.floor(Math.random() * _loadingMessages.length)]
-  //         "Fetching your timesheet for the selected week."
-  //       }
-  //     />
-  //   );
-
   return (
     <animated.div className="timesheet" style={props}>
       {loading ? (
@@ -260,7 +252,7 @@ function GetTimesheet({ data }) {
                   }}
                   className="arrow"
                 />
-                <div className="center-all">
+                {/* <div className="center-all">
                   <span className="text-paragraph-16 day">
                     {getStartDay(date)}
                   </span>
@@ -270,7 +262,7 @@ function GetTimesheet({ data }) {
                   <span className="text-paragraph-16 day">
                     {getEndDay(date)}
                   </span>
-                </div>
+                </div> */}
                 <ArrowForwardIosRoundedIcon
                   onClick={() => {
                     getNextWeekTimesheet(date);
@@ -319,31 +311,39 @@ function GetTimesheet({ data }) {
                             <td className="item-text">
                               <div className="center-all justify-content-between">
                                 <div className="center-all">
-                                  <Tooltip
-                                    title={item.group.title}
-                                    placement="right"
-                                  >
-                                    <div
-                                      className="group-color"
-                                      style={{
-                                        backgroundColor: item.group.color,
-                                      }}
-                                    ></div>
-                                  </Tooltip>
+                                  {item.type === "item" ? (
+                                    <Tooltip
+                                      title={item.group.title}
+                                      placement="right"
+                                    >
+                                      <div
+                                        className="group-color"
+                                        style={{
+                                          backgroundColor: item.group.color,
+                                        }}
+                                      ></div>
+                                    </Tooltip>
+                                  ) : (
+                                    <div className="absence-color"></div>
+                                  )}
                                   <span
-                                    className="item-name"
+                                    className={`item-name ${
+                                      item.type === "item" ? `can-click` : null
+                                    }`}
                                     onClick={() => {
-                                      if (item.deleted) {
-                                        monday.execute("notice", {
-                                          message:
-                                            "This item was removed from the board",
-                                          type: "error", // or "error" (red), or "info" (blue)
-                                          timeout: 4000,
-                                        });
-                                      } else {
-                                        monday.execute("openItemCard", {
-                                          itemId: item.id,
-                                        });
+                                      if (item.type === "item") {
+                                        if (item.deleted) {
+                                          monday.execute("notice", {
+                                            message:
+                                              "This item was removed from the board",
+                                            type: "error", // or "error" (red), or "info" (blue)
+                                            timeout: 4000,
+                                          });
+                                        } else {
+                                          monday.execute("openItemCard", {
+                                            itemId: item.id,
+                                          });
+                                        }
                                       }
                                     }}
                                     style={{
@@ -866,10 +866,19 @@ function GetTimesheet({ data }) {
               ) : null}
 
               {timesheet && timesheet.length > 0 ? (
-                <Button
-                  text="Add Item"
-                  onClick={() => isAddingItem(!addingItem)}
-                />
+                <div>
+                  <Button
+                    text="Add Item"
+                    onClick={() => isAddingItem(!addingItem)}
+                  />
+                  <span className="ml-2">
+                    <Button
+                      secondary
+                      text="Add Absence"
+                      onClick={() => isAddingAbsence(!addingAbsence)}
+                    />
+                  </span>
+                </div>
               ) : (
                 <div
                   className="text-subtitle-18 center-all p-5"
@@ -887,6 +896,14 @@ function GetTimesheet({ data }) {
                       text="Add Item"
                       onClick={() => isAddingItem(!addingItem)}
                     />
+                    <span className="ml-2">
+                      <Button
+                        large
+                        secondary
+                        text="Add Absence"
+                        onClick={() => isAddingAbsence(!addingAbsence)}
+                      />
+                    </span>
                   </div>
                 </div>
               )}
@@ -898,6 +915,18 @@ function GetTimesheet({ data }) {
                   }}
                   close={() => {
                     isAddingItem(false);
+                  }}
+                />
+              ) : null}
+
+              {/* Add Absence to timesheet */}
+              {addingAbsence ? (
+                <AddAbsenceToTimesheet
+                  onSave={(tempTimesheet) => {
+                    saveTimesheetForWeek(tempTimesheet);
+                  }}
+                  close={() => {
+                    isAddingAbsence(false);
                   }}
                 />
               ) : null}

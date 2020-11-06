@@ -56,7 +56,7 @@ function UserTimesheet({ user, goBack }) {
                     icon={<PrintRoundedIcon />}
                   ></Button>
                 </span> */}
-                <Button text="Save" icon={<SaveRoundedIcon />}></Button>
+                <Button tertiary text="Save" icon={<SaveRoundedIcon />}></Button>
               </div>
             </div>
           </Col>
@@ -187,7 +187,7 @@ function GetTimesheet({ data, user }) {
     var currentDate = date;
     var weekStart = currentDate.clone().startOf("isoWeek");
 
-    return weekStart.add(index, "days").format("dd Do");
+    return weekStart.add(index, "days").format("ddd D");
   }
 
   useEffect(() => {
@@ -226,7 +226,7 @@ function GetTimesheet({ data, user }) {
                   }}
                   className="arrow"
                 />
-                <div className="center-all">
+                {/* <div className="center-all">
                   <span className="text-paragraph-16 day">
                     {getStartDay(date)}
                   </span>
@@ -236,7 +236,7 @@ function GetTimesheet({ data, user }) {
                   <span className="text-paragraph-16 day">
                     {getEndDay(date)}
                   </span>
-                </div>
+                </div> */}
                 <ArrowForwardIosRoundedIcon
                   onClick={() => {
                     getNextWeekTimesheet(date);

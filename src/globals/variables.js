@@ -10,7 +10,7 @@ export const _currentComponent = makeVar();
 
 export const _pages = {
   TIMESHEET: "timesheet",
-  COMPONENTA: "a",
+  ABSENCE: "absence",
   USERS: "users",
   ANALYTICS: "analytics",
 };

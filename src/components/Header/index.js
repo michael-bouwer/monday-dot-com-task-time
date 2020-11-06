@@ -4,6 +4,7 @@ import { Row, Col } from "react-bootstrap";
 import EqualizerRoundedIcon from "@material-ui/icons/EqualizerRounded";
 import PeopleAltRoundedIcon from "@material-ui/icons/PeopleAltRounded";
 import ListAltRoundedIcon from "@material-ui/icons/ListAltRounded";
+import BeachAccessRoundedIcon from '@material-ui/icons/BeachAccessRounded';
 import Tooltip from "@material-ui/core/Tooltip";
 import moment from "moment";
 import "./styles.scss";
@@ -30,7 +31,8 @@ function Header() {
   const selectedPage = useReactiveVar(_currentComponent);
   let pageName = "";
   if (selectedPage === _pages.TIMESHEET) pageName = "My Timesheet";
-  else if (selectedPage === _pages.USERS) pageName = "All Users";
+  else if (selectedPage === _pages.USERS) pageName = "Team";
+  else if (selectedPage === _pages.ABSENCE) pageName = "Absence";
   else if (selectedPage === _pages.ANALYTICS)
     pageName = "Analytics and Reporting";
 
@@ -65,8 +67,19 @@ function Header() {
                 <EqualizerRoundedIcon />
               </div>
             </Tooltip>
+            
+            <Tooltip title="Absence">
+              <div
+                className={`timesheet-icon ${
+                  selectedPage === _pages.ABSENCE ? "selected" : ""
+                }`}
+                onClick={() => _currentComponent(_pages.ABSENCE)}
+              >
+                <BeachAccessRoundedIcon />
+              </div>
+            </Tooltip>
 
-            <Tooltip title="All Users">
+            <Tooltip title="Team">
               <div
                 className={`timesheet-icon ${
                   selectedPage === _pages.USERS ? "selected" : ""
