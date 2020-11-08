@@ -1,6 +1,7 @@
 body {
   margin: 0;
   line-height: unset;
+  overflow-x: auto;
 }
 
 .App {

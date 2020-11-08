@@ -51,7 +51,7 @@ const CustomDatePicker = forwardRef(({ onClick }, ref) => {
             style={{
               position: "relative",
               display: "inherit",
-              marginLeft: "-1.8em",
+              marginLeft: "-2.2em",
             }}
           >
             <DateRange style={{ fill: "white" }} />

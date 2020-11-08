@@ -6,7 +6,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import TimerRoundedIcon from "@material-ui/icons/TimerRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
-import HouseRoundedIcon from "@material-ui/icons/HouseRounded";
 import "./styles.scss";
 import moment, { isMoment } from "moment";
 import mondaySdk from "monday-sdk-js";

@@ -6,12 +6,13 @@ import { useSpring, animated } from "react-spring";
 import "./styles.scss";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import Tooltip from "@material-ui/core/Tooltip";
-import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
+import TimerRoundedIcon from "@material-ui/icons/TimerRounded";
 import moment from "moment";
 import mondaySdk from "monday-sdk-js";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
 import ImportExportRoundedIcon from "@material-ui/icons/ImportExportRounded";
+import printJS from "print-js";
 
 //Custom
 import queries from "../../api";
@@ -218,6 +219,14 @@ function GetTimesheet({ data, user }) {
             <Button
               secondary
               text="Export"
+              onClick={() =>
+                printJS({
+                  printable: "printJS-user-timesheet",
+                  type: "html",
+                  targetStyles: ["*"],
+                  style: "@page { size: Letter landscape; }",
+                })
+              }
               icon={<ImportExportRoundedIcon />}
             ></Button>
           </span>
@@ -253,7 +262,7 @@ function GetTimesheet({ data, user }) {
                 />
               </div>
               {loading ? null : timesheet && timesheet.length > 0 ? (
-                <Table striped hover size="sm">
+                <Table striped hover size="sm" id="printJS-user-timesheet">
                   <thead>
                     <tr>
                       <th className="item-head">Item</th>
@@ -279,7 +288,7 @@ function GetTimesheet({ data, user }) {
                         {getDay(6)}
                       </th>
                       <th className="text-center time-capture-head">
-                        <AssignmentRoundedIcon />
+                        <TimerRoundedIcon />
                       </th>
                     </tr>
                   </thead>

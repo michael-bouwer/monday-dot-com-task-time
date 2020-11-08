@@ -4,9 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
-import CheckCircleOutlineRoundedIcon from "@material-ui/icons/CheckCircleOutlineRounded";
+import Loading from "../../components/Loading";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import mondaySdk from "monday-sdk-js";
 
@@ -38,8 +37,9 @@ function AddItemToTimesheet({ close, onSave }) {
   const currentTimesheet = _currentTimesheet();
   const [newTimesheetItems, setTimesheetData] = useState([]);
 
-  if (loading) return <p>fetching items...</p>;
-  if (error) return <p>failed to fetch items</p>;
+  if (loading)
+    return <Loading text="Refreshing item list from the main board" />;
+  if (error) return null;
 
   return (
     <div

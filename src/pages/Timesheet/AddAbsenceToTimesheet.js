@@ -20,6 +20,7 @@ const absenceItems = [
   "Compassionate Leave",
   "Maternity Leave",
   "Paternity Leave",
+  "Public Holiday",
   "Other",
 ];
 
