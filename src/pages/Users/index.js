@@ -49,7 +49,7 @@ function Data({ data }) {
           }}
         />
       ) : (
-        <Row xs={2} md={3} lg={4}>
+        <Row xs={2} md={3} lg={3} xl={4}>
           {transitions.map(({ item, props, key }) => {
             return (
               <animated.div key={key} style={props}>
