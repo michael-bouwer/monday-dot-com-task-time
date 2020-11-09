@@ -12,7 +12,7 @@ import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import "./styles.scss";
 
-const CustomDatePicker = forwardRef(({ onClick }, ref) => {
+const CustomDatePicker = forwardRef(({ onClick, TextFieldComponent }, ref) => {
   const [selectedDate, handleDateChange] = useState(moment());
   const [open, setOpen] = useState(false);
 
@@ -46,6 +46,7 @@ const CustomDatePicker = forwardRef(({ onClick }, ref) => {
             // open={open}
             animateYearScrolling
             showTodayButton
+            TextFieldComponent={TextFieldComponent}
           />
           <div
             style={{
@@ -54,7 +55,9 @@ const CustomDatePicker = forwardRef(({ onClick }, ref) => {
               marginLeft: "-2.2em",
             }}
           >
-            <DateRange style={{ fill: "white" }} />
+            {TextFieldComponent ? null : (
+              <DateRange style={{ fill: "white" }} />
+            )}
           </div>
         </div>
 
