@@ -3,31 +3,39 @@ import ImportExportRoundedIcon from "@material-ui/icons/ImportExportRounded";
 import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import FormControl from "@material-ui/core/FormControl";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import Avatar from "@material-ui/core/Avatar";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Button from "../../components/Button";
 import { Col, Row } from "react-bootstrap";
-import { CustomBar, CustomPolar } from "../../components/Charts";
-import CustomDatePicker from "../../components/CustomDatePicker";
-import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
+import { DatePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import Loading from "../../components/Loading";
 import moment from "moment";
-import DateRange from "@material-ui/icons/DateRange";
 import MomentUtils from "@date-io/moment";
+
+//Custom
+import queries from "../../api";
+import { _currentBoard } from "../../globals/variables";
+import { CustomBar } from "../../components/Charts";
+import Button from "../../components/Button";
 import "./styles.scss";
 
+const defaultUserText = "Select a User";
+const defaultTypeText = "Select a Type";
+
 function Analytics() {
+  const { loading, error, data, refetch } = useQuery(queries.SUBSCRIBERS, {
+    fetchPolicy: "network-only",
+    variables: { ids: _currentBoard() },
+  });
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElType, setAnchorElType] = useState(null);
-  const [userText, setUserText] = useState("Select a User");
-  const [typeText, setTypeText] = useState("Select a Type");
+  const [userText, setUserText] = useState(defaultUserText);
+  const [typeText, setTypeText] = useState(defaultTypeText);
   const [date, setDate] = useState(moment());
   const [isOpen, setIsOpen] = useState(false);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -51,30 +59,22 @@ function Analytics() {
     return weekStart.format("Do MMM") + " - " + weekEnd.format("Do MMM");
   }
 
+  function generateReport() {
+    if (userText === defaultUserText || typeText === defaultTypeText) {
+      //require user input
+    } else {
+      //load chart
+    }
+  }
+
+  if (loading) return <Loading text="Shaping your data" />;
+  if (error) return <span>something went wrong :(</span>;
+
   return (
     <div className="analytics">
       <Row style={{ margin: "0 16px" }}>
-        {/* <Col sm={8}>
-          <span className="text-subtitle-18 dark-gray analytical-block text-uppercase">
-            CHART Here
-          </span>
-          <div className="card mt-2">
-            <CustomBar />
-          </div>
-        </Col>
-
-        <Col sm={4}>
-          <span className="text-subtitle-18 dark-gray analytical-block text-uppercase">
-            Pie Here
-          </span>
-          <div className="card mt-2">
-            <CustomPolar />
-          </div>
-        </Col> */}
         <Col>
-          <span className="text-subtitle-18 dark-gray analytical-block text-uppercase">
-            FILTERS
-          </span>
+          {/* MENU */}
           <div className="center-all reporting-taskbar justify-content-between">
             <div className="center-all justify-content-start">
               <div style={{ marginRight: "16px" }}>
@@ -82,7 +82,7 @@ function Analytics() {
                   className="selector-button justify-content-between"
                   onClick={handleClick}
                 >
-                  <span className="d-flex">
+                  <span className="d-flex align-items-center">
                     <AccountCircleRoundedIcon />
                     <span
                       aria-controls="simple-menu"
@@ -143,7 +143,7 @@ function Analytics() {
                   className="selector-button justify-content-between"
                   onClick={handleClickType}
                 >
-                  <span className="d-flex">
+                  <span className="d-flex align-items-center">
                     <AssignmentRoundedIcon />
                     <span
                       aria-controls="simple-menu"
@@ -224,7 +224,60 @@ function Analytics() {
               ></Button>
             </div>
           </div>
-          <div className="card mt-2"></div>
+
+          {/* CONTENT */}
+          <Row>
+            <Col sm={9} className="card mt-2 h-100">
+              {userText === defaultUserText || typeText === defaultTypeText ? (
+                <h4>Need user input</h4>
+              ) : (
+                <div>
+                  <Col>
+                    <CustomBar />
+                  </Col>
+                </div>
+              )}
+            </Col>
+
+            {userText === defaultUserText || typeText === defaultTypeText ? (
+              <Col sm={3} className="p-2 flex-column justify-content-around">
+                <h4>Need user input</h4>
+              </Col>
+            ) : (
+              <Col
+                sm={3}
+                className="p-2 d-flex flex-column justify-content-around"
+              >
+                <div className="d-flex justify-content-center align-items-center flex-column">
+                  <span className="text-secondary-sub-24 font-weight-bolder">
+                    177
+                  </span>
+                  <span className="text-text-medium-14">TOTAL HOURS</span>
+                </div>
+
+                <div className="d-flex justify-content-center align-items-center flex-column">
+                  <span className="text-secondary-sub-24 font-weight-bolder">
+                    160
+                  </span>
+                  <span className="text-text-medium-14">HOURS WORKED</span>
+                </div>
+
+                <div className="d-flex justify-content-center align-items-center flex-column">
+                  <span className="text-secondary-sub-24 font-weight-bolder">
+                    17
+                  </span>
+                  <span className="text-text-medium-14">HOURS OVERTIME</span>
+                </div>
+
+                <div className="d-flex justify-content-center align-items-center flex-column">
+                  <span className="text-secondary-sub-24 font-weight-bolder">
+                    2
+                  </span>
+                  <span className="text-text-medium-14">DAYS ABSENT</span>
+                </div>
+              </Col>
+            )}
+          </Row>
         </Col>
       </Row>
     </div>

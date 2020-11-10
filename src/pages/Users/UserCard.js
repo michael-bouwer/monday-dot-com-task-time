@@ -111,17 +111,6 @@ function UserCard({ user, onClick }) {
                     ? "--"
                     : hoursWeek}
                 </span>
-                {/* ABSENCE STATUS */}
-                {/* <span
-                  className="diamond"
-                  style={{ opacity: absence ? "1" : "0" }}  //set opacity so that the space the rerender looks natural
-                ></span>
-                <span
-                  className="text-center"
-                  style={{ opacity: absence ? "1" : "0" }}
-                >
-                  ABSENCE LOGGED
-                </span> */}
                 <span
                   className="text-center"
                   style={{ opacity: hasAbsence ? "1" : "0" }}
@@ -150,30 +139,6 @@ function UserCard({ user, onClick }) {
                 </div>
               </Row>
             </Col>
-            {/* <Col sm={3} className="today">
-              <span>TODAY</span>
-              <span className="text-paragraph-16" style={{ display: "block" }}>
-                {hoursToday === null ? "--" : hoursToday}
-              </span>
-            </Col>
-            <Col sm={6} className="avatar">
-              <Avatar
-                alt={user.name}
-                src={user.photo_original}
-                style={{ width: "80px", height: "80px", margin: "16px 0" }}
-              />
-            </Col>
-            <Col sm={3} className="week">
-              <span>WEEK</span>
-              <span className="text-paragraph-16" style={{ display: "block" }}>
-                {hoursWeek === null ? "--" : hoursWeek}
-              </span>
-            </Col> */}
-          </Row>
-          <Row>
-            {/* <Col className="user-name">
-              <span className="text-paragraph-16">{user.name}</span>
-            </Col> */}
           </Row>
         </div>
       </ButtonBase>
