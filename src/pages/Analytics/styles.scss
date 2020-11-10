@@ -1,7 +1,7 @@
 @import "../../styles/variables";
 
 .analytics {
-  margin-bottom: 16px;
+  margin: 16px 0;
 
   .card {
     height: 100%;
@@ -38,8 +38,8 @@
     background-color: $light;
     color: $dark;
     border-radius: 4px 4px;
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 260px;
+    max-width: 260px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -55,5 +55,12 @@
       cursor: pointer;
       background-color: rgba($light, 0.8);
     }
+  }
+
+  .menu-item-text {
+    width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

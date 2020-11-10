@@ -13,6 +13,11 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import Loading from "../../components/Loading";
 import moment from "moment";
 import MomentUtils from "@date-io/moment";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Grow from "@material-ui/core/Grow";
+import Paper from "@material-ui/core/Paper";
+import Popper from "@material-ui/core/Popper";
+import MenuList from "@material-ui/core/MenuList";
 
 //Custom
 import queries from "../../api";
@@ -94,48 +99,81 @@ function Analytics() {
                   </span>
                   <ArrowDropDownIcon />
                 </div>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  keepMounted
+                <Popper
                   open={Boolean(anchorEl)}
-                  onClose={handleClose}
+                  anchorEl={anchorEl}
+                  role={undefined}
+                  transition
+                  disablePortal
+                  style={{
+                    zIndex: "20",
+                    marginTop: "2px",
+                    minWidth: "260px",
+                    maxWidth: "260px",
+                  }}
                 >
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      setUserText("Team");
-                    }}
-                  >
-                    Team
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      setUserText("Michael Bouwer  iasdhia ids aid ishd");
-                    }}
-                  >
-                    <span className="d-flex justify-content-start align-items-center">
-                      <span className="mr-2">
-                        <AccountCircleRoundedIcon />
-                      </span>
-                      Michael Bouwer Michael
-                    </span>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      setUserText("Ross Viljoen");
-                    }}
-                  >
-                    <span className="d-flex justify-content-start align-items-center">
-                      <span className="mr-2">
-                        <AccountCircleRoundedIcon />
-                      </span>
-                      Ross Viljoen
-                    </span>
-                  </MenuItem>
-                </Menu>
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === "bottom"
+                            ? "center top"
+                            : "center bottom",
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                          <MenuList
+                            autoFocusItem={Boolean(anchorEl)}
+                            id="menu-list-grow"
+                            onKeyDown={handleClose}
+                          >
+                            <MenuItem
+                              onClick={() => {
+                                handleClose();
+                                setUserText("Team");
+                              }}
+                            >
+                              Team
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                handleClose();
+                                setUserText(
+                                  "Michael Bouwer  iasdhia ids aid ishd"
+                                );
+                              }}
+                            >
+                              <span className="d-flex justify-content-start align-items-center">
+                                <span className="mr-2">
+                                  <AccountCircleRoundedIcon />
+                                </span>
+                                <span className="menu-item-text">
+                                  Michael BouwerMichael BouwerMichael
+                                  BouwerMichael BouwerMichael Bouwer
+                                </span>
+                              </span>
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                handleClose();
+                                setUserText("Ross Viljoen");
+                              }}
+                            >
+                              <span className="d-flex justify-content-start align-items-center">
+                                <span className="mr-2">
+                                  <AccountCircleRoundedIcon />
+                                </span>
+                                Ross Viljoen
+                              </span>
+                            </MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
               </div>
 
               <div style={{ marginRight: "16px", display: "block" }}>
