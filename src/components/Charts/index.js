@@ -10,7 +10,7 @@ import "./styles.scss";
 import queries from "../../api";
 import Loading from "../../components/Loading";
 
-export function CustomBar() {
+export function CustomBar({ user, reportMode = null, date = null }) {
   const data = {
     labels: ["1", "2", "3"],
     datasets: [
@@ -52,7 +52,16 @@ export function CustomBar() {
     },
   };
 
-  return <Bar data={data} options={options} />;
+  return (
+    <>
+      <div>{user ? user.name : null}</div>
+      {/* {/* <div>{reportMode}</div> */}
+      {/* <div>{date}</div>  */}
+      <Bar //data={data}
+        options={options}
+      />
+    </>
+  );
 }
 
 export default CustomBar;

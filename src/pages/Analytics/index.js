@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import ImportExportRoundedIcon from "@material-ui/icons/ImportExportRounded";
 import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
@@ -18,16 +18,56 @@ import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
+import Avatar from "@material-ui/core/Avatar";
+import { Bar } from "@reactchartjs/react-chart.js";
+import mondaySdk from "monday-sdk-js";
 
 //Custom
 import queries from "../../api";
 import { _currentBoard } from "../../globals/variables";
 import { CustomBar } from "../../components/Charts";
 import Button from "../../components/Button";
+import { getTotalHoursLoggedBarData } from "./calculations";
 import "./styles.scss";
+
+const monday = mondaySdk();
 
 const defaultUserText = "Select a User";
 const defaultTypeText = "Select a Type";
+
+const reportModes = {
+  // Scenario: Person works 50 hours in the week, takes 8 hours leave (1 day).
+  TOTAL_HOURS_LOGGED: "Total Hours Logged", // = 58 hours
+  HOURS_WORKED: "Hours Worked", // = 40 hours (max for average working week)
+  HOURS_OVERTIME: "Hours Overtime", // 50 - 40 = 10 hours
+  ABSENCE: "Absence", // 8 hours
+};
+const reports = [
+  reportModes.TOTAL_HOURS_LOGGED,
+  reportModes.HOURS_WORKED,
+  reportModes.HOURS_OVERTIME,
+  reportModes.ABSENCE,
+];
+
+const options = {
+  maintainsAspectRatio: false,
+  responsive: true,
+  scales: {
+    yAxes: [
+      {
+        stacked: true,
+        ticks: {
+          beginAtZero: true,
+        },
+      },
+    ],
+    xAxes: [
+      {
+        stacked: true,
+      },
+    ],
+  },
+};
 
 function Analytics() {
   const { loading, error, data, refetch } = useQuery(queries.SUBSCRIBERS, {
@@ -38,8 +78,12 @@ function Analytics() {
   const [anchorElType, setAnchorElType] = useState(null);
   const [userText, setUserText] = useState(defaultUserText);
   const [typeText, setTypeText] = useState(defaultTypeText);
+  const [selectedUser, setSelectedUser] = useState({ name: "Select a User" });
+  const [selectedReportMode, setSelectedReportMode] = useState("Select a Type");
   const [date, setDate] = useState(moment());
   const [isOpen, setIsOpen] = useState(false);
+  const [loadingReport, setLoadingReport] = useState(false);
+  const [barData, setBarData] = useState();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -57,20 +101,90 @@ function Analytics() {
     setAnchorElType(null);
   };
 
-  function getDateRange(inputDate) {
+  function getDateRangeForDisplay(inputDate) {
     var currentDate = inputDate; //moment();
     var weekStart = currentDate.clone().startOf("isoWeek");
     var weekEnd = currentDate.clone().endOf("isoWeek");
     return weekStart.format("Do MMM") + " - " + weekEnd.format("Do MMM");
   }
 
-  function generateReport() {
-    if (userText === defaultUserText || typeText === defaultTypeText) {
-      //require user input
+  function getDateRange(inputDate) {
+    var currentDate = inputDate; //moment();
+    var weekStart = currentDate.clone().startOf("isoWeek");
+    var weekEnd = currentDate.clone().endOf("isoWeek");
+    return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
+  }
+
+  const generateReportForUsers = async (user) => {
+    setLoadingReport(true);
+    let allTimesheets = [];
+    if (user) {
+      await monday.storage.instance
+        .getItem("timesheet_" + user.id + "_" + getDateRange(date))
+        .then((res) => {
+          const { value } = res.data;
+          //sleep(10000); // someone may overwrite serialKey during this time
+          if (value && value.length > 0) {
+            allTimesheets.push({
+              user: user,
+              data: JSON.parse(value),
+            });
+          } else {
+            allTimesheets.push({
+              user: user,
+              data: [],
+            });
+          }
+          shapeData(allTimesheets);
+          setLoadingReport(false);
+        });
     } else {
-      //load chart
+      for (const sub of data.boards[0].subscribers) {
+        await monday.storage.instance
+          .getItem("timesheet_" + sub.id + "_" + getDateRange(date))
+          .then((res) => {
+            const { value } = res.data;
+            //sleep(10000); // someone may overwrite serialKey during this time
+            if (value && value.length > 0) {
+              allTimesheets.push({
+                user: sub,
+                data: JSON.parse(value),
+              });
+            } else {
+              allTimesheets.push({
+                user: sub,
+                data: [],
+              });
+            }
+          });
+      }
+      shapeData(allTimesheets);
+      setLoadingReport(false);
+    }
+  };
+
+  function shapeData(timesheetData) {
+    if (selectedReportMode === reportModes.TOTAL_HOURS_LOGGED) {
+      setBarData(getTotalHoursLoggedBarData(timesheetData));
+    } else if (selectedReportMode === reportModes.HOURS_WORKED) {
+    } else if (selectedReportMode === reportModes.HOURS_OVERTIME) {
+    } else if (selectedReportMode === reportModes.ABSENCE) {
     }
   }
+
+  useEffect(() => {
+    if (
+      selectedUser.name !== "Select a User" &&
+      selectedReportMode !== "Select a Type"
+    ) {
+      if (selectedUser.name === "Team") {
+        // get for all team members
+        generateReportForUsers();
+      } else {
+        generateReportForUsers(selectedUser);
+      }
+    }
+  }, [selectedUser, selectedReportMode, date]);
 
   if (loading) return <Loading text="Shaping your data" />;
   if (error) return <span>something went wrong :(</span>;
@@ -82,6 +196,7 @@ function Analytics() {
           {/* MENU */}
           <div className="center-all reporting-taskbar justify-content-between">
             <div className="center-all justify-content-start">
+              {/* SELECT USER */}
               <div style={{ marginRight: "16px" }}>
                 <div
                   className="selector-button justify-content-between"
@@ -94,7 +209,7 @@ function Analytics() {
                       aria-haspopup="true"
                       className="ml-2"
                     >
-                      {userText}
+                      {selectedUser.name}
                     </span>
                   </span>
                   <ArrowDropDownIcon />
@@ -132,42 +247,38 @@ function Analytics() {
                             <MenuItem
                               onClick={() => {
                                 handleClose();
-                                setUserText("Team");
+                                let user = {
+                                  id: 0,
+                                  name: "Team",
+                                };
+                                setSelectedUser(user);
                               }}
                             >
                               Team
                             </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                handleClose();
-                                setUserText(
-                                  "Michael Bouwer  iasdhia ids aid ishd"
-                                );
-                              }}
-                            >
-                              <span className="d-flex justify-content-start align-items-center">
-                                <span className="mr-2">
-                                  <AccountCircleRoundedIcon />
-                                </span>
-                                <span className="menu-item-text">
-                                  Michael BouwerMichael BouwerMichael
-                                  BouwerMichael BouwerMichael Bouwer
-                                </span>
-                              </span>
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                handleClose();
-                                setUserText("Ross Viljoen");
-                              }}
-                            >
-                              <span className="d-flex justify-content-start align-items-center">
-                                <span className="mr-2">
-                                  <AccountCircleRoundedIcon />
-                                </span>
-                                Ross Viljoen
-                              </span>
-                            </MenuItem>
+                            {data.boards[0].subscribers.map((user) => {
+                              return (
+                                <MenuItem
+                                  key={user.id}
+                                  onClick={() => {
+                                    handleClose();
+                                    setSelectedUser(user);
+                                  }}
+                                >
+                                  <span className="d-flex justify-content-start align-items-center">
+                                    <span className="mr-2">
+                                      <Avatar
+                                        alt={user.name}
+                                        src={user.photo_original}
+                                      />
+                                    </span>
+                                    <span className="menu-item-text">
+                                      {user.name}
+                                    </span>
+                                  </span>
+                                </MenuItem>
+                              );
+                            })}
                           </MenuList>
                         </ClickAwayListener>
                       </Paper>
@@ -176,6 +287,7 @@ function Analytics() {
                 </Popper>
               </div>
 
+              {/* SELECT REPORT MODE */}
               <div style={{ marginRight: "16px", display: "block" }}>
                 <div
                   className="selector-button justify-content-between"
@@ -188,29 +300,85 @@ function Analytics() {
                       aria-haspopup="true"
                       className="ml-2"
                     >
-                      {typeText}
+                      {selectedReportMode}
                     </span>
                   </span>
                   <ArrowDropDownIcon />
                 </div>
-                <Menu
+                <Popper
+                  open={Boolean(anchorElType)}
+                  anchorEl={anchorElType}
+                  role={undefined}
+                  transition
+                  disablePortal
+                  style={{
+                    zIndex: "20",
+                    marginTop: "2px",
+                    minWidth: "260px",
+                    maxWidth: "260px",
+                  }}
+                >
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === "bottom"
+                            ? "center top"
+                            : "center bottom",
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleCloseType}>
+                          <MenuList
+                            autoFocusItem={Boolean(anchorElType)}
+                            id="menu-list-grow"
+                            onKeyDown={handleCloseType}
+                          >
+                            {reports.map((mode) => {
+                              return (
+                                <MenuItem
+                                  key={mode}
+                                  onClick={() => {
+                                    handleCloseType();
+                                    setSelectedReportMode(mode);
+                                  }}
+                                >
+                                  {mode}
+                                </MenuItem>
+                              );
+                            })}
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+                {/* <Menu
                   id="simple-menu"
                   anchorEl={anchorElType}
                   keepMounted
                   open={Boolean(anchorElType)}
                   onClose={handleCloseType}
                 >
-                  <MenuItem
-                    onClick={() => {
-                      handleCloseType();
-                      setTypeText("Hours Logged");
-                    }}
-                  >
-                    Hours Logged
-                  </MenuItem>
-                </Menu>
+                  {reports.map((mode) => {
+                    return (
+                      <MenuItem
+                        key={mode}
+                        onClick={() => {
+                          handleCloseType();
+                          setSelectedReportMode(mode);
+                          getGraphData();
+                        }}
+                      >
+                        {mode}
+                      </MenuItem>
+                    );
+                  })}
+                </Menu> */}
               </div>
 
+              {/* SELECT DATE RANGE */}
               <div
                 style={{ marginRight: "16px" }}
                 onClick={() => setIsOpen(true)}
@@ -222,21 +390,11 @@ function Analytics() {
                     aria-haspopup="true"
                     className="ml-2"
                   >
-                    {getDateRange(moment(date))}
+                    {getDateRangeForDisplay(moment(date))}
                   </span>
                 </div>
               </div>
               <span>
-                {/* <CustomDatePicker
-                  ref={datePickerRef}
-                  style={{ display: "inline-block" }}
-                  onClick={(value) => {
-                    setDate(value);
-                    //getTimesheetForWeek(value);
-                  }}
-                  value={date}
-                  TextFieldComponent={() => null}
-                /> */}
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <Fragment>
                     <DatePicker
@@ -246,7 +404,9 @@ function Analytics() {
                       animateYearScrolling
                       showTodayButton
                       style={{ display: "inline-block" }}
-                      onChange={setDate}
+                      onChange={(value) => {
+                        setDate(value);
+                      }}
                       value={date}
                       TextFieldComponent={() => null}
                     />
@@ -255,66 +415,72 @@ function Analytics() {
               </span>
             </div>
             <div>
-              <Button
+              {/* <Button
                 secondary
                 text="Export"
                 icon={<ImportExportRoundedIcon />}
-              ></Button>
+              ></Button> */}
             </div>
           </div>
 
           {/* CONTENT */}
-          <Row>
-            <Col sm={9} className="card mt-2 h-100">
-              {userText === defaultUserText || typeText === defaultTypeText ? (
-                <h4>Need user input</h4>
-              ) : (
-                <div>
-                  <Col>
-                    <CustomBar />
-                  </Col>
-                </div>
-              )}
-            </Col>
-
-            {userText === defaultUserText || typeText === defaultTypeText ? (
-              <Col sm={3} className="p-2 flex-column justify-content-around">
-                <h4>Need user input</h4>
-              </Col>
-            ) : (
-              <Col
-                sm={3}
-                className="p-2 d-flex flex-column justify-content-around"
+          <Row className=" position-relative">
+            {loadingReport ? (
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(0, 0, 0, 0.5)",
+                  position: "absolute",
+                  zIndex: "10",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
               >
-                <div className="d-flex justify-content-center align-items-center flex-column">
-                  <span className="text-secondary-sub-24 font-weight-bolder">
-                    177
-                  </span>
-                  <span className="text-text-medium-14">TOTAL HOURS</span>
-                </div>
+                <span style={{ marginTop: "16px", color: "white" }}>
+                  generating report...
+                </span>
+              </div>
+            ) : null}
+            <Col sm={9} className="card mt-2 h-100">
+              <div>
+                <Col>
+                  <Bar data={barData} options={options} />
+                </Col>
+              </div>
+            </Col>
+            <Col
+              sm={3}
+              className="p-2 d-flex flex-column justify-content-around"
+            >
+              <div className="d-flex justify-content-center align-items-center flex-column">
+                <span className="text-secondary-sub-24 font-weight-bolder">
+                  177
+                </span>
+                <span className="text-text-medium-14">TOTAL HOURS</span>
+              </div>
 
-                <div className="d-flex justify-content-center align-items-center flex-column">
-                  <span className="text-secondary-sub-24 font-weight-bolder">
-                    160
-                  </span>
-                  <span className="text-text-medium-14">HOURS WORKED</span>
-                </div>
+              <div className="d-flex justify-content-center align-items-center flex-column">
+                <span className="text-secondary-sub-24 font-weight-bolder">
+                  160
+                </span>
+                <span className="text-text-medium-14">HOURS WORKED</span>
+              </div>
 
-                <div className="d-flex justify-content-center align-items-center flex-column">
-                  <span className="text-secondary-sub-24 font-weight-bolder">
-                    17
-                  </span>
-                  <span className="text-text-medium-14">HOURS OVERTIME</span>
-                </div>
+              <div className="d-flex justify-content-center align-items-center flex-column">
+                <span className="text-secondary-sub-24 font-weight-bolder">
+                  17
+                </span>
+                <span className="text-text-medium-14">HOURS OVERTIME</span>
+              </div>
 
-                <div className="d-flex justify-content-center align-items-center flex-column">
-                  <span className="text-secondary-sub-24 font-weight-bolder">
-                    2
-                  </span>
-                  <span className="text-text-medium-14">DAYS ABSENT</span>
-                </div>
-              </Col>
-            )}
+              <div className="d-flex justify-content-center align-items-center flex-column">
+                <span className="text-secondary-sub-24 font-weight-bolder">
+                  2
+                </span>
+                <span className="text-text-medium-14">DAYS ABSENT</span>
+              </div>
+            </Col>
           </Row>
         </Col>
       </Row>
