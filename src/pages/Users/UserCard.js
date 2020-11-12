@@ -30,7 +30,7 @@ function UserCard({ user, onClick }) {
     await monday.storage.instance
       .getItem("timesheet_" + user.id + "_" + getDateRange(moment()))
       .then((res) => {
-        const { value, version } = res.data;
+        const { value } = res.data;
         if (value && value.length > 0) {
           let todaySum = 0;
           let weekSum = 0;
@@ -38,9 +38,9 @@ function UserCard({ user, onClick }) {
           const timesheet = JSON.parse(value);
           if (timesheet && timesheet.length > 0) {
             setUserTimesheet(timesheet);
-            timesheet.map((item) => {
+            timesheet.forEach((item) => {
               if (item.type === "absence") setHasAbsence(true);
-              item.timeCaptureForDaysOfWeek.map((dayTime, index) => {
+              item.timeCaptureForDaysOfWeek.forEach((dayTime, index) => {
                 if (index === getdayOfWeekInt()) {
                   //Monday jsut for testing
                   if (item.type === "absence") {

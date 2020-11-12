@@ -1,11 +1,9 @@
 import React, { Fragment, useState, useEffect } from "react";
-import ImportExportRoundedIcon from "@material-ui/icons/ImportExportRounded";
 import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
-import { useQuery, useReactiveVar } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Col, Row } from "react-bootstrap";
 import { DatePicker } from "@material-ui/pickers";
@@ -25,9 +23,12 @@ import mondaySdk from "monday-sdk-js";
 //Custom
 import queries from "../../api";
 import { _currentBoard } from "../../globals/variables";
-import { CustomBar } from "../../components/Charts";
-import Button from "../../components/Button";
-import { getTotalHoursLoggedBarData } from "./calculations";
+import {
+  getTotalHoursLoggedBarData,
+  getHoursWorkedBarData,
+  getHoursOvertimeBarData,
+  getAbsenceBarData,
+} from "./calculations";
 import "./styles.scss";
 
 const monday = mondaySdk();
@@ -70,14 +71,12 @@ const options = {
 };
 
 function Analytics() {
-  const { loading, error, data, refetch } = useQuery(queries.SUBSCRIBERS, {
+  const { loading, error, data } = useQuery(queries.SUBSCRIBERS, {
     fetchPolicy: "network-only",
     variables: { ids: _currentBoard() },
   });
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElType, setAnchorElType] = useState(null);
-  const [userText, setUserText] = useState(defaultUserText);
-  const [typeText, setTypeText] = useState(defaultTypeText);
   const [selectedUser, setSelectedUser] = useState({ name: "Select a User" });
   const [selectedReportMode, setSelectedReportMode] = useState("Select a Type");
   const [date, setDate] = useState(moment());
@@ -167,8 +166,11 @@ function Analytics() {
     if (selectedReportMode === reportModes.TOTAL_HOURS_LOGGED) {
       setBarData(getTotalHoursLoggedBarData(timesheetData));
     } else if (selectedReportMode === reportModes.HOURS_WORKED) {
+      setBarData(getHoursWorkedBarData(timesheetData));
     } else if (selectedReportMode === reportModes.HOURS_OVERTIME) {
+      setBarData(getHoursOvertimeBarData(timesheetData));
     } else if (selectedReportMode === reportModes.ABSENCE) {
+      setBarData(getAbsenceBarData(timesheetData));
     }
   }
 

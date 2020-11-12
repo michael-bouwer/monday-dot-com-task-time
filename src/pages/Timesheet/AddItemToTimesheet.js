@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -14,19 +13,8 @@ import queries from "../../api";
 import { _currentBoard, _currentTimesheet } from "../../globals/variables";
 import Button from "../../components/Button";
 import "./styles.scss";
-import { Save } from "@material-ui/icons";
 
 const monday = mondaySdk();
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-}));
 
 function AddItemToTimesheet({ close, onSave }) {
   const { loading, error, data } = useQuery(queries.USERS_ITEMS, {
@@ -82,7 +70,7 @@ function AddItemToTimesheet({ close, onSave }) {
     let groups = fromData.boards[0].groups;
 
     if (filteredItems && filteredItems.length > 0) {
-      groups.map((group) => {
+      groups.forEach((group) => {
         let itemsCount = 0;
         list.push(
           <Accordion key={group.id}>
@@ -99,7 +87,7 @@ function AddItemToTimesheet({ close, onSave }) {
               {filteredItems.map((item) => {
                 let found = false;
                 if (currentTimesheet && currentTimesheet.length > 0) {
-                  currentTimesheet.map((timesheetItem, timesheetIndex) => {
+                  currentTimesheet.forEach((timesheetItem, timesheetIndex) => {
                     if (timesheetItem.id === item.id) {
                       //filteredItems = filteredItems.splice(index, 1);
                       found = true;
@@ -132,6 +120,8 @@ function AddItemToTimesheet({ close, onSave }) {
                       <span className="tick-text">{item.name}</span>
                     </div>
                   );
+                } else {
+                  return null;
                 }
               })}
             </AccordionDetails>
@@ -172,7 +162,7 @@ function AddItemToTimesheet({ close, onSave }) {
     };
 
     let found = false;
-    newTimesheetItems.map((entry) => {
+    newTimesheetItems.forEach((entry) => {
       if (entry.id === item.id) found = true;
     });
 
@@ -184,7 +174,7 @@ function AddItemToTimesheet({ close, onSave }) {
 
   function alreadyInTimesheet(item) {
     let found = false;
-    newTimesheetItems.map((entry) => {
+    newTimesheetItems.forEach((entry) => {
       if (entry.id === item.id) {
         found = true;
       }
@@ -195,7 +185,7 @@ function AddItemToTimesheet({ close, onSave }) {
 
   function removeFromTimesheet(item) {
     let tempArr = newTimesheetItems;
-    newTimesheetItems.map((entry, index) => {
+    newTimesheetItems.forEach((entry, index) => {
       if (entry.id === item.id) {
         tempArr.splice(index, 1);
       }

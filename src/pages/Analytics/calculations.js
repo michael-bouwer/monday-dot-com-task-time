@@ -2,11 +2,23 @@ export function getTotalHoursLoggedBarData(timesheetData) {
   debugger;
   let labels = [];
   let datasets = [];
+  let contentColors = [
+    "#00C875",
+    "#7E3B8A",
+    "#7F5347",
+    "#66CCFF",
+    "#784BD1",
+    "#FFCB00",
+    "#579BFC",
+    "#FDAB3D",
+    "#68A1BD",
+    "#FF7575",
+  ];
+  let index = 0;
   if (timesheetData && timesheetData.length > 0) {
     labels.push("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
     timesheetData.forEach((user) => {
       let name = user.user.name;
-      let data = [];
       let sums = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
       user.data.forEach((item) => {
         sums[0] += parseFloat(item.timeCaptureForDaysOfWeek[0]);
@@ -17,11 +29,13 @@ export function getTotalHoursLoggedBarData(timesheetData) {
         sums[5] += parseFloat(item.timeCaptureForDaysOfWeek[5]);
         sums[6] += parseFloat(item.timeCaptureForDaysOfWeek[6]);
       });
-      data = sums;
+      if (index > contentColors.length) index = 0;
       datasets.push({
         label: name,
+        backgroundColor: contentColors[index],
         data: sums,
       });
+      index++;
     });
 
     return {
@@ -31,3 +45,9 @@ export function getTotalHoursLoggedBarData(timesheetData) {
   }
   return null;
 }
+
+export function getHoursWorkedBarData(timesheetData) {}
+
+export function getHoursOvertimeBarData(timesheetData) {}
+
+export function getAbsenceBarData(timesheetData) {}

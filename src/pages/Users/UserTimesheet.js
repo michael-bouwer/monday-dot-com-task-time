@@ -92,17 +92,6 @@ function getDateRange(inputDate) {
   return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
 }
 
-function getStartDay(inputDate) {
-  var currentDate = inputDate; //moment();
-  var weekStart = currentDate.clone().startOf("isoWeek");
-  return weekStart.format("dddd, DD MMMM yyyy");
-}
-function getEndDay(inputDate) {
-  var currentDate = inputDate; //moment();
-  var weekEnd = currentDate.clone().endOf("isoWeek");
-  return weekEnd.format("dddd, DD MMMM yyyy");
-}
-
 function GetTimesheet({ data, user }) {
   const timesheet = useReactiveVar(_currentTimesheet);
   const [loading, setLoading] = useState(true);
@@ -121,16 +110,15 @@ function GetTimesheet({ data, user }) {
     await monday.storage.instance
       .getItem("timesheet_" + user.id + "_" + getDateRange(dateRange))
       .then((res) => {
-        const { value, version } = res.data;
+        const { value } = res.data;
         //sleep(10000); // someone may overwrite serialKey during this time
         if (value && value.length > 0) {
           let items = JSON.parse(value); //Need to establish if items are still valid on the main board.
-          items.map((item) => {
+          items.forEach((item) => {
             let found = false;
-            data.boards[0].items.map((boardItem) => {
+            data.boards[0].items.forEach((boardItem) => {
               if (item.id === boardItem.id) {
                 found = true;
-                return;
               }
             });
             if (!found && item.type === "item") {
@@ -164,8 +152,8 @@ function GetTimesheet({ data, user }) {
     let sums = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
     if (processData && processData.length > 0) {
       //valid timesheet, calculate sums
-      processData.map((item) => {
-        item.timeCaptureForDaysOfWeek.map((dayOfWeek, index) => {
+      processData.forEach((item) => {
+        item.timeCaptureForDaysOfWeek.forEach((dayOfWeek, index) => {
           sums[index] += parseFloat(dayOfWeek);
         });
       });
@@ -175,7 +163,7 @@ function GetTimesheet({ data, user }) {
 
   function getWeekdaySum(dayValues) {
     let sum = 0;
-    dayValues.map((value) => {
+    dayValues.forEach((value) => {
       sum += parseFloat(value);
     });
 

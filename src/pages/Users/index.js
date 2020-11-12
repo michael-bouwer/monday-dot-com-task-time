@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles.scss";
-import { useQuery, useReactiveVar } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Row } from "react-bootstrap";
 import { useTransition, animated } from "react-spring";
 
@@ -10,12 +10,9 @@ import { _currentBoard } from "../../globals/variables";
 import Loading from "../../components/Loading";
 import UserCard from "./UserCard";
 import UserTimesheet from "./UserTimesheet";
-import mondaySdk from "monday-sdk-js";
-
-const monday = mondaySdk();
 
 function Users() {
-  const { loading, error, data, refetch } = useQuery(queries.SUBSCRIBERS, {
+  const { loading, error, data } = useQuery(queries.SUBSCRIBERS, {
     fetchPolicy: "network-only",
     variables: { ids: _currentBoard() },
   });

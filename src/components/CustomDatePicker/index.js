@@ -4,17 +4,16 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
+import { DatePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateRange from "@material-ui/icons/DateRange";
-import IconButton from "@material-ui/core/IconButton";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import "./styles.scss";
 
 const CustomDatePicker = forwardRef(({ onClick, TextFieldComponent }, ref) => {
   const [selectedDate, handleDateChange] = useState(moment());
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
     setDateFromParentComponent(val) {

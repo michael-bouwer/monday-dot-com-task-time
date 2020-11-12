@@ -1,14 +1,8 @@
 import React, { useState } from "react";
-import { useQuery } from "@apollo/client";
-import { makeStyles } from "@material-ui/core/styles";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Box from "@material-ui/core/Box";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 //Custom
-import { _currentBoard, _currentTimesheet } from "../../globals/variables";
+import { _currentTimesheet } from "../../globals/variables";
 import Button from "../../components/Button";
 import "./styles.scss";
 
@@ -67,7 +61,7 @@ function AddAbsenceToTimesheet({ close, onSave }) {
     return absenceItems.map((item) => {
       let found = false;
       if (currentTimesheet && currentTimesheet.length > 0) {
-        currentTimesheet.map((timesheetItem, timesheetIndex) => {
+        currentTimesheet.forEach((timesheetItem, timesheetIndex) => {
           if (timesheetItem.id === item) {
             found = true;
           }
@@ -93,6 +87,8 @@ function AddAbsenceToTimesheet({ close, onSave }) {
             <span className="tick-text">{item}</span>
           </div>
         );
+      } else {
+        return null;
       }
     });
   }
@@ -119,7 +115,7 @@ function AddAbsenceToTimesheet({ close, onSave }) {
     };
 
     let found = false;
-    newTimesheetItems.map((entry) => {
+    newTimesheetItems.forEach((entry) => {
       if (entry.id === item.id) found = true;
     });
 
@@ -131,7 +127,7 @@ function AddAbsenceToTimesheet({ close, onSave }) {
 
   function alreadyInTimesheet(item) {
     let found = false;
-    newTimesheetItems.map((entry) => {
+    newTimesheetItems.forEach((entry) => {
       if (entry.id === item) {
         found = true;
       }
@@ -142,7 +138,7 @@ function AddAbsenceToTimesheet({ close, onSave }) {
 
   function removeFromTimesheet(item) {
     let tempArr = newTimesheetItems;
-    newTimesheetItems.map((entry, index) => {
+    newTimesheetItems.forEach((entry, index) => {
       if (entry.id === item) {
         tempArr.splice(index, 1);
       }

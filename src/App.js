@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import {
   ApolloProvider,
@@ -21,7 +21,6 @@ import Timesheet from "./pages/Timesheet";
 import Users from "./pages/Users";
 import Analytics from "./pages/Analytics";
 import Header from "./components/Header";
-import { ContactSupportOutlined } from "@material-ui/icons";
 
 const monday = mondaySdk();
 

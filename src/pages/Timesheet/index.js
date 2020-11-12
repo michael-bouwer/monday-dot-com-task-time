@@ -7,7 +7,7 @@ import TimerRoundedIcon from "@material-ui/icons/TimerRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
 import "./styles.scss";
-import moment, { isMoment } from "moment";
+import moment from "moment";
 import mondaySdk from "monday-sdk-js";
 import { IMaskInput } from "react-imask";
 
@@ -43,17 +43,6 @@ function Timesheet() {
     );
   if (error) return <p>error</p>;
   return <GetTimesheet data={data} />;
-}
-
-function getStartDay(inputDate) {
-  var currentDate = inputDate; //moment();
-  var weekStart = currentDate.clone().startOf("isoWeek");
-  return weekStart.format("dddd, DD MMMM yyyy");
-}
-function getEndDay(inputDate) {
-  var currentDate = inputDate; //moment();
-  var weekEnd = currentDate.clone().endOf("isoWeek");
-  return weekEnd.format("dddd, DD MMMM yyyy");
 }
 
 function GetTimesheet({ data }) {
@@ -129,16 +118,15 @@ function GetTimesheet({ data }) {
     await monday.storage.instance
       .getItem("timesheet_" + _currentUser().id + "_" + getDateRange(dateRange))
       .then((res) => {
-        const { value, version } = res.data;
+        const { value } = res.data;
         //sleep(10000); // someone may overwrite serialKey during this time
         if (value && value.length > 0) {
           let items = JSON.parse(value); //Need to establish if items are still valid on the main board.
-          items.map((item) => {
+          items.forEach((item) => {
             let found = false;
-            data.boards[0].items.map((boardItem) => {
+            data.boards[0].items.forEach((boardItem) => {
               if (item.id === boardItem.id) {
                 found = true;
-                return;
               }
             });
             if (!found && item.type === "item") {
@@ -167,7 +155,7 @@ function GetTimesheet({ data }) {
 
   function saveTimeItem(time, timeItem, index) {
     let arr = timesheet;
-    arr.map((item) => {
+    arr.forEach((item) => {
       if (item.id === timeItem.id && parseFloat(time).toFixed(2) >= 0) {
         item.timeCaptureForDaysOfWeek[index] = parseFloat(time).toFixed(2);
       }
@@ -179,7 +167,7 @@ function GetTimesheet({ data }) {
 
   function removeItemFromTimesheet(itemToDelete) {
     let arr = timesheet;
-    arr.map((item, index) => {
+    arr.forEach((item, index) => {
       if (item.id === itemToDelete.id) {
         arr.splice(index, 1);
       }
@@ -195,8 +183,8 @@ function GetTimesheet({ data }) {
     let sums = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
     if (processData && processData.length > 0) {
       //valid timesheet, calculate sums
-      processData.map((item) => {
-        item.timeCaptureForDaysOfWeek.map((dayOfWeek, index) => {
+      processData.forEach((item) => {
+        item.timeCaptureForDaysOfWeek.forEach((dayOfWeek, index) => {
           sums[index] += parseFloat(dayOfWeek);
         });
       });
@@ -206,7 +194,7 @@ function GetTimesheet({ data }) {
 
   function getWeekdaySum(dayValues) {
     let sum = 0;
-    dayValues.map((value) => {
+    dayValues.forEach((value) => {
       sum += parseFloat(value);
     });
 
