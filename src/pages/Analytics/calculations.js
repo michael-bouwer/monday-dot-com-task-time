@@ -1,5 +1,4 @@
 export function getTotalHoursLoggedBarData(timesheetData) {
-  debugger;
   let labels = [];
   let datasets = [];
   let contentColors = [
@@ -27,6 +26,7 @@ export function getTotalHoursLoggedBarData(timesheetData) {
     timesheetData.forEach((user) => {
       let name = user.user.name;
       let sums = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+      let sumsTypeItem = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
       user.data.forEach((item) => {
         sums[0] += parseFloat(item.timeCaptureForDaysOfWeek[0]);
         sums[1] += parseFloat(item.timeCaptureForDaysOfWeek[1]);
@@ -36,6 +36,15 @@ export function getTotalHoursLoggedBarData(timesheetData) {
         sums[5] += parseFloat(item.timeCaptureForDaysOfWeek[5]);
         sums[6] += parseFloat(item.timeCaptureForDaysOfWeek[6]);
 
+        if (item.type === "item") {
+          sumsTypeItem[0] += parseFloat(item.timeCaptureForDaysOfWeek[0]);
+          sumsTypeItem[1] += parseFloat(item.timeCaptureForDaysOfWeek[1]);
+          sumsTypeItem[2] += parseFloat(item.timeCaptureForDaysOfWeek[2]);
+          sumsTypeItem[3] += parseFloat(item.timeCaptureForDaysOfWeek[3]);
+          sumsTypeItem[4] += parseFloat(item.timeCaptureForDaysOfWeek[4]);
+          sumsTypeItem[5] += parseFloat(item.timeCaptureForDaysOfWeek[5]);
+          sumsTypeItem[6] += parseFloat(item.timeCaptureForDaysOfWeek[6]);
+        }
         if (item.type === "item") {
           hoursWorked +=
             parseFloat(item.timeCaptureForDaysOfWeek[0]) +
@@ -57,13 +66,15 @@ export function getTotalHoursLoggedBarData(timesheetData) {
         }
       });
       sums.forEach((total) => {
+        hoursTotal += total;
+      });
+
+      sumsTypeItem.forEach((total, index) => {
         if (total > 8.0) {
           //average working hours in working day
           hoursOvertime += total - 8;
         }
-        hoursTotal += total;
       });
-
       if (index > contentColors.length) index = 0;
       datasets.push({
         label: name,
@@ -72,8 +83,6 @@ export function getTotalHoursLoggedBarData(timesheetData) {
       });
       index++;
     });
-
-    hoursOvertime -= hoursAbsence;
 
     return {
       data: {
@@ -156,11 +165,14 @@ export function getHoursWorkedBarData(timesheetData) {
         }
       });
       sums.forEach((total) => {
+        hoursTotal += total;
+      });
+
+      sumsWorked.forEach((total, index) => {
         if (total > 8.0) {
           //average working hours in working day
           hoursOvertime += total - 8;
         }
-        hoursTotal += total;
       });
 
       if (index > contentColors.length) index = 0;
@@ -171,8 +183,6 @@ export function getHoursWorkedBarData(timesheetData) {
       });
       index++;
     });
-
-    hoursOvertime -= hoursAbsence;
 
     return {
       data: {
@@ -217,6 +227,7 @@ export function getHoursOvertimeBarData(timesheetData) {
       let name = user.user.name;
       let sums = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
       let sumsOvertime = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+      let sumsTypeItem = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
       user.data.forEach((item) => {
         sums[0] += parseFloat(item.timeCaptureForDaysOfWeek[0]);
         sums[1] += parseFloat(item.timeCaptureForDaysOfWeek[1]);
@@ -226,11 +237,15 @@ export function getHoursOvertimeBarData(timesheetData) {
         sums[5] += parseFloat(item.timeCaptureForDaysOfWeek[5]);
         sums[6] += parseFloat(item.timeCaptureForDaysOfWeek[6]);
 
-        item.timeCaptureForDaysOfWeek.forEach((time, index) => {
-          if (parseFloat(time) > 8.0) {
-            sumsOvertime[index] += parseFloat(time) - 8.0;
-          }
-        });
+        if (item.type === "item") {
+          sumsTypeItem[0] += parseFloat(item.timeCaptureForDaysOfWeek[0]);
+          sumsTypeItem[1] += parseFloat(item.timeCaptureForDaysOfWeek[1]);
+          sumsTypeItem[2] += parseFloat(item.timeCaptureForDaysOfWeek[2]);
+          sumsTypeItem[3] += parseFloat(item.timeCaptureForDaysOfWeek[3]);
+          sumsTypeItem[4] += parseFloat(item.timeCaptureForDaysOfWeek[4]);
+          sumsTypeItem[5] += parseFloat(item.timeCaptureForDaysOfWeek[5]);
+          sumsTypeItem[6] += parseFloat(item.timeCaptureForDaysOfWeek[6]);
+        }
 
         if (item.type === "item") {
           hoursWorked +=
@@ -252,12 +267,16 @@ export function getHoursOvertimeBarData(timesheetData) {
             parseFloat(item.timeCaptureForDaysOfWeek[6]);
         }
       });
-      sums.forEach((total) => {
+      sums.forEach((total, index) => {
+        hoursTotal += total;
+      });
+
+      sumsTypeItem.forEach((total, index) => {
         if (total > 8.0) {
           //average working hours in working day
           hoursOvertime += total - 8;
+          sumsOvertime[index] = total - 8;
         }
-        hoursTotal += total;
       });
 
       if (index > contentColors.length) index = 0;
@@ -268,8 +287,6 @@ export function getHoursOvertimeBarData(timesheetData) {
       });
       index++;
     });
-
-    hoursOvertime -= hoursAbsence;
 
     return {
       data: {
@@ -314,6 +331,7 @@ export function getAbsenceBarData(timesheetData) {
       let name = user.user.name;
       let sums = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
       let sumsAbsence = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+      let sumsTypeItem = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
       user.data.forEach((item) => {
         sums[0] += parseFloat(item.timeCaptureForDaysOfWeek[0]);
         sums[1] += parseFloat(item.timeCaptureForDaysOfWeek[1]);
@@ -322,6 +340,16 @@ export function getAbsenceBarData(timesheetData) {
         sums[4] += parseFloat(item.timeCaptureForDaysOfWeek[4]);
         sums[5] += parseFloat(item.timeCaptureForDaysOfWeek[5]);
         sums[6] += parseFloat(item.timeCaptureForDaysOfWeek[6]);
+
+        if (item.type === "item") {
+          sumsTypeItem[0] += parseFloat(item.timeCaptureForDaysOfWeek[0]);
+          sumsTypeItem[1] += parseFloat(item.timeCaptureForDaysOfWeek[1]);
+          sumsTypeItem[2] += parseFloat(item.timeCaptureForDaysOfWeek[2]);
+          sumsTypeItem[3] += parseFloat(item.timeCaptureForDaysOfWeek[3]);
+          sumsTypeItem[4] += parseFloat(item.timeCaptureForDaysOfWeek[4]);
+          sumsTypeItem[5] += parseFloat(item.timeCaptureForDaysOfWeek[5]);
+          sumsTypeItem[6] += parseFloat(item.timeCaptureForDaysOfWeek[6]);
+        }
 
         if (item.type !== "item") {
           item.timeCaptureForDaysOfWeek.forEach((time, index) => {
@@ -350,11 +378,14 @@ export function getAbsenceBarData(timesheetData) {
         }
       });
       sums.forEach((total) => {
+        hoursTotal += total;
+      });
+
+      sumsTypeItem.forEach((total, index) => {
         if (total > 8.0) {
           //average working hours in working day
           hoursOvertime += total - 8;
         }
-        hoursTotal += total;
       });
 
       if (index > contentColors.length) index = 0;
@@ -365,8 +396,6 @@ export function getAbsenceBarData(timesheetData) {
       });
       index++;
     });
-
-    hoursOvertime -= hoursAbsence;
 
     return {
       data: {

@@ -203,7 +203,7 @@ function GetTimesheet({ data, user }) {
         </Col>
 
         <Col className="tab text-right">
-          <span stlye={{ position: "absolute", top: "-1em" }}>
+          {/* <span stlye={{ position: "absolute", top: "-1em" }}>
             <Button
               secondary
               text="Export"
@@ -217,7 +217,7 @@ function GetTimesheet({ data, user }) {
               }
               icon={<ImportExportRoundedIcon />}
             ></Button>
-          </span>
+          </span> */}
         </Col>
       </Row>
       <Row>

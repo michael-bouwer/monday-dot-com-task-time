@@ -53,7 +53,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-_currentComponent(_pages.ANALYTICS);
+_currentComponent(_pages.TIMESHEET);
 
 function App() {
   const selection = useReactiveVar(_currentComponent);
