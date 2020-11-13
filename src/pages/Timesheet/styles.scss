@@ -279,3 +279,27 @@ td {
     background-color: lightgreen;
   }
 }
+
+.selector-button {
+  //transition: all 0.2s ease;
+  color: white;
+  padding: 4px 8px;
+  background-color: $dark-mode;
+  color: $light;
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: all 0.1s ease;
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba($dark-mode, 0.8);
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { useQuery, useReactiveVar } from "@apollo/client";
 import { useSpring, animated } from "react-spring";
 import { Col, Row, Table } from "react-bootstrap";
@@ -6,6 +6,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 import TimerRoundedIcon from "@material-ui/icons/TimerRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
+import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
+import { DatePicker } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 import "./styles.scss";
 import moment from "moment";
 import mondaySdk from "monday-sdk-js";
@@ -60,6 +64,7 @@ function GetTimesheet({ data }) {
   const [editingItem, setEditingItem] = useState(null);
   const [editingText, setEditingText] = useState("");
   const [summaries, setSummaries] = useState(() => getSums());
+  const [isOpen, setIsOpen] = useState(false);
 
   const [date, setDate] = useState(moment());
   const datePickerRef = useRef();
@@ -90,6 +95,13 @@ function GetTimesheet({ data }) {
     //   " (Monday - Sunday)"
     // );
     return weekStart.format("yyyyMMDD") + "-" + weekEnd.format("yyyyMMDD");
+  }
+
+  function getDateRangeForDisplay(inputDate) {
+    var currentDate = inputDate; //moment();
+    var weekStart = currentDate.clone().startOf("isoWeek");
+    var weekEnd = currentDate.clone().endOf("isoWeek");
+    return weekStart.format("Do MMM") + " - " + weekEnd.format("Do MMM");
   }
 
   function getPreviousWeekTimesheet(currentDate) {
@@ -219,14 +231,46 @@ function GetTimesheet({ data }) {
       ) : null}
       <Row>
         <Col className="tab">
-          <CustomDatePicker
+          {/* <CustomDatePicker
             ref={datePickerRef}
             onClick={(value) => {
               setDate(value);
               getTimesheetForWeek(value);
             }}
             value={date}
-          />
+          /> */}
+          <div style={{ marginRight: "16px", display: "flex" }}>
+            <div className="selector-button" onClick={() => setIsOpen(true)}>
+              <DateRangeRoundedIcon />
+              <span
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                className="ml-2"
+              >
+                {getDateRangeForDisplay(moment(date))}
+              </span>
+            </div>
+          </div>
+          <span>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <Fragment>
+                <DatePicker
+                  open={isOpen}
+                  onOpen={() => setIsOpen(true)}
+                  onClose={() => setIsOpen(false)}
+                  animateYearScrolling
+                  showTodayButton
+                  style={{ display: "inline-block" }}
+                  onChange={(value) => {
+                    setDate(value);
+                    getTimesheetForWeek(value);
+                  }}
+                  value={date}
+                  TextFieldComponent={() => null}
+                />
+              </Fragment>
+            </MuiPickersUtilsProvider>
+          </span>
         </Col>
       </Row>
       <Row>
