@@ -204,6 +204,7 @@ function GetTimesheet({ data }) {
   useEffect(() => {
     setLoading(true);
     getTimesheetForWeek(date);
+    setSummaries(getSums());
   }, []);
 
   return (

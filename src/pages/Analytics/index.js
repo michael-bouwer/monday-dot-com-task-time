@@ -2,6 +2,8 @@ import React, { Fragment, useState, useEffect } from "react";
 import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
+import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
+import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
 import { useQuery } from "@apollo/client";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -104,6 +106,15 @@ function Analytics() {
   const handleCloseType = () => {
     setAnchorElType(null);
   };
+
+  function getPreviousWeekTimesheet(currentDate) {
+    var thisTimeLastWeek = moment(currentDate).subtract(1, "weeks");
+    setDate(thisTimeLastWeek);
+  }
+  function getNextWeekTimesheet(currentDate) {
+    var thisTimeNextWeek = moment(currentDate).add(1, "weeks");
+    setDate(thisTimeNextWeek);
+  }
 
   function getDateRangeForDisplay(inputDate) {
     var currentDate = inputDate; //moment();
@@ -381,28 +392,6 @@ function Analytics() {
                     </Grow>
                   )}
                 </Popper>
-                {/* <Menu
-                  id="simple-menu"
-                  anchorEl={anchorElType}
-                  keepMounted
-                  open={Boolean(anchorElType)}
-                  onClose={handleCloseType}
-                >
-                  {reports.map((mode) => {
-                    return (
-                      <MenuItem
-                        key={mode}
-                        onClick={() => {
-                          handleCloseType();
-                          setSelectedReportMode(mode);
-                          getGraphData();
-                        }}
-                      >
-                        {mode}
-                      </MenuItem>
-                    );
-                  })}
-                </Menu> */}
               </div>
 
               {/* SELECT DATE RANGE */}
@@ -470,6 +459,31 @@ function Analytics() {
               </div>
             ) : null}
             <Col sm={9} className="card mt-2 h-100">
+              <div className="center-all justify-content-between mb-2">
+                <ArrowBackIosRoundedIcon
+                  onClick={() => {
+                    getPreviousWeekTimesheet(date);
+                  }}
+                  className="arrow"
+                />
+                {/* <div className="center-all">
+                  <span className="text-paragraph-16 day">
+                    {getStartDay(date)}
+                  </span>
+                  <div className="ml-2 mr-2">
+                    <ArrowRightAltRoundedIcon />
+                  </div>
+                  <span className="text-paragraph-16 day">
+                    {getEndDay(date)}
+                  </span>
+                </div> */}
+                <ArrowForwardIosRoundedIcon
+                  onClick={() => {
+                    getNextWeekTimesheet(date);
+                  }}
+                  className="arrow"
+                />
+              </div>
               <div>
                 <Col>
                   <Bar data={barData} options={options} />

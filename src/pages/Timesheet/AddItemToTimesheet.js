@@ -194,6 +194,7 @@ function AddItemToTimesheet({ close, onSave }) {
   }
 
   function save() {
+    _currentTimesheet(null);
     _currentTimesheet([...currentTimesheet, ...newTimesheetItems]);
     close();
   }
