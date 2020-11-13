@@ -18,6 +18,7 @@ import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
 import Avatar from "@material-ui/core/Avatar";
 import { Bar } from "@reactchartjs/react-chart.js";
+import Tooltip from "@material-ui/core/Tooltip";
 import mondaySdk from "monday-sdk-js";
 
 //Custom
@@ -83,6 +84,10 @@ function Analytics() {
   const [isOpen, setIsOpen] = useState(false);
   const [loadingReport, setLoadingReport] = useState(false);
   const [barData, setBarData] = useState();
+  const [hoursTotal, setHoursTotal] = useState(0);
+  const [hoursWorked, setHoursWorked] = useState(0);
+  const [hoursOvertime, setHoursOvertime] = useState(0);
+  const [hoursAbsence, setHoursAbsence] = useState(0);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -164,13 +169,33 @@ function Analytics() {
 
   function shapeData(timesheetData) {
     if (selectedReportMode === reportModes.TOTAL_HOURS_LOGGED) {
-      setBarData(getTotalHoursLoggedBarData(timesheetData));
+      let result = getTotalHoursLoggedBarData(timesheetData);
+      setBarData(result.data);
+      setHoursTotal(result.total);
+      setHoursWorked(result.worked);
+      setHoursOvertime(result.overtime);
+      setHoursAbsence(result.absence);
     } else if (selectedReportMode === reportModes.HOURS_WORKED) {
-      setBarData(getHoursWorkedBarData(timesheetData));
+      let result = getHoursWorkedBarData(timesheetData);
+      setBarData(result.data);
+      setHoursTotal(result.total);
+      setHoursWorked(result.worked);
+      setHoursOvertime(result.overtime);
+      setHoursAbsence(result.absence);
     } else if (selectedReportMode === reportModes.HOURS_OVERTIME) {
-      setBarData(getHoursOvertimeBarData(timesheetData));
+      let result = getHoursOvertimeBarData(timesheetData);
+      setBarData(result.data);
+      setHoursTotal(result.total);
+      setHoursWorked(result.worked);
+      setHoursOvertime(result.overtime);
+      setHoursAbsence(result.absence);
     } else if (selectedReportMode === reportModes.ABSENCE) {
-      setBarData(getAbsenceBarData(timesheetData));
+      let result = getAbsenceBarData(timesheetData);
+      setBarData(result.data);
+      setHoursTotal(result.total);
+      setHoursWorked(result.worked);
+      setHoursOvertime(result.overtime);
+      setHoursAbsence(result.absence);
     }
   }
 
@@ -457,30 +482,52 @@ function Analytics() {
             >
               <div className="d-flex justify-content-center align-items-center flex-column">
                 <span className="text-secondary-sub-24 font-weight-bolder">
-                  177
+                  {hoursTotal === 0.0 ? "--" : hoursTotal}
                 </span>
-                <span className="text-text-medium-14">TOTAL HOURS</span>
+                <Tooltip
+                  title="All hours captured across all items"
+                  placement="left"
+                >
+                  <span className="text-text-medium-14">TOTAL HOURS</span>
+                </Tooltip>
               </div>
 
               <div className="d-flex justify-content-center align-items-center flex-column">
                 <span className="text-secondary-sub-24 font-weight-bolder">
-                  160
+                  {hoursWorked === 0.0 ? "--" : hoursWorked}
                 </span>
-                <span className="text-text-medium-14">HOURS WORKED</span>
+                <Tooltip
+                  title="Total time worked including overtime, excluding absence."
+                  placement="left"
+                >
+                  <span className="text-text-medium-14">HOURS WORKED</span>
+                </Tooltip>
               </div>
 
               <div className="d-flex justify-content-center align-items-center flex-column">
                 <span className="text-secondary-sub-24 font-weight-bolder">
-                  17
+                  {hoursOvertime === 0.0 ? "--" : hoursOvertime}
                 </span>
-                <span className="text-text-medium-14">HOURS OVERTIME</span>
+                <Tooltip
+                  title="Total time worked after 8 hours on each day"
+                  placement="left"
+                >
+                  <span className="text-text-medium-14">HOURS OVERTIME</span>
+                </Tooltip>
               </div>
 
               <div className="d-flex justify-content-center align-items-center flex-column">
                 <span className="text-secondary-sub-24 font-weight-bolder">
-                  2
+                  {hoursAbsence === 0.0
+                    ? "--"
+                    : hoursAbsence +
+                      "h / " +
+                      parseFloat(hoursAbsence / 8).toFixed(1) +
+                      "d"}
                 </span>
-                <span className="text-text-medium-14">DAYS ABSENT</span>
+                <Tooltip title="Total absence logged" placement="left">
+                  <span className="text-text-medium-14">ABSENT</span>
+                </Tooltip>
               </div>
             </Col>
           </Row>
