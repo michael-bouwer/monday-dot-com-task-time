@@ -69,6 +69,8 @@ function GetTimesheet({ data }) {
   const [date, setDate] = useState(moment());
   const datePickerRef = useRef();
 
+  const zeroHoursColor = "rgba(0, 0, 0, 0.3)";
+
   //Grid refs
   const Mon = useRef(null);
   const Tues = useRef(null);
@@ -108,20 +110,26 @@ function GetTimesheet({ data }) {
     var thisTimeLastWeek = moment(currentDate).subtract(1, "weeks");
     setDate(thisTimeLastWeek);
     getTimesheetForWeek(thisTimeLastWeek);
-    datePickerRef.current.setDateFromParentComponent(thisTimeLastWeek);
+    //datePickerRef.current.setDateFromParentComponent(thisTimeLastWeek);
   }
   function getNextWeekTimesheet(currentDate) {
     var thisTimeNextWeek = moment(currentDate).add(1, "weeks");
     setDate(thisTimeNextWeek);
     getTimesheetForWeek(thisTimeNextWeek);
-    datePickerRef.current.setDateFromParentComponent(thisTimeNextWeek);
+    //datePickerRef.current.setDateFromParentComponent(thisTimeNextWeek);
   }
 
   function getDay(index) {
     var currentDate = date;
     var weekStart = currentDate.clone().startOf("isoWeek");
 
-    return weekStart.add(index, "days").format("ddd D");
+    return (
+      <>
+        {weekStart.add(index, "days").format("ddd")}
+        <br />
+        {weekStart.format("Do")}
+      </>
+    );
   }
 
   const getTimesheetForWeek = async (dateRange) => {
@@ -463,7 +471,18 @@ function GetTimesheet({ data }) {
                                   tabIndex={1}
                                 ></IMaskInput>
                               ) : (
-                                <span>{item.timeCaptureForDaysOfWeek[0]}</span>
+                                <span
+                                  style={{
+                                    color:
+                                      parseFloat(
+                                        item.timeCaptureForDaysOfWeek[0]
+                                      ) === 0.0
+                                        ? zeroHoursColor
+                                        : "inherit",
+                                  }}
+                                >
+                                  {item.timeCaptureForDaysOfWeek[0]}
+                                </span>
                               )}
                             </td>
                             {/* TUESDAY */}
@@ -512,7 +531,18 @@ function GetTimesheet({ data }) {
                                   tabIndex={2}
                                 ></IMaskInput>
                               ) : (
-                                <span>{item.timeCaptureForDaysOfWeek[1]}</span>
+                                <span
+                                  style={{
+                                    color:
+                                      parseFloat(
+                                        item.timeCaptureForDaysOfWeek[1]
+                                      ) === 0.0
+                                        ? zeroHoursColor
+                                        : "inherit",
+                                  }}
+                                >
+                                  {item.timeCaptureForDaysOfWeek[1]}
+                                </span>
                               )}
                             </td>
 
@@ -562,7 +592,18 @@ function GetTimesheet({ data }) {
                                   tabIndex={3}
                                 ></IMaskInput>
                               ) : (
-                                <span>{item.timeCaptureForDaysOfWeek[2]}</span>
+                                <span
+                                  style={{
+                                    color:
+                                      parseFloat(
+                                        item.timeCaptureForDaysOfWeek[2]
+                                      ) === 0.0
+                                        ? zeroHoursColor
+                                        : "inherit",
+                                  }}
+                                >
+                                  {item.timeCaptureForDaysOfWeek[2]}
+                                </span>
                               )}
                             </td>
 
@@ -612,7 +653,18 @@ function GetTimesheet({ data }) {
                                   tabIndex={4}
                                 ></IMaskInput>
                               ) : (
-                                <span>{item.timeCaptureForDaysOfWeek[3]}</span>
+                                <span
+                                  style={{
+                                    color:
+                                      parseFloat(
+                                        item.timeCaptureForDaysOfWeek[3]
+                                      ) === 0.0
+                                        ? zeroHoursColor
+                                        : "inherit",
+                                  }}
+                                >
+                                  {item.timeCaptureForDaysOfWeek[3]}
+                                </span>
                               )}
                             </td>
 
@@ -662,7 +714,18 @@ function GetTimesheet({ data }) {
                                   tabIndex={5}
                                 ></IMaskInput>
                               ) : (
-                                <span>{item.timeCaptureForDaysOfWeek[4]}</span>
+                                <span
+                                  style={{
+                                    color:
+                                      parseFloat(
+                                        item.timeCaptureForDaysOfWeek[4]
+                                      ) === 0.0
+                                        ? zeroHoursColor
+                                        : "inherit",
+                                  }}
+                                >
+                                  {item.timeCaptureForDaysOfWeek[4]}
+                                </span>
                               )}
                             </td>
 
@@ -712,7 +775,18 @@ function GetTimesheet({ data }) {
                                   tabIndex={6}
                                 ></IMaskInput>
                               ) : (
-                                <span>{item.timeCaptureForDaysOfWeek[5]}</span>
+                                <span
+                                  style={{
+                                    color:
+                                      parseFloat(
+                                        item.timeCaptureForDaysOfWeek[5]
+                                      ) === 0.0
+                                        ? zeroHoursColor
+                                        : "inherit",
+                                  }}
+                                >
+                                  {item.timeCaptureForDaysOfWeek[5]}
+                                </span>
                               )}
                             </td>
 
@@ -762,7 +836,18 @@ function GetTimesheet({ data }) {
                                   tabIndex={7}
                                 ></IMaskInput>
                               ) : (
-                                <span>{item.timeCaptureForDaysOfWeek[6]}</span>
+                                <span
+                                  style={{
+                                    color:
+                                      parseFloat(
+                                        item.timeCaptureForDaysOfWeek[6]
+                                      ) === 0.0
+                                        ? zeroHoursColor
+                                        : "inherit",
+                                  }}
+                                >
+                                  {item.timeCaptureForDaysOfWeek[6]}
+                                </span>
                               )}
                             </td>
 
