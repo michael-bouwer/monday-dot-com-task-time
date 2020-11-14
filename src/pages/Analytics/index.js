@@ -4,6 +4,8 @@ import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
+import PeopleAltRoundedIcon from "@material-ui/icons/PeopleAltRounded";
+import { useSpring, animated } from "react-spring";
 import { useQuery } from "@apollo/client";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -54,7 +56,7 @@ const reports = [
 ];
 
 const options = {
-  maintainsAspectRatio: false,
+  maintainsAspectRatio: true,
   responsive: true,
   scales: {
     yAxes: [
@@ -90,6 +92,11 @@ function Analytics() {
   const [hoursWorked, setHoursWorked] = useState(0);
   const [hoursOvertime, setHoursOvertime] = useState(0);
   const [hoursAbsence, setHoursAbsence] = useState(0);
+
+  const props = useSpring({
+    to: { opacity: 1, marginTop: 0 },
+    from: { opacity: 0, marginTop: 64 },
+  });
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -224,11 +231,11 @@ function Analytics() {
     }
   }, [selectedUser, selectedReportMode, date]);
 
-  if (loading) return <Loading text="Shaping your data" />;
   if (error) return <span>something went wrong :(</span>;
 
   return (
-    <div className="analytics">
+    <animated.div className="analytics" style={props}>
+      {loading ? <Loading text="Shaping your data" /> : null}
       <Row style={{ margin: "0 16px" }}>
         <Col>
           {/* MENU */}
@@ -292,7 +299,15 @@ function Analytics() {
                                 setSelectedUser(user);
                               }}
                             >
-                              Team
+                              <span className="d-flex justify-content-start align-items-center">
+                                <span className="mr-2">
+                                  <Avatar
+                                    alt="Team"
+                                    children={<PeopleAltRoundedIcon />}
+                                  />
+                                </span>
+                                <span className="menu-item-text">Team</span>
+                              </span>
                             </MenuItem>
                             {data.boards[0].subscribers.map((user) => {
                               return (
@@ -440,7 +455,7 @@ function Analytics() {
           </div>
 
           {/* CONTENT */}
-          <Row className=" position-relative">
+          <Row className="position-relative analytics-content">
             {loadingReport ? (
               <div
                 style={{
@@ -547,7 +562,7 @@ function Analytics() {
           </Row>
         </Col>
       </Row>
-    </div>
+    </animated.div>
   );
 }
 
