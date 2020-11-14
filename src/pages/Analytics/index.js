@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Col, Row } from "react-bootstrap";
 import { DatePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import Badge from "@material-ui/core/Badge";
 import Loading from "../../components/Loading";
 import moment from "moment";
 import MomentUtils from "@date-io/moment";
@@ -243,22 +244,28 @@ function Analytics() {
             <div className="center-all justify-content-start">
               {/* SELECT USER */}
               <div style={{ marginRight: "16px" }}>
-                <div
-                  className="selector-button justify-content-between"
-                  onClick={handleClick}
+                <Badge
+                  color="secondary"
+                  variant="dot"
+                  invisible={selectedUser.name !== "Select a User"}
                 >
-                  <span className="d-flex align-items-center">
-                    <AccountCircleRoundedIcon />
-                    <span
-                      aria-controls="simple-menu"
-                      aria-haspopup="true"
-                      className="ml-2"
-                    >
-                      {selectedUser.name}
+                  <div
+                    className="selector-button justify-content-between"
+                    onClick={handleClick}
+                  >
+                    <span className="d-flex align-items-center">
+                      <AccountCircleRoundedIcon />
+                      <span
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        className="ml-2"
+                      >
+                        {selectedUser.name}
+                      </span>
                     </span>
-                  </span>
-                  <ArrowDropDownIcon />
-                </div>
+                    <ArrowDropDownIcon />
+                  </div>
+                </Badge>
                 <Popper
                   open={Boolean(anchorEl)}
                   anchorEl={anchorEl}
@@ -342,22 +349,28 @@ function Analytics() {
 
               {/* SELECT REPORT MODE */}
               <div style={{ marginRight: "16px", display: "block" }}>
-                <div
-                  className="selector-button justify-content-between"
-                  onClick={handleClickType}
+                <Badge
+                  color="secondary"
+                  variant="dot"
+                  invisible={selectedReportMode !== "Select a Type"}
                 >
-                  <span className="d-flex align-items-center">
-                    <AssignmentRoundedIcon />
-                    <span
-                      aria-controls="simple-menu"
-                      aria-haspopup="true"
-                      className="ml-2"
-                    >
-                      {selectedReportMode}
+                  <div
+                    className="selector-button justify-content-between"
+                    onClick={handleClickType}
+                  >
+                    <span className="d-flex align-items-center">
+                      <AssignmentRoundedIcon />
+                      <span
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        className="ml-2"
+                      >
+                        {selectedReportMode}
+                      </span>
                     </span>
-                  </span>
-                  <ArrowDropDownIcon />
-                </div>
+                    <ArrowDropDownIcon />
+                  </div>
+                </Badge>
                 <Popper
                   open={Boolean(anchorElType)}
                   anchorEl={anchorElType}
