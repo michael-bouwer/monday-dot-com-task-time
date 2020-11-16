@@ -222,6 +222,7 @@ function Analytics() {
       let result = getHoursWorkedBarData(timesheetData);
       setBarData(result.dataBar);
       setPieData(result.dataPie);
+      debugger;
       setHoursTotal(result.total);
       setHoursWorked(result.worked);
       setHoursOvertime(result.overtime);

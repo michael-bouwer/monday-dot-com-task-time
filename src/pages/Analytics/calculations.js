@@ -111,6 +111,7 @@ export function getTotalHoursLoggedBarData(timesheetData) {
 export function getHoursWorkedBarData(timesheetData) {
   let labels = [];
   let datasets = [];
+  let datasetsPie = [];
   let contentColors = [
     "#00C875", //Green
     "#4ECCC6", //Aquamarine
@@ -191,6 +192,11 @@ export function getHoursWorkedBarData(timesheetData) {
         backgroundColor: contentColors[index],
         data: sumsWorked,
       });
+      datasetsPie.push({
+        label: name,
+        data: sumsWorked,
+        backgroundColor: [...contentColors],
+      });
       index++;
     });
 
@@ -198,6 +204,10 @@ export function getHoursWorkedBarData(timesheetData) {
       dataBar: {
         labels,
         datasets,
+      },
+      dataPie: {
+        labels,
+        datasets: datasetsPie,
       },
       total: hoursTotal,
       worked: hoursWorked,
@@ -211,6 +221,7 @@ export function getHoursWorkedBarData(timesheetData) {
 export function getHoursOvertimeBarData(timesheetData) {
   let labels = [];
   let datasets = [];
+  let datasetsPie = [];
   let contentColors = [
     "#00C875", //Green
     "#4ECCC6", //Aquamarine
@@ -295,6 +306,11 @@ export function getHoursOvertimeBarData(timesheetData) {
         backgroundColor: contentColors[index],
         data: sumsOvertime,
       });
+      datasetsPie.push({
+        label: name,
+        data: sumsOvertime,
+        backgroundColor: [...contentColors],
+      });
       index++;
     });
 
@@ -302,6 +318,10 @@ export function getHoursOvertimeBarData(timesheetData) {
       dataBar: {
         labels,
         datasets,
+      },
+      dataPie: {
+        labels,
+        datasets: datasetsPie,
       },
       total: hoursTotal,
       worked: hoursWorked,
@@ -315,6 +335,7 @@ export function getHoursOvertimeBarData(timesheetData) {
 export function getAbsenceBarData(timesheetData) {
   let labels = [];
   let datasets = [];
+  let datasetsPie = [];
   let contentColors = [
     "#00C875", //Green
     "#4ECCC6", //Aquamarine
@@ -404,6 +425,11 @@ export function getAbsenceBarData(timesheetData) {
         backgroundColor: contentColors[index],
         data: sumsAbsence,
       });
+      datasetsPie.push({
+        label: name,
+        data: sumsAbsence,
+        backgroundColor: [...contentColors],
+      });
       index++;
     });
 
@@ -411,6 +437,10 @@ export function getAbsenceBarData(timesheetData) {
       dataBar: {
         labels,
         datasets,
+      },
+      dataPie: {
+        labels,
+        datasets: datasetsPie,
       },
       total: hoursTotal,
       worked: hoursWorked,
