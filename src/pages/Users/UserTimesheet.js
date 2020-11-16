@@ -107,6 +107,8 @@ function GetTimesheet({ data, user }) {
     from: { opacity: 0, marginTop: 64 },
   });
 
+  const zeroHoursColor = "rgba(0, 0, 0, 0.3)";
+
   const getTimesheetForWeek = async (dateRange) => {
     setLoading(true);
     _currentTimesheet(null);
@@ -136,7 +138,7 @@ function GetTimesheet({ data, user }) {
         setLoading(false);
       });
   };
-  
+
   function getDateRangeForDisplay(inputDate) {
     var currentDate = inputDate; //moment();
     var weekStart = currentDate.clone().startOf("isoWeek");
@@ -385,14 +387,36 @@ function GetTimesheet({ data, user }) {
                               className="text-center time-capture Mon"
                               tabIndex={1}
                             >
-                              <span>{item.timeCaptureForDaysOfWeek[0]}</span>
+                              <span
+                                style={{
+                                  color:
+                                    parseFloat(
+                                      item.timeCaptureForDaysOfWeek[0]
+                                    ) === 0.0
+                                      ? zeroHoursColor
+                                      : "inherit",
+                                }}
+                              >
+                                {item.timeCaptureForDaysOfWeek[0]}
+                              </span>
                             </td>
                             {/* TUESDAY */}
                             <td
                               className="text-center time-capture Tue"
                               tabIndex={2}
                             >
-                              <span>{item.timeCaptureForDaysOfWeek[1]}</span>
+                              <span
+                                style={{
+                                  color:
+                                    parseFloat(
+                                      item.timeCaptureForDaysOfWeek[1]
+                                    ) === 0.0
+                                      ? zeroHoursColor
+                                      : "inherit",
+                                }}
+                              >
+                                {item.timeCaptureForDaysOfWeek[1]}
+                              </span>
                             </td>
 
                             {/* WEDNESDAY */}
@@ -400,35 +424,90 @@ function GetTimesheet({ data, user }) {
                               className="text-center time-capture Wed"
                               tabIndex={2}
                             >
-                              <span>{item.timeCaptureForDaysOfWeek[2]}</span>
+                              <span
+                                style={{
+                                  color:
+                                    parseFloat(
+                                      item.timeCaptureForDaysOfWeek[2]
+                                    ) === 0.0
+                                      ? zeroHoursColor
+                                      : "inherit",
+                                }}
+                              >
+                                {item.timeCaptureForDaysOfWeek[2]}
+                              </span>
                             </td>
                             {/* THURSDAY */}
                             <td
                               className="text-center time-capture Thu"
                               tabIndex={2}
                             >
-                              <span>{item.timeCaptureForDaysOfWeek[3]}</span>
+                              <span
+                                style={{
+                                  color:
+                                    parseFloat(
+                                      item.timeCaptureForDaysOfWeek[3]
+                                    ) === 0.0
+                                      ? zeroHoursColor
+                                      : "inherit",
+                                }}
+                              >
+                                {item.timeCaptureForDaysOfWeek[3]}
+                              </span>
                             </td>
                             {/* FRIDAY */}
                             <td
                               className="text-center time-capture Fri"
                               tabIndex={2}
                             >
-                              <span>{item.timeCaptureForDaysOfWeek[4]}</span>
+                              <span
+                                style={{
+                                  color:
+                                    parseFloat(
+                                      item.timeCaptureForDaysOfWeek[4]
+                                    ) === 0.0
+                                      ? zeroHoursColor
+                                      : "inherit",
+                                }}
+                              >
+                                {item.timeCaptureForDaysOfWeek[4]}
+                              </span>
                             </td>
                             {/* SATURDAY */}
                             <td
                               className="text-center time-capture Sat"
                               tabIndex={2}
                             >
-                              <span>{item.timeCaptureForDaysOfWeek[5]}</span>
+                              <span
+                                style={{
+                                  color:
+                                    parseFloat(
+                                      item.timeCaptureForDaysOfWeek[5]
+                                    ) === 0.0
+                                      ? zeroHoursColor
+                                      : "inherit",
+                                }}
+                              >
+                                {item.timeCaptureForDaysOfWeek[5]}
+                              </span>
                             </td>
                             {/* SUNDAY */}
                             <td
                               className="text-center time-capture Sun"
                               tabIndex={2}
                             >
-                              <span>{item.timeCaptureForDaysOfWeek[6]}</span>
+                              <span
+                                style={{
+                                  color:
+                                    parseFloat(
+                                      item.timeCaptureForDaysOfWeek[6]
+                                    ) === 0.0
+                                      ? zeroHoursColor
+                                      : "inherit",
+                                }}
+                              >
+                                {item.timeCaptureForDaysOfWeek[6]}
+                              </span>
                             </td>
                             <td className="text-center time-capture bold">
                               {getWeekdaySum(item.timeCaptureForDaysOfWeek)}

@@ -5,6 +5,10 @@ import AssignmentRoundedIcon from "@material-ui/icons/AssignmentRounded";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounded";
 import PeopleAltRoundedIcon from "@material-ui/icons/PeopleAltRounded";
+import PollOutlinedIcon from "@material-ui/icons/PollOutlined";
+import InsertChartIcon from "@material-ui/icons/InsertChart";
+import PieChartOutlinedIcon from "@material-ui/icons/PieChartOutlined";
+import PieChartIcon from "@material-ui/icons/PieChart";
 import { useSpring, animated } from "react-spring";
 import { useQuery } from "@apollo/client";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
@@ -22,7 +26,7 @@ import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
 import Avatar from "@material-ui/core/Avatar";
-import { Bar } from "@reactchartjs/react-chart.js";
+import { Bar, Pie, Doughnut } from "@reactchartjs/react-chart.js";
 import Tooltip from "@material-ui/core/Tooltip";
 import mondaySdk from "monday-sdk-js";
 
@@ -56,9 +60,7 @@ const reports = [
   reportModes.ABSENCE,
 ];
 
-const options = {
-  maintainsAspectRatio: true,
-  responsive: true,
+const barOptions = {
   scales: {
     yAxes: [
       {
@@ -76,6 +78,25 @@ const options = {
   },
 };
 
+const pieOptions = {
+  rotation: -Math.PI, //-Math.PI / 2,
+  circumference: Math.PI, //2 * Math.PI,
+  tooltips: {
+    callbacks: {
+      label: function (item, data) {
+        console.log(data.labels, item);
+        return (
+          data.datasets[item.datasetIndex].label +
+          ": " +
+          data.labels[item.index] +
+          ": " +
+          data.datasets[item.datasetIndex].data[item.index]
+        );
+      },
+    },
+  },
+};
+
 function Analytics() {
   const { loading, error, data } = useQuery(queries.SUBSCRIBERS, {
     fetchPolicy: "network-only",
@@ -89,10 +110,12 @@ function Analytics() {
   const [isOpen, setIsOpen] = useState(false);
   const [loadingReport, setLoadingReport] = useState(false);
   const [barData, setBarData] = useState();
+  const [pieData, setPieData] = useState();
   const [hoursTotal, setHoursTotal] = useState(0);
   const [hoursWorked, setHoursWorked] = useState(0);
   const [hoursOvertime, setHoursOvertime] = useState(0);
   const [hoursAbsence, setHoursAbsence] = useState(0);
+  const [barSelected, setBarSelected] = useState(true);
 
   const props = useSpring({
     to: { opacity: 1, marginTop: 0 },
@@ -189,28 +212,32 @@ function Analytics() {
   function shapeData(timesheetData) {
     if (selectedReportMode === reportModes.TOTAL_HOURS_LOGGED) {
       let result = getTotalHoursLoggedBarData(timesheetData);
-      setBarData(result.data);
+      setBarData(result.dataBar);
+      setPieData(result.dataPie);
       setHoursTotal(result.total);
       setHoursWorked(result.worked);
       setHoursOvertime(result.overtime);
       setHoursAbsence(result.absence);
     } else if (selectedReportMode === reportModes.HOURS_WORKED) {
       let result = getHoursWorkedBarData(timesheetData);
-      setBarData(result.data);
+      setBarData(result.dataBar);
+      setPieData(result.dataPie);
       setHoursTotal(result.total);
       setHoursWorked(result.worked);
       setHoursOvertime(result.overtime);
       setHoursAbsence(result.absence);
     } else if (selectedReportMode === reportModes.HOURS_OVERTIME) {
       let result = getHoursOvertimeBarData(timesheetData);
-      setBarData(result.data);
+      setBarData(result.dataBar);
+      setPieData(result.dataPie);
       setHoursTotal(result.total);
       setHoursWorked(result.worked);
       setHoursOvertime(result.overtime);
       setHoursAbsence(result.absence);
     } else if (selectedReportMode === reportModes.ABSENCE) {
       let result = getAbsenceBarData(timesheetData);
-      setBarData(result.data);
+      setBarData(result.dataBar);
+      setPieData(result.dataPie);
       setHoursTotal(result.total);
       setHoursWorked(result.worked);
       setHoursOvertime(result.overtime);
@@ -486,15 +513,16 @@ function Analytics() {
                 </span>
               </div>
             ) : null}
-            <Col sm={9} className="card mt-2 h-100">
-              <div className="center-all justify-content-between mb-2">
-                <ArrowBackIosRoundedIcon
-                  onClick={() => {
-                    getPreviousWeekTimesheet(date);
-                  }}
-                  className="arrow"
-                />
-                {/* <div className="center-all">
+            <Col sm={8} className="card mt-2 h-100">
+              <div>
+                <div className="center-all justify-content-between mb-2">
+                  <ArrowBackIosRoundedIcon
+                    onClick={() => {
+                      getPreviousWeekTimesheet(date);
+                    }}
+                    className="arrow"
+                  />
+                  {/* <div className="center-all">
                   <span className="text-paragraph-16 day">
                     {getStartDay(date)}
                   </span>
@@ -505,21 +533,54 @@ function Analytics() {
                     {getEndDay(date)}
                   </span>
                 </div> */}
-                <ArrowForwardIosRoundedIcon
-                  onClick={() => {
-                    getNextWeekTimesheet(date);
-                  }}
-                  className="arrow"
-                />
-              </div>
-              <div>
-                <Col>
-                  <Bar data={barData} options={options} />
-                </Col>
+                  <ArrowForwardIosRoundedIcon
+                    onClick={() => {
+                      getNextWeekTimesheet(date);
+                    }}
+                    className="arrow"
+                  />
+                </div>
+                <div>
+                  <Col>
+                    {barSelected ? (
+                      <Bar data={barData} options={barOptions} />
+                    ) : (
+                      <Pie data={pieData} options={pieOptions} />
+                    )}
+                  </Col>
+                  <Row>
+                    {selectedUser !== "Select a User" &&
+                    selectedReportMode !== "Select a Type" ? (
+                      <Col className="center-all chart-icons mt-2 mb-2">
+                        <span
+                          className="mr-2"
+                          onClick={() => setBarSelected(true)}
+                        >
+                          {barSelected ? (
+                            <span className="selected-icon">
+                              <InsertChartIcon />
+                            </span>
+                          ) : (
+                            <PollOutlinedIcon />
+                          )}
+                        </span>
+                        <span onClick={() => setBarSelected(false)}>
+                          {barSelected ? (
+                            <PieChartOutlinedIcon />
+                          ) : (
+                            <span className="selected-icon">
+                              <PieChartIcon />
+                            </span>
+                          )}
+                        </span>
+                      </Col>
+                    ) : null}
+                  </Row>
+                </div>
               </div>
             </Col>
             <Col
-              sm={3}
+              sm={4}
               className="p-2 d-flex flex-column justify-content-around"
             >
               <div className="d-flex justify-content-center align-items-center flex-column">

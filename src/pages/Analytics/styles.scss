@@ -64,7 +64,29 @@
     text-overflow: ellipsis;
   }
 
-  .analytics-content{
+  .analytics-content {
     //height: 70vh;
+  }
+}
+
+.chart-icons {
+  svg {
+    fill: lightgray;
+  }
+
+  span {
+    &:hover {
+      cursor: pointer;
+
+      svg {
+        fill: $primary-button;
+      }
+    }
+  }
+
+  .selected-icon {
+    svg {
+      fill: $primary-button;
+    }
   }
 }

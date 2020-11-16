@@ -1,6 +1,7 @@
 export function getTotalHoursLoggedBarData(timesheetData) {
   let labels = [];
   let datasets = [];
+  let datasetsPie = [];
   let contentColors = [
     "#00C875", //Green
     "#4ECCC6", //Aquamarine
@@ -81,13 +82,22 @@ export function getTotalHoursLoggedBarData(timesheetData) {
         backgroundColor: contentColors[index],
         data: sums,
       });
+      datasetsPie.push({
+        label: name,
+        data: sums,
+        backgroundColor: [...contentColors],
+      });
       index++;
     });
 
     return {
-      data: {
+      dataBar: {
         labels,
         datasets,
+      },
+      dataPie: {
+        labels,
+        datasets: datasetsPie,
       },
       total: hoursTotal,
       worked: hoursWorked,
@@ -185,7 +195,7 @@ export function getHoursWorkedBarData(timesheetData) {
     });
 
     return {
-      data: {
+      dataBar: {
         labels,
         datasets,
       },
@@ -289,7 +299,7 @@ export function getHoursOvertimeBarData(timesheetData) {
     });
 
     return {
-      data: {
+      dataBar: {
         labels,
         datasets,
       },
@@ -398,7 +408,7 @@ export function getAbsenceBarData(timesheetData) {
     });
 
     return {
-      data: {
+      dataBar: {
         labels,
         datasets,
       },

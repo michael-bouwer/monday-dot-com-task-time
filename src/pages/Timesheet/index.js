@@ -27,7 +27,6 @@ import Button from "../../components/Button";
 import AddItemToTimeheet from "./AddItemToTimesheet";
 import AddAbsenceToTimesheet from "./AddAbsenceToTimesheet";
 import Loading from "../../components/Loading";
-import CustomDatePicker from "../../components/CustomDatePicker";
 
 const monday = mondaySdk();
 
