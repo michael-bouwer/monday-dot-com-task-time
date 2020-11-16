@@ -175,7 +175,9 @@ function GetTimesheet({ data }) {
   function saveTimeItem(time, timeItem, index) {
     let arr = timesheet;
     arr.forEach((item) => {
-      if (item.id === timeItem.id && parseFloat(time).toFixed(2) >= 0) {
+      if (item.id === timeItem.id && time === "") {
+        item.timeCaptureForDaysOfWeek[index] = (0.0).toFixed(2);
+      } else if (item.id === timeItem.id && parseFloat(time).toFixed(2) >= 0) {
         item.timeCaptureForDaysOfWeek[index] = parseFloat(time).toFixed(2);
       }
     });

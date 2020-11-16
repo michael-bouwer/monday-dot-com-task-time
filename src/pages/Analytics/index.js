@@ -76,6 +76,13 @@ const barOptions = {
       },
     ],
   },
+  legend: {
+    onHover: function (event, legendItem) {
+      debugger;
+      var test = this;
+      event.currentTarget.classList.add("temp-hover");
+    },
+  },
 };
 
 const pieOptions = {
@@ -268,7 +275,10 @@ function Analytics() {
       <Row style={{ margin: "0 16px" }}>
         <Col>
           {/* MENU */}
-          <div className="center-all reporting-taskbar justify-content-between">
+          <div
+            className="center-all reporting-taskbar justify-content-between"
+            style={{ minWidth: "844px" }}
+          >
             <div className="center-all justify-content-start">
               {/* SELECT USER */}
               <div style={{ marginRight: "16px" }}>
@@ -589,7 +599,7 @@ function Analytics() {
                   {hoursTotal === 0.0 ? "--" : hoursTotal}
                 </span>
                 <Tooltip
-                  title="All hours captured across all items"
+                  title="All hours captured across all items."
                   placement="left"
                 >
                   <span className="text-text-medium-14">TOTAL HOURS</span>
@@ -601,7 +611,7 @@ function Analytics() {
                   {hoursWorked === 0.0 ? "--" : hoursWorked}
                 </span>
                 <Tooltip
-                  title="Total time worked including overtime, excluding absence."
+                  title="Total time captured including overtime, excluding absences."
                   placement="left"
                 >
                   <span className="text-text-medium-14">HOURS WORKED</span>
@@ -613,7 +623,7 @@ function Analytics() {
                   {hoursOvertime === 0.0 ? "--" : hoursOvertime}
                 </span>
                 <Tooltip
-                  title="Total time worked after 8 hours on each day"
+                  title="Total time captured after a standard 8 hour working day."
                   placement="left"
                 >
                   <span className="text-text-medium-14">HOURS OVERTIME</span>
@@ -625,12 +635,15 @@ function Analytics() {
                   {hoursAbsence === 0.0
                     ? "--"
                     : hoursAbsence +
-                      "h / " +
+                      " hrs | " +
                       parseFloat(hoursAbsence / 8).toFixed(1) +
-                      "d"}
+                      " days"}
                 </span>
-                <Tooltip title="Total absence logged" placement="left">
-                  <span className="text-text-medium-14">ABSENT</span>
+                <Tooltip
+                  title="Total absence captured based on a standard 8 hour working day."
+                  placement="left"
+                >
+                  <span className="text-text-medium-14">ABSENCE</span>
                 </Tooltip>
               </div>
             </Col>

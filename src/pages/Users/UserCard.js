@@ -89,7 +89,10 @@ function UserCard({ user, onClick }) {
             <Col
               sm={3}
               style={{
-                padding: "16px",
+                //padding: "16px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 margin: "0",
                 backgroundColor: "#292F4C",
                 borderRadius: "4px 0 0 4px",

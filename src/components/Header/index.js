@@ -70,7 +70,9 @@ function Header() {
                 className={`timesheet-icon ${
                   selectedPage === _pages.USERS ? "selected" : ""
                 }`}
-                onClick={() => _currentComponent(_pages.USERS)}
+                onClick={() => {
+                  _currentComponent(_pages.USERS);
+                }}
               >
                 <PeopleAltRoundedIcon />
               </div>

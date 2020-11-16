@@ -186,7 +186,13 @@ function GetTimesheet({ data, user }) {
     var currentDate = date;
     var weekStart = currentDate.clone().startOf("isoWeek");
 
-    return weekStart.add(index, "days").format("ddd D");
+    return (
+      <>
+        {weekStart.add(index, "days").format("ddd")}
+        <br />
+        {weekStart.format("Do")}
+      </>
+    );
   }
 
   useEffect(() => {
