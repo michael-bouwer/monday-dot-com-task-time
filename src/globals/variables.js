@@ -12,6 +12,7 @@ export const _pages = {
   TIMESHEET: "timesheet",
   ABSENCE: "absence",
   USERS: "users",
+  TEAM: "team",
   ANALYTICS: "analytics",
 };
 

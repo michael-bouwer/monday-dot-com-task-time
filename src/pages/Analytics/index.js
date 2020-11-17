@@ -77,10 +77,15 @@ const barOptions = {
     ],
   },
   legend: {
-    onHover: function (event, legendItem) {
-      debugger;
-      var test = this;
-      event.currentTarget.classList.add("temp-hover");
+    onHover: function (e) {
+      e.target.style.cursor = "pointer";
+    },
+  },
+  hover: {
+    onHover: function (e) {
+      var point = this.getElementAtEvent(e);
+      if (point.length) e.target.style.cursor = "pointer";
+      else e.target.style.cursor = "default";
     },
   },
 };
@@ -100,6 +105,18 @@ const pieOptions = {
           data.datasets[item.datasetIndex].data[item.index]
         );
       },
+    },
+  },
+  legend: {
+    onHover: function (e) {
+      e.target.style.cursor = "pointer";
+    },
+  },
+  hover: {
+    onHover: function (e) {
+      var point = this.getElementAtEvent(e);
+      if (point.length) e.target.style.cursor = "pointer";
+      else e.target.style.cursor = "default";
     },
   },
 };
@@ -229,7 +246,6 @@ function Analytics() {
       let result = getHoursWorkedBarData(timesheetData);
       setBarData(result.dataBar);
       setPieData(result.dataPie);
-      debugger;
       setHoursTotal(result.total);
       setHoursWorked(result.worked);
       setHoursOvertime(result.overtime);

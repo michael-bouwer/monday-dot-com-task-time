@@ -83,6 +83,8 @@ function App() {
       return <Users />;
     } else if (selection === _pages.ANALYTICS) {
       return <Analytics />;
+    } else if (selection === _pages.TEAM) {
+      return <Users key={1} />;
     }
   }
 }

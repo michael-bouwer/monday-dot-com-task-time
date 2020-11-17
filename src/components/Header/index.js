@@ -30,6 +30,7 @@ function Header() {
   let pageName = "";
   if (selectedPage === _pages.TIMESHEET) pageName = "My Timesheet";
   else if (selectedPage === _pages.USERS) pageName = "Team";
+  else if (selectedPage === _pages.TEAM) pageName = "Team";
   else if (selectedPage === _pages.ANALYTICS)
     pageName = "Analytics and Reporting";
 
@@ -68,10 +69,19 @@ function Header() {
             <Tooltip title="Team">
               <div
                 className={`timesheet-icon ${
-                  selectedPage === _pages.USERS ? "selected" : ""
+                  selectedPage === _pages.USERS || selectedPage === _pages.TEAM
+                    ? "selected"
+                    : ""
                 }`}
                 onClick={() => {
-                  _currentComponent(_pages.USERS);
+                  debugger;
+                  if (selectedPage === _pages.USERS) {
+                    _currentComponent(_pages.TEAM);
+                  } else if (selectedPage === _pages.TEAM) {
+                    _currentComponent(_pages.USERS);
+                  } else {
+                    _currentComponent(_pages.USERS);
+                  }
                 }}
               >
                 <PeopleAltRoundedIcon />
