@@ -74,7 +74,6 @@ function Header() {
                     : ""
                 }`}
                 onClick={() => {
-                  debugger;
                   if (selectedPage === _pages.USERS) {
                     _currentComponent(_pages.TEAM);
                   } else if (selectedPage === _pages.TEAM) {

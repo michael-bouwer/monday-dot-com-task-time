@@ -150,13 +150,11 @@ function GetTimesheet({ data, user }) {
     var thisTimeLastWeek = moment(currentDate).subtract(1, "weeks");
     setDate(thisTimeLastWeek);
     getTimesheetForWeek(thisTimeLastWeek);
-    datePickerRef.current.setDateFromParentComponent(thisTimeLastWeek);
   }
   function getNextWeekTimesheet(currentDate) {
     var thisTimeNextWeek = moment(currentDate).add(1, "weeks");
     setDate(thisTimeNextWeek);
     getTimesheetForWeek(thisTimeNextWeek);
-    datePickerRef.current.setDateFromParentComponent(thisTimeNextWeek);
   }
 
   function getSums(timesheetObject) {
@@ -185,13 +183,16 @@ function GetTimesheet({ data, user }) {
   function getDay(index) {
     var currentDate = date;
     var weekStart = currentDate.clone().startOf("isoWeek");
+    weekStart.add(index, "days");
+
+    var today = moment().dayOfYear() === weekStart.dayOfYear();
 
     return (
-      <>
-        {weekStart.add(index, "days").format("ddd")}
+      <span style={{ color: today ? "#0071d9" : "inherit" }}>
+        {weekStart.format("ddd")}
         <br />
         {weekStart.format("Do")}
-      </>
+      </span>
     );
   }
 

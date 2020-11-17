@@ -121,13 +121,16 @@ function GetTimesheet({ data }) {
   function getDay(index) {
     var currentDate = date;
     var weekStart = currentDate.clone().startOf("isoWeek");
+    weekStart.add(index, "days");
+
+    var today = moment().dayOfYear() === weekStart.dayOfYear();
 
     return (
-      <>
-        {weekStart.add(index, "days").format("ddd")}
+      <span style={{ color: today ? "#0071d9" : "inherit" }}>
+        {weekStart.format("ddd")}
         <br />
         {weekStart.format("Do")}
-      </>
+      </span>
     );
   }
 
