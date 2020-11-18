@@ -188,7 +188,7 @@ function GetTimesheet({ data, user }) {
     var today = moment().dayOfYear() === weekStart.dayOfYear();
 
     return (
-      <span style={{ color: today ? "#0071d9" : "inherit" }}>
+      <span>
         {weekStart.format("ddd")}
         <br />
         {weekStart.format("Do")}
