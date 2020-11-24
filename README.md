@@ -1,14 +1,8 @@
-## Overview
-This is the "Quickstart React" example Monday app. 
-<br>It can be used as a board view or dashboard widget, connected to a board and render data from the board using settings.
 
-<br>This app demonstrates how to use: 
+<br>References: 
 - [settings](https://github.com/mondaycom/monday-sdk-js#mondaygettype-params--) 
 - [context](https://github.com/mondaycom/monday-sdk-js#mondaygettype-params--) 
 - [API](https://github.com/mondaycom/monday-sdk-js#mondayapiquery-options--)
-
-<br>You can find more info in our QuickStart guide [here](https://monday.com/developers/apps/quickstart-view/)
-<br /> ![Screenshot](https://dapulse-res.cloudinary.com/image/upload/w_900/v1591485466/remote_mondaycom_static/developers/screenshots/final_view.gif)
 
 ## Run the project
 
@@ -23,7 +17,7 @@ And then to run an application with automatic virtual ngrok tunnel, run:
 Visit http://localhost:4040/status and under "command_line section" find the URL. This is the public URL of your app, so you can use it to test it.
 F.e.: https://021eb6330099.ngrok.io
 
-## Configure Monday App 
+## Monday App Dev Steps
 
 1. Open monday.com, login to your account and go to a "Developers" section.
 2. Create a new "QuickStart View Example App"
